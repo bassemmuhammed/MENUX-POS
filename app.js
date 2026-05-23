@@ -133,12 +133,12 @@ function injectDynamicUI() {
 
     <!-- ═══ ITEM FORM MODAL ═══ -->
     <div class="modal-overlay" id="item-form-modal" hidden>
-      <div class="modal" style="max-width: 500px; border-radius: 20px; width:92%; box-shadow:0 20px 60px rgba(0,0,0,0.18);">
+      <div class="modal" style="max-width: 500px; border-radius: 20px; width:92%; box-shadow:0 20px 60px rgba(0,0,0,0.18); overflow:visible;">
         <div style="width:40px; height:4px; background:var(--border); border-radius:2px; margin:12px auto;"></div>
         <div class="modal-header" style="padding:0 24px 16px; border-bottom:1px solid var(--border);">
           <h2 id="item-form-title" style="font-size: 20px; font-weight: 700;">إضافة منتج / Add Item</h2>
         </div>
-        <div class="modal-body" style="padding:24px; max-height: 80vh; overflow-y: auto;">
+        <div class="modal-body" style="padding:20px 24px 24px; overflow:hidden;">
           <input type="hidden" id="item-form-id">
           <div style="margin-bottom:16px;">
             <label style="display:block; margin-bottom:6px; font-size:13px; color:var(--text-secondary);">اسم المنتج بالعربي</label>
@@ -897,7 +897,18 @@ async function printBill() {
         document.getElementById('invoice-total').innerText = `${(subtotal - discount).toFixed(2)} ج.م`;
         document.getElementById('invoice-items-count').innerText = `عدد المنتجات: ${count}`;
 
-        // 5. الطباعة
+        // 5. تغيير لون الطاولة لـ printed
+        if (state.currentTable) {
+          const tbl = state.tables.find(t => t.id == state.currentTable);
+          if (tbl && tbl.status !== 'empty') {
+            tbl.status = 'printed';
+            await dbOp('tables', 'put', tbl);
+            const order = getCurrentOrder();
+            if (order) { order.status = 'printed'; await dbOp('orders', 'put', { ...order, items: undefined }); }
+            renderTables();
+          }
+        }
+        // 6. الطباعة
         window.print();
     } catch (e) {
         console.error("خطأ في الطباعة:", e);
@@ -1581,8 +1592,14 @@ function bindEvents() {
       const name = await showInputModal('cm-add-table', 'cm-table-name', 'cm-add-table-ok', 'cm-add-table-cancel');
       if (!name) return;
       try {
-        const id = await dbOp('tables', 'add', { name, status: 'empty' });
-        state.tables.push({ id, name, status: 'empty' });
+        // استخرج رقم من الاسم لو موجود (مثال: "طاولة 5" → 5)، وإلا استخدم وقت
+        const numMatch = name.match(/\d+/);
+        const tableId = numMatch ? parseInt(numMatch[0]) : Date.now() % 10000;
+        // تحقق إن الرقم مش مكرر
+        const existing = state.tables.find(t => t.id == tableId);
+        if (existing) return showToast('رقم الطاولة موجود بالفعل', true);
+        await dbOp('tables', 'put', { id: tableId, name, status: 'empty' });
+        state.tables.push({ id: tableId, name, status: 'empty' });
         loadTablesMgmt();
         renderTables();
         showToast('تم إضافة الطاولة');
