@@ -30,30 +30,30 @@ function injectDynamicUI() {
       </div>
     </div>
     <!-- ═══ EXPENSES MODAL ═══ -->
-    <div class="modal-overlay" id="expenses-modal" hidden>
-      <div class="modal" style="max-width: 400px; border-radius: 16px; overflow: hidden;">
-        <div class="modal-header" style="display:flex; justify-content:space-between; padding:20px; border-bottom:1px solid var(--border);">
-          <h2 data-i18n="expenses" style="font-size: 20px; font-weight: 700;">المصروفات</h2>
-          <button class="modal-close" id="close-expenses" style="background:none; border:none; cursor:pointer;">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-          </button>
+    <div class="cmodal-overlay" id="expenses-modal" style="align-items:center;">
+      <div class="cmodal-box" style="max-width:420px;width:95%;padding:0;border-radius:16px;overflow:hidden;">
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:18px 20px; border-bottom:1px solid var(--border);">
+          <h2 style="font-size:18px; font-weight:700;">المصروفات</h2>
+          <button id="close-expenses" style="background:none; border:none; cursor:pointer; color:var(--text-secondary); font-size:22px; line-height:1;">✕</button>
         </div>
-        <div class="modal-body" style="padding:20px;">
-          <div style="margin-bottom:16px;">
-            <label style="display:block; margin-bottom:6px; font-size:13px; color:var(--text-secondary);">القسم / Category</label>
-            <select id="expense-category" style="width:100%; height:44px; border:1px solid var(--border); border-radius:8px; padding:0 12px; font-size:14px;"></select>
+        <div style="padding:20px; display:flex; flex-direction:column; gap:14px;">
+          <div>
+            <label style="display:block; margin-bottom:6px; font-size:13px; color:var(--text-secondary); font-weight:600;">القسم</label>
+            <select id="expense-category" style="width:100%; height:44px; border:1.5px solid var(--border); border-radius:8px; padding:0 12px; font-size:14px; font-family:'Cairo',sans-serif; background:var(--surface); outline:none;"></select>
           </div>
-          <div style="margin-bottom:16px;">
-            <label style="display:block; margin-bottom:6px; font-size:13px; color:var(--text-secondary);">المبلغ / Amount</label>
-            <input type="number" id="expense-amount" style="width:100%; height:44px; border:1px solid var(--border); border-radius:8px; padding:0 12px; font-size:14px;" min="0" step="0.5">
+          <div>
+            <label style="display:block; margin-bottom:6px; font-size:13px; color:var(--text-secondary); font-weight:600;">المبلغ</label>
+            <input type="number" id="expense-amount" placeholder="0.00" min="0" step="0.5"
+              style="width:100%; height:44px; border:1.5px solid var(--border); border-radius:8px; padding:0 12px; font-size:14px; font-family:'Cairo',sans-serif; outline:none; box-sizing:border-box;">
           </div>
-          <div style="margin-bottom:16px;">
-            <label style="display:block; margin-bottom:6px; font-size:13px; color:var(--text-secondary);">ملاحظات / Note</label>
-            <input type="text" id="expense-note" style="width:100%; height:44px; border:1px solid var(--border); border-radius:8px; padding:0 12px; font-size:14px;">
+          <div>
+            <label style="display:block; margin-bottom:6px; font-size:13px; color:var(--text-secondary); font-weight:600;">اسم المورد / ملاحظة</label>
+            <input type="text" id="expense-note" placeholder="مثال: شركة النيل للخامات"
+              style="width:100%; height:44px; border:1.5px solid var(--border); border-radius:8px; padding:0 12px; font-size:14px; font-family:'Cairo',sans-serif; outline:none; box-sizing:border-box;">
           </div>
-          <button id="submit-expense" style="width:100%; height:44px; background:var(--primary); color:white; border:none; border-radius:8px; font-weight:600; cursor:pointer;">حفظ / Save</button>
+          <button id="submit-expense" style="width:100%; height:46px; background:var(--primary); color:white; border:none; border-radius:9px; font-weight:700; font-size:15px; cursor:pointer; font-family:'Cairo',sans-serif; margin-top:4px;">
+            التالي — اختيار طريقة الدفع
+          </button>
         </div>
       </div>
     </div>
@@ -255,10 +255,10 @@ function injectDynamicUI() {
             </div>
           </div>
 
-          <!-- KPI Cards Row 1: الإيراد -->
-          <div class="kpi-grid">
-            <!-- Cash on Hand — Hero card -->
-            <div class="kpi-card kpi-hero" id="kpi-hero-card" style="cursor:pointer;" title="اضغط لرؤية التاريخ اليومي">
+          <!-- KPI Cards Row 1: الإيراد — من اليمين للشمال -->
+          <div class="kpi-grid" style="grid-template-columns: repeat(4, 1fr);">
+            <!-- المتوقع في الخزنة — Hero card ممتد كامل العرض -->
+            <div class="kpi-card kpi-hero" id="kpi-hero-card" style="cursor:pointer; grid-column: 1 / -1;" title="اضغط لرؤية التاريخ اليومي">
               <div class="kpi-icon-wrap kpi-icon-white">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
               </div>
@@ -267,43 +267,57 @@ function injectDynamicUI() {
               <div class="kpi-hint">اضغط لعرض الإيراد اليومي ▾</div>
             </div>
 
-            <!-- إيراد كاش -->
-            <div class="kpi-card">
-              <div class="kpi-icon-wrap" style="background:#E8F5E9;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/></svg>
-              </div>
-              <div class="kpi-label">إيراد نقدي</div>
-              <div class="kpi-value kpi-green" id="rep-cash">0.00</div>
-            </div>
-
-            <!-- إيراد محفظة -->
-            <div class="kpi-card">
-              <div class="kpi-icon-wrap" style="background:#E3F2FD;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1565C0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 10H18a2 2 0 0 0 0 4h4"/></svg>
-              </div>
-              <div class="kpi-label">محفظة</div>
-              <div class="kpi-value kpi-blue" id="rep-wallet">0.00</div>
-            </div>
-
-            <!-- آجل مدفوع -->
-            <div class="kpi-card">
-              <div class="kpi-icon-wrap" style="background:#FFF3E0;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E65100" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z"/></svg>
-              </div>
-              <div class="kpi-label">آجل مدفوع</div>
-              <div class="kpi-value kpi-orange" id="rep-credit-paid">0.00</div>
-            </div>
-
-            <!-- إجمالي الإيراد -->
-            <div class="kpi-card kpi-accent">
+            <!-- ١. إجمالي الإيراد -->
+            <div class="kpi-card kpi-accent" id="kpi-revenue-card" style="cursor:pointer;" title="اضغط لرؤية التاريخ اليومي">
               <div class="kpi-icon-wrap kpi-icon-white">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
               </div>
               <div class="kpi-label">إجمالي الإيراد</div>
               <div class="kpi-value" id="rep-revenue">0.00</div>
+              <div style="font-size:10px;color:rgba(255,255,255,0.55);margin-top:2px;">اضغط لعرض اليومي ▾</div>
             </div>
 
-            <!-- صافي الدخل -->
+            <!-- ٢. إيراد نقدي -->
+            <div class="kpi-card" id="kpi-cash-card" style="cursor:pointer;" title="اضغط لعرض فواتير الكاش">
+              <div class="kpi-icon-wrap" style="background:#E8F5E9;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/></svg>
+              </div>
+              <div class="kpi-label">إيراد نقدي</div>
+              <div class="kpi-value kpi-green" id="rep-cash">0.00</div>
+              <div style="font-size:10px;color:var(--text-secondary);margin-top:2px;">اضغط للفواتير ▾</div>
+            </div>
+
+            <!-- ٣. محفظة -->
+            <div class="kpi-card" id="kpi-wallet-card" style="cursor:pointer;" title="اضغط لعرض فواتير المحفظة">
+              <div class="kpi-icon-wrap" style="background:#E3F2FD;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1565C0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 10H18a2 2 0 0 0 0 4h4"/></svg>
+              </div>
+              <div class="kpi-label">محفظة</div>
+              <div class="kpi-value kpi-blue" id="rep-wallet">0.00</div>
+              <div style="font-size:10px;color:var(--text-secondary);margin-top:2px;">اضغط للفواتير ▾</div>
+            </div>
+
+            <!-- ٤. آجل مدفوع -->
+            <div class="kpi-card" id="kpi-credit-paid-card" style="cursor:pointer;" title="اضغط لعرض تقارير الآجل المدفوع">
+              <div class="kpi-icon-wrap" style="background:#FFF3E0;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E65100" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z"/></svg>
+              </div>
+              <div class="kpi-label">آجل مدفوع</div>
+              <div class="kpi-value kpi-orange" id="rep-credit-paid">0.00</div>
+              <div style="font-size:10px;color:var(--text-secondary);margin-top:2px;">اضغط للتفاصيل ▾</div>
+            </div>
+
+            <!-- ٥. بضاعة آجل مدفوعة -->
+            <div class="kpi-card" id="kpi-exp-credit-card" style="cursor:pointer;" title="اضغط لعرض تفاصيل فواتير بضاعة الآجل">
+              <div class="kpi-icon-wrap" style="background:#FFF3E0;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E65100" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z"/><path d="M12 11v4"/><path d="M10 13h4"/></svg>
+              </div>
+              <div class="kpi-label">بضاعة آجل مدفوعة</div>
+              <div class="kpi-value kpi-orange" id="rep-exp-credit-paid">0.00</div>
+              <div style="font-size:10px;color:var(--text-secondary);margin-top:2px;">اضغط للتفاصيل ▾</div>
+            </div>
+
+            <!-- ٦. صافي الدخل -->
             <div class="kpi-card kpi-success">
               <div class="kpi-icon-wrap" style="background:rgba(255,255,255,0.2);">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-5"/></svg>
@@ -312,13 +326,14 @@ function injectDynamicUI() {
               <div class="kpi-value" id="rep-net">0.00</div>
             </div>
 
-            <!-- أكثر منتج مبيعاً -->
-            <div class="kpi-card">
+            <!-- ٧. أكثر منتج مبيعاً -->
+            <div class="kpi-card" id="kpi-top-item-card" style="cursor:pointer;" title="اضغط لعرض تفاصيل المبيعات">
               <div class="kpi-icon-wrap" style="background:#F3E5F5;">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7B1FA2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
               </div>
               <div class="kpi-label">أكثر منتج مبيعاً</div>
               <div class="kpi-value kpi-purple kpi-sm" id="rep-top-item">—</div>
+              <div style="font-size:10px;color:var(--text-secondary);margin-top:2px;">اضغط للتفاصيل ▾</div>
             </div>
           </div>
 
@@ -350,6 +365,12 @@ function injectDynamicUI() {
 
           <!-- Row 3: بضاعة الآجل -->
           <div class="dash-section-title">بضاعة الآجل (غير مدفوعة)</div>
+          <div class="credit-summary-bar" id="exp-purchases-bar">
+            <div class="credit-summary-empty">لا توجد بضاعة آجل غير مدفوعة</div>
+          </div>
+
+          <!-- Row 4: مديونية العملاء -->
+          <div class="dash-section-title" style="margin-top:20px;">مديونية العملاء (غير مدفوعة)</div>
           <div class="credit-summary-bar" id="credit-summary-bar">
             <div class="credit-summary-empty">لا توجد مبالغ آجلة</div>
           </div>
@@ -454,6 +475,105 @@ function injectDynamicUI() {
           <button id="cm-daily-close" style="background:none; border:none; cursor:pointer; color:#6B7280; font-size:20px;">✕</button>
         </div>
         <div id="daily-revenue-list" style="max-height:400px; overflow-y:auto;"></div>
+      </div>
+    </div>
+
+    <!-- ═══ EXPENSE PAYMENT METHOD MODAL ═══ -->
+    <div class="cmodal-overlay" id="cm-exp-payment">
+      <div class="cmodal-box">
+        <div class="cmodal-title">طريقة الدفع</div>
+        <div class="cmodal-msg" id="cm-exp-payment-msg">اختر طريقة دفع المصروف</div>
+        <div class="cmodal-btns" style="flex-direction:column; gap:10px;">
+          <button class="cmodal-btn primary" id="cm-exp-pay-cash" style="display:flex;align-items:center;justify-content:center;gap:8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
+            نقدي (كاش)
+          </button>
+          <button class="cmodal-btn" id="cm-exp-pay-credit" style="background:#FFF3E0;color:#E65100;display:flex;align-items:center;justify-content:center;gap:8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z"/></svg>
+            آجل (غير مدفوع)
+          </button>
+          <button class="cmodal-btn cancel" id="cm-exp-pay-cancel">إلغاء</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ EXPENSE CREDIT PAY MODAL (partial or full) ═══ -->
+    <div class="cmodal-overlay" id="cm-exp-credit-pay">
+      <div class="cmodal-box" style="max-width:400px;">
+        <div class="cmodal-title">دفع بضاعة آجل</div>
+        <div class="cmodal-msg" id="cm-exp-credit-pay-msg">اختر طريقة الدفع</div>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:18px;">
+          <button class="cmodal-btn primary" id="cm-exp-full-pay" style="display:flex;align-items:center;justify-content:center;gap:8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            دفع المبلغ الكامل
+          </button>
+          <div style="background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:14px;">
+            <div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;font-weight:600;">أو ادفع مبلغ جزئي:</div>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <input type="number" id="cm-exp-partial-amount" placeholder="0.00" min="0" step="0.5"
+                style="flex:1;height:40px;border:1.5px solid var(--border);border-radius:8px;padding:0 10px;font-size:14px;font-family:'Cairo',sans-serif;outline:none;">
+              <button class="cmodal-btn primary" id="cm-exp-partial-pay" style="flex:0 0 auto;padding:0 16px;height:40px;font-size:13px;">دفع</button>
+            </div>
+          </div>
+        </div>
+        <div class="cmodal-btns">
+          <button class="cmodal-btn cancel" id="cm-exp-credit-pay-cancel">إلغاء</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ EXPENSE CREDIT DETAIL POPUP ═══ -->
+    <div class="cmodal-overlay" id="cm-exp-credit-detail">
+      <div class="cmodal-box" style="max-width:500px; width:95%;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <div class="cmodal-title" style="margin:0;">فواتير بضاعة الآجل المدفوعة — الشهر</div>
+          <button id="cm-exp-credit-detail-close" style="background:none; border:none; cursor:pointer; color:#6B7280; font-size:20px;">✕</button>
+        </div>
+        <div id="exp-credit-detail-list" style="max-height:440px; overflow-y:auto;"></div>
+      </div>
+    </div>
+
+    <!-- ═══ CREDIT PAID POPUP (آجل مدفوع خلال الشهر) ═══ -->
+    <div class="cmodal-overlay" id="cm-credit-paid-detail">
+      <div class="cmodal-box" style="max-width:500px; width:95%;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <div class="cmodal-title" style="margin:0;">تقارير الآجل المدفوع</div>
+          <button id="cm-credit-paid-close" style="background:none; border:none; cursor:pointer; color:#6B7280; font-size:20px;">✕</button>
+        </div>
+        <div id="credit-paid-detail-list" style="max-height:440px; overflow-y:auto;"></div>
+      </div>
+    </div>
+
+    <!-- ═══ CASH INVOICES POPUP (فواتير كاش خلال الشهر) ═══ -->
+    <div class="cmodal-overlay" id="cm-cash-invoices">
+      <div class="cmodal-box" style="max-width:500px; width:95%;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <div class="cmodal-title" style="margin:0;">فواتير الكاش المقفولة</div>
+          <button id="cm-cash-invoices-close" style="background:none; border:none; cursor:pointer; color:#6B7280; font-size:20px;">✕</button>
+        </div>
+        <div id="cash-invoices-list" style="max-height:440px; overflow-y:auto;"></div>
+      </div>
+    </div>
+
+    <!-- ═══ WALLET INVOICES POPUP (فواتير محفظة خلال الشهر) ═══ -->
+    <div class="cmodal-overlay" id="cm-wallet-invoices">
+      <div class="cmodal-box" style="max-width:500px; width:95%;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <div class="cmodal-title" style="margin:0;">فواتير المحفظة المقفولة</div>
+          <button id="cm-wallet-invoices-close" style="background:none; border:none; cursor:pointer; color:#6B7280; font-size:20px;">✕</button>
+        </div>
+        <div id="wallet-invoices-list" style="max-height:440px; overflow-y:auto;"></div>
+      </div>
+    </div>
+
+    <!-- ═══ TOP ITEMS POPUP (تفاصيل المنتجات الأكثر مبيعاً) ═══ -->
+    <div class="cmodal-overlay" id="cm-top-items">
+      <div class="cmodal-box" style="max-width:500px; width:95%;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <div class="cmodal-title" style="margin:0;">تفاصيل المبيعات — الكميات</div>
+          <button id="cm-top-items-close" style="background:none; border:none; cursor:pointer; color:#6B7280; font-size:20px;">✕</button>
+        </div>
+        <div id="top-items-list" style="max-height:440px; overflow-y:auto;"></div>
       </div>
     </div>
 
@@ -632,7 +752,7 @@ const state = {
 // ──────────────── INDEXED DB ────────────────
 
 const DB_NAME = 'cafe-pos-db';
-const DB_VERSION = 2; // Upgraded version for new schema
+const DB_VERSION = 3; // v3: added expense_purchases store
 let db = null;
 
 function openDB() {
@@ -650,7 +770,8 @@ function openDB() {
         { name: 'expense_categories', keyPath: 'id', autoInc: true },
         { name: 'customers', keyPath: 'id', autoInc: true },
         { name: 'credit_orders', keyPath: 'id', autoInc: true },
-        { name: 'settings', keyPath: 'key', autoInc: false }
+        { name: 'settings', keyPath: 'key', autoInc: false },
+        { name: 'expense_purchases', keyPath: 'id', autoInc: true }
       ];
       stores.forEach(s => {
         if (!d.objectStoreNames.contains(s.name)) {
@@ -1258,6 +1379,7 @@ async function loadReports(type) {
   const orderItems   = await dbOp('order_items',      'getAll');
   const customers    = await dbOp('customers',        'getAll');
   const expCats      = await dbOp('expense_categories','getAll');
+  const expPurchases = await dbOp('expense_purchases', 'getAll');
 
   const todayStr = isoDate().split('T')[0];
   const monthStr = todayStr.substring(0, 7);
@@ -1331,6 +1453,18 @@ async function loadReports(type) {
   });
   creditOrders.forEach(co => { if (co.is_paid && co.paid_at?.startsWith(monthStr)) cashOnHand += co.amount; });
   expenses.forEach(e => { if (e.created_at?.startsWith(monthStr)) cashOnHand -= e.amount; });
+  // اطرح بضاعة الآجل المدفوعة من الخزينة
+  expPurchases.forEach(ep => {
+    // اطرح أي مبلغ مدفوع (كامل أو جزئي) من الخزينة
+    if (ep.paid_amount > 0 && ep.paid_at?.startsWith(monthStr)) cashOnHand -= ep.paid_amount;
+  });
+  // بضاعة آجل مدفوعة في الفترة المختارة
+  let expCreditPaid = 0;
+  expPurchases.forEach(ep => {
+    if ((ep.is_paid === 1 || ep.paid_amount > 0) && matchDate(ep.paid_at || ep.created_at)) {
+      expCreditPaid += ep.paid_amount || ep.amount;
+    }
+  });
 
   // ── Update KPI cards ──
   const cur = t('currency');
@@ -1344,8 +1478,34 @@ async function loadReports(type) {
   document.getElementById('rep-exp-primary').textContent   = `${fmt(expPrimary)} ${cur}`;
   document.getElementById('rep-exp-raw').textContent       = `${fmt(expRaw)} ${cur}`;
   document.getElementById('rep-exp-secondary').textContent = `${fmt(expSecondary)} ${cur}`;
+  const expCreditEl = document.getElementById('rep-exp-credit-paid');
+  if (expCreditEl) expCreditEl.textContent = `${fmt(expCreditPaid)} ${cur}`;
 
-  // ── Credit Summary (unpaid) ──
+  // ── Expense Purchases (unpaid) bar ──
+  const unpaidPurchases = expPurchases.filter(ep => !ep.is_paid || ep.paid_amount < ep.amount);
+  const purchasesBar = document.getElementById('exp-purchases-bar');
+  if (purchasesBar) {
+    if (unpaidPurchases.length > 0) {
+      purchasesBar.innerHTML = unpaidPurchases.map(ep => {
+        const remaining = ep.amount - (ep.paid_amount || 0);
+        const dateStr = ep.created_at ? ep.created_at.split('T')[0] : '—';
+        return `<div class="credit-summary-row" style="flex-wrap:wrap;gap:8px;">
+          <div style="flex:1;min-width:120px;">
+            <div class="credit-summary-name">${ep.supplier_name || ep.category_name}</div>
+            <div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">${dateStr} ${ep.note && ep.note !== ep.supplier_name ? '· ' + ep.note : ''}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="credit-summary-amt">${fmt(remaining)} ${cur}</span>
+            <button class="dash-btn-primary" style="height:32px;padding:0 14px;font-size:12px;" onclick="window.openExpCreditPayModal(${ep.id})">دفع</button>
+          </div>
+        </div>`;
+      }).join('');
+    } else {
+      purchasesBar.innerHTML = `<div class="credit-summary-empty">✓ لا توجد بضاعة آجل غير مدفوعة</div>`;
+    }
+  }
+
+  // ── Credit Summary (unpaid customers) ──
   const unpaid = creditOrders.filter(co => !co.is_paid);
   const grouped = {};
   unpaid.forEach(co => {
@@ -1366,7 +1526,187 @@ async function loadReports(type) {
   }
 }
 
-// ── Daily revenue popup ──
+// ── Cash Invoices Popup ──
+async function showCashInvoices() {
+  const orders = await dbOp('orders', 'getAll');
+  const orderItems = await dbOp('order_items', 'getAll');
+  const todayStr = isoDate().split('T')[0];
+  const monthStr = todayStr.substring(0, 7);
+  const pickerVal = document.getElementById('rep-date-picker')?.value;
+  const chosenDate = pickerVal || (_repType === 'today' ? todayStr : null);
+  const matchDate = (d) => {
+    if (!d) return false;
+    if (chosenDate && _repType === 'today') return d.startsWith(chosenDate);
+    if (_repType === 'today') return d.startsWith(todayStr);
+    return d.startsWith(monthStr);
+  };
+  const cur = t('currency');
+  const cashOrders = orders.filter(o => o.status === 'paid' && o.payment_method === 'cash' && matchDate(o.paid_at));
+  const list = document.getElementById('cash-invoices-list');
+  if (!list) return;
+  if (cashOrders.length === 0) {
+    list.innerHTML = `<div style="text-align:center;padding:32px;color:var(--text-secondary);">لا توجد فواتير كاش في هذه الفترة</div>`;
+  } else {
+    const total = cashOrders.reduce((s, o) => s + o.total, 0);
+    list.innerHTML = cashOrders.map(o => {
+      const items = orderItems.filter(oi => oi.order_id === o.id);
+      const summary = items.map(oi => `${oi.name_ar} ×${oi.quantity}`).join('، ');
+      return `<div class="daily-row" style="flex-direction:column;align-items:flex-start;gap:4px;">
+        <div style="display:flex;justify-content:space-between;width:100%;align-items:center;">
+          <span style="font-weight:700;font-size:14px;">فاتورة #${String(o.id).slice(-4)} — طاولة ${o.table_id}</span>
+          <span class="daily-amt">${fmt(o.total)} ${cur}</span>
+        </div>
+        <div style="font-size:12px;color:var(--text-secondary);">${o.paid_at ? o.paid_at.split('T')[0] + ' ' + (o.paid_at.split('T')[1]||'').substring(0,5) : '—'}</div>
+        ${summary ? `<div style="font-size:11px;color:var(--text-secondary);">${summary}</div>` : ''}
+      </div>`;
+    }).join('') +
+    `<div style="border-top:2px solid var(--border);margin-top:8px;padding-top:10px;display:flex;justify-content:space-between;font-weight:800;font-size:15px;">
+      <span>الإجمالي</span><span style="color:#16A34A;">${fmt(total)} ${cur}</span>
+    </div>`;
+  }
+  openModal('cm-cash-invoices');
+}
+
+// ── Wallet Invoices Popup ──
+async function showWalletInvoices() {
+  const orders = await dbOp('orders', 'getAll');
+  const orderItems = await dbOp('order_items', 'getAll');
+  const todayStr = isoDate().split('T')[0];
+  const monthStr = todayStr.substring(0, 7);
+  const pickerVal = document.getElementById('rep-date-picker')?.value;
+  const chosenDate = pickerVal || (_repType === 'today' ? todayStr : null);
+  const matchDate = (d) => {
+    if (!d) return false;
+    if (chosenDate && _repType === 'today') return d.startsWith(chosenDate);
+    if (_repType === 'today') return d.startsWith(todayStr);
+    return d.startsWith(monthStr);
+  };
+  const cur = t('currency');
+  const walletOrders = orders.filter(o => o.status === 'paid' && o.payment_method === 'wallet' && matchDate(o.paid_at));
+  const list = document.getElementById('wallet-invoices-list');
+  if (!list) return;
+  if (walletOrders.length === 0) {
+    list.innerHTML = `<div style="text-align:center;padding:32px;color:var(--text-secondary);">لا توجد فواتير محفظة في هذه الفترة</div>`;
+  } else {
+    const total = walletOrders.reduce((s, o) => s + o.total, 0);
+    list.innerHTML = walletOrders.map(o => {
+      const items = orderItems.filter(oi => oi.order_id === o.id);
+      const summary = items.map(oi => `${oi.name_ar} ×${oi.quantity}`).join('، ');
+      return `<div class="daily-row" style="flex-direction:column;align-items:flex-start;gap:4px;">
+        <div style="display:flex;justify-content:space-between;width:100%;align-items:center;">
+          <span style="font-weight:700;font-size:14px;">فاتورة #${String(o.id).slice(-4)} — طاولة ${o.table_id}</span>
+          <span class="daily-amt" style="color:#1565C0;">${fmt(o.total)} ${cur}</span>
+        </div>
+        <div style="font-size:12px;color:var(--text-secondary);">${o.paid_at ? o.paid_at.split('T')[0] + ' ' + (o.paid_at.split('T')[1]||'').substring(0,5) : '—'}</div>
+        ${summary ? `<div style="font-size:11px;color:var(--text-secondary);">${summary}</div>` : ''}
+      </div>`;
+    }).join('') +
+    `<div style="border-top:2px solid var(--border);margin-top:8px;padding-top:10px;display:flex;justify-content:space-between;font-weight:800;font-size:15px;">
+      <span>الإجمالي</span><span style="color:#1565C0;">${fmt(total)} ${cur}</span>
+    </div>`;
+  }
+  openModal('cm-wallet-invoices');
+}
+
+// ── Credit Paid Detail Popup (آجل مدفوع — الاسم والمبلغ والتاريخ) ──
+async function showCreditPaidDetail() {
+  const creditOrders = await dbOp('credit_orders', 'getAll');
+  const customers    = await dbOp('customers',     'getAll');
+  const todayStr = isoDate().split('T')[0];
+  const monthStr = todayStr.substring(0, 7);
+  const pickerVal = document.getElementById('rep-date-picker')?.value;
+  const chosenDate = pickerVal || (_repType === 'today' ? todayStr : null);
+  const matchDate = (d) => {
+    if (!d) return false;
+    if (chosenDate && _repType === 'today') return d.startsWith(chosenDate);
+    if (_repType === 'today') return d.startsWith(todayStr);
+    return d.startsWith(monthStr);
+  };
+  const cur = t('currency');
+  const paidCredit = creditOrders.filter(co => co.is_paid && matchDate(co.paid_at));
+  const list = document.getElementById('credit-paid-detail-list');
+  if (!list) return;
+  if (paidCredit.length === 0) {
+    list.innerHTML = `<div style="text-align:center;padding:32px;color:var(--text-secondary);">لا توجد مدفوعات آجل في هذه الفترة</div>`;
+  } else {
+    const total = paidCredit.reduce((s, co) => s + co.amount, 0);
+    list.innerHTML = paidCredit.map(co => {
+      const cust = customers.find(c => c.id === co.customer_id);
+      return `<div class="daily-row" style="flex-direction:column;align-items:flex-start;gap:4px;">
+        <div style="display:flex;justify-content:space-between;width:100%;align-items:center;">
+          <span style="font-weight:700;font-size:14px;">${cust ? cust.name : 'عميل'}</span>
+          <span class="daily-amt" style="color:#E65100;">${fmt(co.amount)} ${cur}</span>
+        </div>
+        <div style="font-size:12px;color:var(--text-secondary);">${co.paid_at ? co.paid_at.split('T')[0] : '—'}</div>
+        ${co.items_summary ? `<div style="font-size:11px;color:var(--text-secondary);">${co.items_summary}</div>` : ''}
+      </div>`;
+    }).join('') +
+    `<div style="border-top:2px solid var(--border);margin-top:8px;padding-top:10px;display:flex;justify-content:space-between;font-weight:800;font-size:15px;">
+      <span>الإجمالي المحصل</span><span style="color:#E65100;">${fmt(total)} ${cur}</span>
+    </div>`;
+  }
+  openModal('cm-credit-paid-detail');
+}
+
+// ── Top Items Detail Popup (كل المنتجات بالكمية) ──
+async function showTopItemsDetail() {
+  const orders     = await dbOp('orders',      'getAll');
+  const orderItems = await dbOp('order_items', 'getAll');
+  const menuItems  = await dbOp('menu_items',  'getAll');
+  const todayStr = isoDate().split('T')[0];
+  const monthStr = todayStr.substring(0, 7);
+  const pickerVal = document.getElementById('rep-date-picker')?.value;
+  const chosenDate = pickerVal || (_repType === 'today' ? todayStr : null);
+  const matchDate = (d) => {
+    if (!d) return false;
+    if (chosenDate && _repType === 'today') return d.startsWith(chosenDate);
+    if (_repType === 'today') return d.startsWith(todayStr);
+    return d.startsWith(monthStr);
+  };
+  const itemCounts = {};
+  const itemRevenue = {};
+  orders.forEach(o => {
+    if (o.status === 'paid' && matchDate(o.paid_at)) {
+      orderItems.filter(oi => oi.order_id === o.id).forEach(oi => {
+        itemCounts[oi.item_id]  = (itemCounts[oi.item_id]  || 0) + oi.quantity;
+        itemRevenue[oi.item_id] = (itemRevenue[oi.item_id] || 0) + oi.line_total;
+      });
+    }
+  });
+  const sorted = Object.entries(itemCounts).sort((a, b) => b[1] - a[1]);
+  const cur = t('currency');
+  const list = document.getElementById('top-items-list');
+  if (!list) return;
+  if (sorted.length === 0) {
+    list.innerHTML = `<div style="text-align:center;padding:32px;color:var(--text-secondary);">لا توجد مبيعات في هذه الفترة</div>`;
+  } else {
+    const maxQty = sorted[0][1];
+    list.innerHTML = sorted.map(([id, qty], idx) => {
+      const item = menuItems.find(m => m.id == id);
+      const name = item ? item.name_ar : `منتج #${id}`;
+      const rev  = itemRevenue[id] || 0;
+      const pct  = Math.round((qty / maxQty) * 100);
+      return `<div style="padding:10px 4px; border-bottom:1px solid var(--border);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="width:22px;height:22px;border-radius:50%;background:${idx===0?'var(--primary)':idx===1?'#1565C0':idx===2?'#16A34A':'var(--border)'};color:${idx<3?'white':'var(--text-secondary)'};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;">${idx+1}</span>
+            <span style="font-weight:700;font-size:14px;">${name}</span>
+          </div>
+          <div style="text-align:left;">
+            <div style="font-weight:800;font-size:14px;color:var(--primary);">${qty} قطعة</div>
+            <div style="font-size:11px;color:var(--text-secondary);">${fmt(rev)} ${cur}</div>
+          </div>
+        </div>
+        <div style="height:4px;background:var(--border);border-radius:2px;">
+          <div style="height:100%;width:${pct}%;background:${idx===0?'var(--primary)':'#E4E1EC'};border-radius:2px;transition:width 0.3s;"></div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+  openModal('cm-top-items');
+}
+
+
 async function showDailyRevenue() {
   const orders       = await dbOp('orders',        'getAll');
   const creditOrders = await dbOp('credit_orders', 'getAll');
@@ -1400,6 +1740,99 @@ async function showDailyRevenue() {
       </div>`).join('');
   }
   openModal('cm-daily-revenue');
+}
+
+// ── Expense Credit Pay Modal ──
+window.openExpCreditPayModal = async function(expPurchaseId) {
+  const ep = await dbOp('expense_purchases', 'get', expPurchaseId);
+  if (!ep) return;
+  const remaining = ep.amount - (ep.paid_amount || 0);
+  const cur = t('currency');
+  document.getElementById('cm-exp-credit-pay-msg').textContent =
+    `${ep.supplier_name || ep.category_name} — متبقي: ${fmt(remaining)} ${cur}`;
+  document.getElementById('cm-exp-partial-amount').value = '';
+  document.getElementById('cm-exp-partial-amount').max = remaining;
+  openModal('cm-exp-credit-pay');
+  window._pendingExpPurchase = { id: expPurchaseId, remaining };
+
+  // Full pay handler (re-assign each time)
+  const fullBtn = document.getElementById('cm-exp-full-pay');
+  const partialBtn = document.getElementById('cm-exp-partial-pay');
+  const cancelBtn = document.getElementById('cm-exp-credit-pay-cancel');
+
+  const cleanup = () => {
+    fullBtn.onclick = null; partialBtn.onclick = null; cancelBtn.onclick = null;
+  };
+
+  fullBtn.onclick = async () => {
+    cleanup();
+    closeModal('cm-exp-credit-pay');
+    const ep2 = await dbOp('expense_purchases', 'get', expPurchaseId);
+    ep2.paid_amount = ep2.amount;
+    ep2.is_paid = 1;
+    ep2.paid_at = isoDate();
+    await dbOp('expense_purchases', 'put', ep2);
+    showToast('تم دفع المبلغ الكامل ✓');
+    loadReports();
+  };
+
+  partialBtn.onclick = async () => {
+    const partial = Number(document.getElementById('cm-exp-partial-amount').value);
+    if (!partial || partial <= 0 || partial > remaining) {
+      showToast('أدخل مبلغاً صحيحاً لا يتجاوز المتبقي', true);
+      return;
+    }
+    cleanup();
+    closeModal('cm-exp-credit-pay');
+    const ep2 = await dbOp('expense_purchases', 'get', expPurchaseId);
+    ep2.paid_amount = (ep2.paid_amount || 0) + partial;
+    ep2.is_paid = ep2.paid_amount >= ep2.amount ? 1 : 0;
+    ep2.paid_at = isoDate();
+    await dbOp('expense_purchases', 'put', ep2);
+    showToast(`تم دفع ${fmt(partial)} ${cur} ✓`);
+    loadReports();
+  };
+
+  cancelBtn.onclick = () => { cleanup(); closeModal('cm-exp-credit-pay'); };
+};
+
+// ── Show Expense Credit Detail Popup (paid this month) ──
+async function showExpCreditDetail() {
+  const expPurchases = await dbOp('expense_purchases', 'getAll');
+  const monthStr = isoDate().split('T')[0].substring(0, 7);
+  const cur = t('currency');
+
+  const paidThisMonth = expPurchases.filter(ep =>
+    (ep.is_paid === 1 || ep.paid_amount > 0) && ep.paid_at?.startsWith(monthStr)
+  );
+
+  const list = document.getElementById('exp-credit-detail-list');
+  if (!list) return;
+
+  if (paidThisMonth.length === 0) {
+    list.innerHTML = `<div style="text-align:center;padding:32px;color:var(--text-secondary);">لا توجد فواتير بضاعة آجل مدفوعة هذا الشهر</div>`;
+  } else {
+    const total = paidThisMonth.reduce((s, ep) => s + (ep.paid_amount || ep.amount), 0);
+    list.innerHTML = paidThisMonth.map(ep => `
+      <div class="daily-row" style="flex-direction:column;align-items:flex-start;gap:4px;">
+        <div style="display:flex;justify-content:space-between;width:100%;align-items:center;">
+          <span style="font-weight:700;font-size:14px;">${ep.supplier_name || ep.category_name}</span>
+          <span class="daily-amt">${fmt(ep.paid_amount || ep.amount)} ${cur}</span>
+        </div>
+        <div style="display:flex;gap:12px;">
+          <span class="daily-date">${ep.paid_at ? ep.paid_at.split('T')[0] : '—'}</span>
+          ${ep.note && ep.note !== ep.supplier_name ? `<span style="font-size:11px;color:var(--text-secondary);">${ep.note}</span>` : ''}
+          <span style="font-size:11px;background:${ep.is_paid ? '#E8F5E9' : '#FFF3E0'};color:${ep.is_paid ? '#16A34A' : '#E65100'};padding:1px 8px;border-radius:20px;font-weight:600;">
+            ${ep.is_paid ? 'مدفوع كامل' : `جزئي (${fmt(ep.amount)} الأصلي)`}
+          </span>
+        </div>
+      </div>`).join('') +
+      `<div style="border-top:2px solid var(--border);margin-top:8px;padding-top:10px;display:flex;justify-content:space-between;font-weight:800;font-size:15px;">
+        <span>الإجمالي المدفوع</span>
+        <span style="color:var(--error);">${fmt(total)} ${cur}</span>
+      </div>`;
+  }
+  openModal('cm-exp-credit-detail');
 }
 
 window.payCreditOrder = async function (creditId, customerId) {
@@ -1743,8 +2176,19 @@ async function loadSettingsMgmt() {
 // ──────────────── EVENTS ────────────────
 
 function bindEvents() {
-  const openModal = (id) => document.getElementById(id).hidden = false;
-  const closeModal = (id) => document.getElementById(id).hidden = true;
+  // Smart modal helpers — يشتغلوا على النوعين: hidden-based و cmodal-overlay
+  const openModal = (id) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (el.classList.contains('cmodal-overlay')) { el.classList.add('open'); }
+    else { el.hidden = false; }
+  };
+  const closeModal = (id) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (el.classList.contains('cmodal-overlay')) { el.classList.remove('open'); }
+    else { el.hidden = true; }
+  };
 
   // Modals
   document.getElementById('btn-tables').addEventListener('click', () => { renderTables(); openModal('tables-modal'); });
@@ -1756,21 +2200,81 @@ function bindEvents() {
 
   document.getElementById('btn-expenses').addEventListener('click', async () => {
     const cats = await dbOp('expense_categories', 'getAll');
-    document.getElementById('expense-category').innerHTML = cats.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+    document.getElementById('expense-category').innerHTML = cats.length > 0
+      ? cats.map(c => `<option value="${c.id}">${c.name}</option>`).join('')
+      : '<option value="">لا توجد أقسام — أضف من الداشبورد</option>';
     document.getElementById('expense-amount').value = '';
     document.getElementById('expense-note').value = '';
-    openModal('expenses-modal');
+    openModal('expenses-modal'); // global openModal (classList.add('open'))
   });
   document.getElementById('close-expenses').addEventListener('click', () => closeModal('expenses-modal'));
+  document.getElementById('expenses-modal').addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) closeModal('expenses-modal');
+  });
   document.getElementById('submit-expense').addEventListener('click', async () => {
     const cid = document.getElementById('expense-category').value;
     const cname = document.getElementById('expense-category').options[document.getElementById('expense-category').selectedIndex]?.text || '';
     const amt = Number(document.getElementById('expense-amount').value);
-    const note = document.getElementById('expense-note').value;
-    if (!amt) return;
-    await dbOp('expenses', 'add', { category_id: Number(cid), category_name: cname, amount: amt, note, created_at: isoDate() });
+    const note = document.getElementById('expense-note').value.trim();
+    if (!cid) return showToast('اختر القسم أولاً', true);
+    if (!amt || amt <= 0) return showToast('أدخل مبلغاً صحيحاً', true);
+
+    // Close expenses modal and open payment method chooser
     closeModal('expenses-modal');
-    showToast('تم حفظ المصروف / Expense Saved');
+    document.getElementById('cm-exp-payment-msg').textContent =
+      `${cname} — ${fmt(amt)} ${t('currency')}${note ? ' | ' + note : ''}`;
+
+    // Open payment method modal and wait for choice
+    openModal('cm-exp-payment');
+
+    // Store pending expense data temporarily
+    window._pendingExpense = { cid: Number(cid), cname, amt, note };
+  });
+
+  // Expense payment: CASH
+  document.getElementById('cm-exp-pay-cash').addEventListener('click', async () => {
+    const pe = window._pendingExpense;
+    if (!pe) return;
+    closeModal('cm-exp-payment');
+    await dbOp('expenses', 'add', {
+      category_id: pe.cid, category_name: pe.cname,
+      amount: pe.amt, note: pe.note, payment_method: 'cash', created_at: isoDate()
+    });
+    window._pendingExpense = null;
+    showToast('تم حفظ المصروف نقداً ✓');
+    if (document.getElementById('owner-dashboard').style.display !== 'none') loadReports();
+  });
+
+  // Expense payment: CREDIT (آجل)
+  document.getElementById('cm-exp-pay-credit').addEventListener('click', async () => {
+    const pe = window._pendingExpense;
+    if (!pe) return;
+    closeModal('cm-exp-payment');
+    // Save as expense_purchase (آجل غير مدفوع)
+    await dbOp('expense_purchases', 'add', {
+      category_id: pe.cid, category_name: pe.cname,
+      supplier_name: pe.note || pe.cname, // اسم المورد من النوت
+      amount: pe.amt, paid_amount: 0, is_paid: 0,
+      note: pe.note, created_at: isoDate(), paid_at: null
+    });
+    window._pendingExpense = null;
+    showToast('تم تسجيل البضاعة آجل ✓');
+    if (document.getElementById('owner-dashboard').style.display !== 'none') loadReports();
+  });
+
+  // Expense payment modal cancel
+  document.getElementById('cm-exp-pay-cancel').addEventListener('click', () => {
+    closeModal('cm-exp-payment');
+    window._pendingExpense = null;
+  });
+  document.getElementById('cm-exp-payment').addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) { closeModal('cm-exp-payment'); window._pendingExpense = null; }
+  });
+
+  // Expense credit detail close
+  document.getElementById('cm-exp-credit-detail-close').addEventListener('click', () => closeModal('cm-exp-credit-detail'));
+  document.getElementById('cm-exp-credit-detail').addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) closeModal('cm-exp-credit-detail');
   });
 
   // btn-credit handler (triggered via pay-credit-btn click)
@@ -1899,9 +2403,33 @@ function bindEvents() {
     });
   }
 
-  // Hero card → daily revenue popup
+  // Hero card (المتوقع في الخزنة) → daily revenue popup
   const heroCard = document.getElementById('kpi-hero-card');
   if (heroCard) heroCard.addEventListener('click', showDailyRevenue);
+
+  // إجمالي الإيراد → daily revenue popup
+  const revenueCard = document.getElementById('kpi-revenue-card');
+  if (revenueCard) revenueCard.addEventListener('click', showDailyRevenue);
+
+  // كاش → فواتير الكاش
+  const cashCard = document.getElementById('kpi-cash-card');
+  if (cashCard) cashCard.addEventListener('click', showCashInvoices);
+
+  // محفظة → فواتير المحفظة
+  const walletCard = document.getElementById('kpi-wallet-card');
+  if (walletCard) walletCard.addEventListener('click', showWalletInvoices);
+
+  // آجل مدفوع → تفاصيل الآجل
+  const creditPaidCard = document.getElementById('kpi-credit-paid-card');
+  if (creditPaidCard) creditPaidCard.addEventListener('click', showCreditPaidDetail);
+
+  // بضاعة آجل مدفوعة card → detail popup
+  const expCreditCard = document.getElementById('kpi-exp-credit-card');
+  if (expCreditCard) expCreditCard.addEventListener('click', showExpCreditDetail);
+
+  // أكثر مبيعاً → تفاصيل المنتجات
+  const topItemCard = document.getElementById('kpi-top-item-card');
+  if (topItemCard) topItemCard.addEventListener('click', showTopItemsDetail);
 
   // Daily revenue close
   const dailyClose = document.getElementById('cm-daily-close');
@@ -1912,6 +2440,26 @@ function bindEvents() {
   const creditDetailClose = document.getElementById('cm-credit-detail-close');
   if (creditDetailClose) creditDetailClose.addEventListener('click', () => closeModal('cm-credit-detail'));
   document.getElementById('cm-credit-detail')?.addEventListener('click', (e) => { if (e.target === e.currentTarget) closeModal('cm-credit-detail'); });
+
+  // Exp credit detail close
+  document.getElementById('cm-exp-credit-detail-close')?.addEventListener('click', () => closeModal('cm-exp-credit-detail'));
+  document.getElementById('cm-exp-credit-detail')?.addEventListener('click', (e) => { if (e.target === e.currentTarget) closeModal('cm-exp-credit-detail'); });
+
+  // Credit paid detail close
+  document.getElementById('cm-credit-paid-close')?.addEventListener('click', () => closeModal('cm-credit-paid-detail'));
+  document.getElementById('cm-credit-paid-detail')?.addEventListener('click', (e) => { if (e.target === e.currentTarget) closeModal('cm-credit-paid-detail'); });
+
+  // Cash invoices close
+  document.getElementById('cm-cash-invoices-close')?.addEventListener('click', () => closeModal('cm-cash-invoices'));
+  document.getElementById('cm-cash-invoices')?.addEventListener('click', (e) => { if (e.target === e.currentTarget) closeModal('cm-cash-invoices'); });
+
+  // Wallet invoices close
+  document.getElementById('cm-wallet-invoices-close')?.addEventListener('click', () => closeModal('cm-wallet-invoices'));
+  document.getElementById('cm-wallet-invoices')?.addEventListener('click', (e) => { if (e.target === e.currentTarget) closeModal('cm-wallet-invoices'); });
+
+  // Top items close
+  document.getElementById('cm-top-items-close')?.addEventListener('click', () => closeModal('cm-top-items'));
+  document.getElementById('cm-top-items')?.addEventListener('click', (e) => { if (e.target === e.currentTarget) closeModal('cm-top-items'); });
 
   // Mgmt Add Actions
   document.getElementById('btn-add-category').addEventListener('click', () => {
