@@ -641,9 +641,14 @@ function renderMenu() {
 
   container.innerHTML = items.map(item => `
     <button class="menu-card" data-item-id="${item.id}">
-      <span class="menu-card-name-ar">${item.name_ar}</span>
-      <span class="menu-card-name-en">${item.name_en}</span>
-      <span class="menu-card-price">${fmt(item.price)} <small>${t('currency')}</small></span>
+      <div class="menu-card-body">
+        <span class="menu-card-name-ar">${item.name_ar}</span>
+        <span class="menu-card-name-en">${item.name_en}</span>
+      </div>
+      <div class="menu-card-footer">
+        <span class="menu-card-price">${fmt(item.price)} <small>${t('currency')}</small></span>
+        <span class="menu-card-add-icon">+</span>
+      </div>
     </button>
   `).join('');
 }
@@ -702,7 +707,10 @@ function updateTotals(order) {
   document.getElementById('subtotal').innerHTML = `${fmt(order ? order.subtotal : 0)} <small>${t('currency')}</small>`;
   document.getElementById('total-value').innerHTML = `${fmt(order ? order.total : 0)} <small>${t('currency')}</small>`;
   const discInput = document.getElementById('discount-input');
-  if (document.activeElement !== discInput) discInput.value = order ? order.discount : 0;
+  if (document.activeElement !== discInput) {
+    const disc = order ? order.discount : 0;
+    discInput.value = disc > 0 ? disc : '';
+  }
 }
 
 function renderTables() {
