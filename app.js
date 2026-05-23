@@ -108,7 +108,7 @@ function injectDynamicUI() {
 
     <!-- ═══ CATEGORY FORM MODAL ═══ -->
     <div class="modal-overlay" id="category-form-modal" hidden>
-      <div class="modal" style="max-width: 480px; border-radius: 16px 16px 0 0; position:absolute; bottom:0; left:50%; transform:translateX(-50%); width:100%; box-shadow:0 -4px 20px rgba(0,0,0,0.1);">
+      <div class="modal" style="max-width: 480px; border-radius: 20px; width:92%; box-shadow:0 20px 60px rgba(0,0,0,0.18);">
         <div style="width:40px; height:4px; background:var(--border); border-radius:2px; margin:12px auto;"></div>
         <div class="modal-header" style="padding:0 24px 16px; border-bottom:1px solid var(--border);">
           <h2 style="font-size: 20px; font-weight: 700;">إضافة قسم / Add Category</h2>
@@ -133,7 +133,7 @@ function injectDynamicUI() {
 
     <!-- ═══ ITEM FORM MODAL ═══ -->
     <div class="modal-overlay" id="item-form-modal" hidden>
-      <div class="modal" style="max-width: 520px; border-radius: 16px 16px 0 0; position:absolute; bottom:0; left:50%; transform:translateX(-50%); width:100%; box-shadow:0 -4px 20px rgba(0,0,0,0.1);">
+      <div class="modal" style="max-width: 500px; border-radius: 20px; width:92%; box-shadow:0 20px 60px rgba(0,0,0,0.18);">
         <div style="width:40px; height:4px; background:var(--border); border-radius:2px; margin:12px auto;"></div>
         <div class="modal-header" style="padding:0 24px 16px; border-bottom:1px solid var(--border);">
           <h2 id="item-form-title" style="font-size: 20px; font-weight: 700;">إضافة منتج / Add Item</h2>
@@ -1332,12 +1332,29 @@ async function refreshCashierMenu() {
 async function loadTablesMgmt() {
   const tables = await dbOp('tables', 'getAll');
   document.getElementById('mgmt-tables-grid').innerHTML = tables.map(t => `
-    <div style="background:var(--surface); border:1px solid var(--border); padding:16px; border-radius:8px; display:flex; justify-content:space-between;">
-      <span>${t.name}</span>
-      <button style="color:var(--error); background:none; border:none; cursor:pointer;" onclick="window.delTable(${t.id})">حذف</button>
+    <div style="background:var(--surface); border:1px solid var(--border); padding:16px; border-radius:10px; display:flex; justify-content:space-between; align-items:center;">
+      <span style="font-weight:600;">${t.name}</span>
+      <button style="color:var(--error); background:#FEF2F2; border:1px solid rgba(220,38,38,0.2); border-radius:8px; padding:6px 14px; cursor:pointer; font-size:13px; font-weight:600;" onclick="window.delTable(${t.id})">حذف</button>
     </div>
   `).join('');
 }
+
+window.delTable = async (id) => {
+  const ok = await showConfirmModal('cm-del-table', 'cm-del-table-ok', 'cm-del-table-cancel');
+  if (!ok) return;
+  try {
+    await dbOp('tables', 'delete', id);
+    const idx = state.tables.findIndex(t => t.id == id);
+    if (idx !== -1) state.tables.splice(idx, 1);
+    if (state.currentTable == id) {
+      state.currentTable = null;
+      renderOrder();
+    }
+    loadTablesMgmt();
+    renderTables();
+    showToast('تم حذف الطاولة');
+  } catch (e) { console.error(e); showToast('حدث خطأ', true); }
+};
 
 async function loadExpensesMgmt() {
   const cats = await dbOp('expense_categories', 'getAll');

@@ -11,10 +11,10 @@
   --primary-hover: #3B1680;
   --primary-light: #F3EEFF;
   --primary-glow: rgba(74,29,150,0.15);
-  --bg: #FFFFFF;
-  --sidebar-bg: #FAFAFA;
+  --bg: #F4F2F8;
+  --sidebar-bg: #FFFFFF;
   --surface: #FFFFFF;
-  --border: #EDEDF0;
+  --border: #E4E1EC;
   --text-primary: #0D0D12;
   --text-secondary: #6B7280;
   --text-on-accent: #FFFFFF;
@@ -113,6 +113,7 @@ input:focus { outline: 2px solid var(--primary); outline-offset: -1px; }
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
   direction: ltr;
+  box-shadow: 0 1px 8px rgba(74,29,150,0.06);
 }
 
 /* ─── Top Bar Buttons ─── */
@@ -189,7 +190,7 @@ input:focus { outline: 2px solid var(--primary); outline-offset: -1px; }
   flex-direction: column;
   flex-shrink: 0;
   overflow: hidden;
-  /* يبدأ مباشرة بعد الهيدر بدون padding فوقي زيادة */
+  box-shadow: -4px 0 20px rgba(74,29,150,0.06);
 }
 
 .order-header {
@@ -453,6 +454,8 @@ input:focus { outline: 2px solid var(--primary); outline-offset: -1px; }
   overflow: hidden;
   padding: 0;
   background: var(--bg);
+  background-image: radial-gradient(circle at 20% 50%, rgba(74,29,150,0.03) 0%, transparent 60%),
+                    radial-gradient(circle at 80% 20%, rgba(124,58,237,0.03) 0%, transparent 50%);
 }
 
 /* ─── Category Tabs ─── */
@@ -465,6 +468,8 @@ input:focus { outline: 2px solid var(--primary); outline-offset: -1px; }
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   direction: ltr;
+  background: rgba(255,255,255,0.7);
+  border-bottom: 1px solid var(--border);
 }
 .category-tabs::-webkit-scrollbar { display: none; }
 
@@ -505,7 +510,7 @@ input:focus { outline: 2px solid var(--primary); outline-offset: -1px; }
   gap: 12px;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 0 20px 20px;
+  padding: 16px 20px 20px;
   flex: 1;
   align-content: flex-start;
   -webkit-overflow-scrolling: touch;
@@ -554,6 +559,8 @@ input:focus { outline: 2px solid var(--primary); outline-offset: -1px; }
   gap: 3px;
   padding: 12px 13px 8px;
   flex: 1;
+  direction: rtl;
+  text-align: center;
 }
 
 .menu-card-name-ar {
@@ -1038,4 +1045,23 @@ input:focus { outline: 2px solid var(--primary); outline-offset: -1px; }
 @keyframes slideUp {
   from { transform: translateX(-50%) translateY(100%); opacity: 0; }
   to   { transform: translateX(-50%) translateY(0);    opacity: 1; }
+}
+
+/* ═══════════════════════════════════════════════════
+   ITEM / CATEGORY FORM MODAL — CENTER STYLE
+   ═══════════════════════════════════════════════════ */
+#item-form-modal .modal,
+#category-form-modal .modal {
+  border-radius: 20px !important;
+  position: relative !important;
+  bottom: auto !important;
+  left: auto !important;
+  transform: none !important;
+  width: 92% !important;
+  max-width: 500px !important;
+  animation: modalSpring 250ms cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+@keyframes modalSpring {
+  from { opacity: 0; transform: scale(0.88) translateY(20px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
 }
