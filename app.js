@@ -190,148 +190,281 @@ function injectDynamicUI() {
     </div>
 
     <!-- ═══ OWNER DASHBOARD ═══ -->
-    <div id="owner-dashboard" style="position:fixed; inset:0; background:var(--bg); z-index:200; display:none;">
-      <div style="width:240px; background:var(--primary); color:white; display:flex; flex-direction:column; flex-shrink:0;">
-        <div style="height:var(--top-bar-h); display:flex; align-items:center; padding:0 20px; font-size:20px; font-weight:700; border-bottom:1px solid rgba(255,255,255,0.1);">Owner Dashboard</div>
-        <nav id="dashboard-nav" style="flex:1; padding:20px 0; overflow-y:auto; display:flex; flex-direction:column;">
-          <button class="dash-nav-item active" data-tab="reports"><span>📊</span> التقارير / Reports</button>
-          <button class="dash-nav-item" data-tab="menu"><span>🍽</span> المنيو / Menu</button>
-          <button class="dash-nav-item" data-tab="tables"><span>🪑</span> الطاولات / Tables</button>
-          <button class="dash-nav-item" data-tab="expenses"><span>💸</span> المصروفات / Expenses</button>
-          <button class="dash-nav-item" data-tab="customers"><span>👥</span> العملاء / Customers</button>
-          <button class="dash-nav-item" data-tab="settings"><span>⚙️</span> الإعدادات / Settings</button>
+    <div id="owner-dashboard" class="dash-root">
+      <!-- SIDEBAR -->
+      <aside class="dash-sidebar">
+        <div class="dash-brand">
+          <div class="dash-brand-logo">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z"/><path d="m3 9 2.45-4.9A2 2 0 0 1 7.24 3h9.52a2 2 0 0 1 1.8 1.1L21 9"/><path d="M12 3v6"/></svg>
+          </div>
+          <div>
+            <div class="dash-brand-name">MENUX</div>
+            <div class="dash-brand-sub">لوحة الإدارة</div>
+          </div>
+        </div>
+        <nav id="dashboard-nav" class="dash-nav">
+          <button class="dash-nav-item active" data-tab="reports">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="6" height="18" rx="1"/><rect x="9" y="8" width="6" height="13" rx="1"/><rect x="16" y="13" width="6" height="8" rx="1"/></svg>
+            <span>التقارير</span>
+          </button>
+          <button class="dash-nav-item" data-tab="menu">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>
+            <span>المنيو</span>
+          </button>
+          <button class="dash-nav-item" data-tab="tables">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+            <span>الطاولات</span>
+          </button>
+          <button class="dash-nav-item" data-tab="expenses">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 10h20"/><path d="M6 14h.01"/><path d="M10 14h4"/></svg>
+            <span>المصروفات</span>
+          </button>
+          <button class="dash-nav-item" data-tab="customers">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span>العملاء</span>
+          </button>
+          <button class="dash-nav-item" data-tab="settings">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+            <span>الإعدادات</span>
+          </button>
         </nav>
-        <button id="btn-exit-dashboard" style="padding:16px 20px; border-top:1px solid rgba(255,255,255,0.1); background:none; color:white; font-size:16px; text-align:start; cursor:pointer;"><span>←</span> خروج / Exit</button>
-      </div>
-      <div style="flex:1; background:var(--sidebar-bg); overflow-y:auto; padding:32px;">
-        
-        <!-- REPORTS TAB -->
+        <button id="btn-exit-dashboard" class="dash-exit-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <span>خروج</span>
+        </button>
+      </aside>
+
+      <!-- MAIN AREA -->
+      <main class="dash-main">
+
+        <!-- ══ REPORTS TAB ══ -->
         <div class="dash-tab-pane active" id="tab-reports">
-          <div style="display:flex; justify-content:space-between; margin-bottom:24px; align-items:center;">
-            <h2 style="font-size:28px; font-weight:700;">التقارير / Reports</h2>
-            <div style="display:flex; background:var(--border); border-radius:8px; padding:4px;">
-              <button id="rep-today" class="toggle-btn active" style="padding:8px 20px; border-radius:6px; background:var(--bg); color:var(--primary); box-shadow:var(--shadow-sm); border:none; cursor:pointer; font-weight:600;">اليوم / Today</button>
-              <button id="rep-month" class="toggle-btn" style="padding:8px 20px; border-radius:6px; background:none; border:none; cursor:pointer; font-weight:600; color:var(--text-secondary);">الشهر / Month</button>
+          <!-- Header row -->
+          <div class="dash-page-header">
+            <div>
+              <h1 class="dash-page-title">التقارير</h1>
+              <p class="dash-page-sub" id="rep-date-label">اليوم</p>
+            </div>
+            <div class="dash-header-actions">
+              <!-- Date picker -->
+              <input type="date" id="rep-date-picker" class="dash-date-input" title="اختر يوماً">
+              <div class="dash-toggle-group">
+                <button id="rep-today" class="dash-toggle-btn active">اليوم</button>
+                <button id="rep-month" class="dash-toggle-btn">الشهر</button>
+              </div>
             </div>
           </div>
-          <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:20px;">
-            <div style="grid-column:1 / -1; background:var(--primary); color:white; padding:24px; border-radius:10px; box-shadow:var(--shadow-sm);">
-              <h3 style="font-size:14px; font-weight:500; margin-bottom:8px; color:rgba(255,255,255,0.8);">المتوقع في الخزنة / Expected Cash on Hand</h3>
-              <div id="rep-cash-on-hand" style="font-size:40px; font-weight:700;">0.00</div>
+
+          <!-- KPI Cards Row 1: الإيراد -->
+          <div class="kpi-grid">
+            <!-- Cash on Hand — Hero card -->
+            <div class="kpi-card kpi-hero" id="kpi-hero-card" style="cursor:pointer;" title="اضغط لرؤية التاريخ اليومي">
+              <div class="kpi-icon-wrap kpi-icon-white">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
+              </div>
+              <div class="kpi-label">المتوقع في الخزنة</div>
+              <div class="kpi-value" id="rep-cash-on-hand">0.00</div>
+              <div class="kpi-hint">اضغط لعرض الإيراد اليومي ▾</div>
             </div>
-            <div style="background:var(--surface); padding:24px; border-radius:10px; box-shadow:var(--shadow-sm);">
-              <h3 style="font-size:14px; color:var(--text-secondary); margin-bottom:8px;">الإيراد / Revenue</h3>
-              <div id="rep-revenue" style="font-size:28px; font-weight:700;">0.00</div>
+
+            <!-- إيراد كاش -->
+            <div class="kpi-card">
+              <div class="kpi-icon-wrap" style="background:#E8F5E9;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/></svg>
+              </div>
+              <div class="kpi-label">إيراد نقدي</div>
+              <div class="kpi-value kpi-green" id="rep-cash">0.00</div>
             </div>
-            <div style="background:var(--surface); padding:24px; border-radius:10px; box-shadow:var(--shadow-sm);">
-              <h3 style="font-size:14px; color:var(--text-secondary); margin-bottom:8px;">المصروفات / Expenses</h3>
-              <div id="rep-expenses" style="font-size:28px; font-weight:700;">0.00</div>
+
+            <!-- إيراد محفظة -->
+            <div class="kpi-card">
+              <div class="kpi-icon-wrap" style="background:#E3F2FD;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1565C0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 10H18a2 2 0 0 0 0 4h4"/></svg>
+              </div>
+              <div class="kpi-label">محفظة</div>
+              <div class="kpi-value kpi-blue" id="rep-wallet">0.00</div>
             </div>
-            <div style="background:var(--surface); padding:24px; border-radius:10px; box-shadow:var(--shadow-sm);">
-              <h3 style="font-size:14px; color:var(--text-secondary); margin-bottom:8px;">صافي الدخل / Net Income</h3>
-              <div id="rep-net" style="font-size:28px; font-weight:700;">0.00</div>
+
+            <!-- آجل مدفوع -->
+            <div class="kpi-card">
+              <div class="kpi-icon-wrap" style="background:#FFF3E0;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E65100" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z"/></svg>
+              </div>
+              <div class="kpi-label">آجل مدفوع</div>
+              <div class="kpi-value kpi-orange" id="rep-credit-paid">0.00</div>
             </div>
-            <div style="background:var(--surface); padding:24px; border-radius:10px; box-shadow:var(--shadow-sm);">
-              <h3 style="font-size:14px; color:var(--text-secondary); margin-bottom:8px;">أكثر منتج / Top Item</h3>
-              <div id="rep-top-item" style="font-size:20px; font-weight:700;">-</div>
+
+            <!-- إجمالي الإيراد -->
+            <div class="kpi-card kpi-accent">
+              <div class="kpi-icon-wrap kpi-icon-white">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+              </div>
+              <div class="kpi-label">إجمالي الإيراد</div>
+              <div class="kpi-value" id="rep-revenue">0.00</div>
+            </div>
+
+            <!-- صافي الدخل -->
+            <div class="kpi-card kpi-success">
+              <div class="kpi-icon-wrap" style="background:rgba(255,255,255,0.2);">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-5"/></svg>
+              </div>
+              <div class="kpi-label">صافي الدخل</div>
+              <div class="kpi-value" id="rep-net">0.00</div>
+            </div>
+
+            <!-- أكثر منتج مبيعاً -->
+            <div class="kpi-card">
+              <div class="kpi-icon-wrap" style="background:#F3E5F5;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7B1FA2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              </div>
+              <div class="kpi-label">أكثر منتج مبيعاً</div>
+              <div class="kpi-value kpi-purple kpi-sm" id="rep-top-item">—</div>
             </div>
           </div>
-          <h3 style="font-size:20px; font-weight:700; margin:24px 0 16px;">تقرير الآجل / Credit Report</h3>
-          <table style="width:100%; border-collapse:collapse; background:var(--surface); border-radius:10px; overflow:hidden; box-shadow:var(--shadow-sm);">
-            <thead style="background:var(--sidebar-bg); text-align:start;">
-              <tr><th style="padding:16px; border-bottom:1px solid var(--border);">العميل / Customer</th><th style="padding:16px; border-bottom:1px solid var(--border);">المنتجات / Items</th><th style="padding:16px; border-bottom:1px solid var(--border);">الإجمالي / Total</th><th style="padding:16px; border-bottom:1px solid var(--border);">إجراء / Action</th></tr>
-            </thead>
-            <tbody id="credit-report-table"></tbody>
-          </table>
+
+          <!-- Row 2: المصروفات -->
+          <div class="dash-section-title">المصروفات</div>
+          <div class="kpi-grid kpi-grid-3">
+            <div class="kpi-card kpi-danger">
+              <div class="kpi-icon-wrap" style="background:rgba(255,255,255,0.2);">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
+              </div>
+              <div class="kpi-label">مصروفات أساسية</div>
+              <div class="kpi-value" id="rep-exp-primary">0.00</div>
+            </div>
+            <div class="kpi-card" style="border-color:rgba(245,158,11,0.3);">
+              <div class="kpi-icon-wrap" style="background:#FFF8E1;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/></svg>
+              </div>
+              <div class="kpi-label">مصروفات خامات</div>
+              <div class="kpi-value kpi-orange" id="rep-exp-raw">0.00</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-icon-wrap" style="background:#F5F5F5;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9E9E9E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              </div>
+              <div class="kpi-label">مصروفات ثانوية</div>
+              <div class="kpi-value" id="rep-exp-secondary">0.00</div>
+            </div>
+          </div>
+
+          <!-- Row 3: بضاعة الآجل -->
+          <div class="dash-section-title">بضاعة الآجل (غير مدفوعة)</div>
+          <div class="credit-summary-bar" id="credit-summary-bar">
+            <div class="credit-summary-empty">لا توجد مبالغ آجلة</div>
+          </div>
         </div>
 
-        <!-- MENU TAB -->
+        <!-- ══ MENU TAB ══ -->
         <div class="dash-tab-pane" id="tab-menu" style="display:none; height:100%;">
-          <div style="display:flex; gap:32px; height:100%;">
-            <!-- Left Panel (35%) -->
-            <div style="flex: 0 0 35%; display:flex; flex-direction:column;">
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-                <h3 style="font-size:24px; font-weight:700; color:var(--primary);">الأقسام / Categories</h3>
-                <button id="btn-add-category" style="height:36px; padding:0 16px; background:var(--primary); color:white; border:none; border-radius:8px; cursor:pointer; font-weight:600;">+ إضافة قسم</button>
+          <div style="display:flex; gap:28px; height:100%;">
+            <div style="flex:0 0 38%; display:flex; flex-direction:column;">
+              <div class="dash-page-header" style="margin-bottom:16px;">
+                <h2 class="dash-page-title" style="font-size:20px;">الأقسام</h2>
+                <button id="btn-add-category" class="dash-btn-primary">+ قسم جديد</button>
               </div>
-              <div id="mgmt-categories-list" style="display:flex; flex-direction:column; gap:8px; overflow-y:auto; flex:1; padding-right:8px;"></div>
+              <div id="mgmt-categories-list" style="display:flex; flex-direction:column; gap:8px; overflow-y:auto; flex:1;"></div>
             </div>
-            
-            <!-- Right Panel (65%) -->
-            <div style="flex: 0 0 65%; display:flex; flex-direction:column; position:relative; border-right:1px solid var(--border); padding-right:32px;">
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-                <h3 id="mgmt-items-title" style="font-size:24px; font-weight:700; color:var(--primary);">المنتجات / Items</h3>
+            <div style="flex:1; display:flex; flex-direction:column; position:relative; border-right:1px solid var(--border); padding-right:28px;">
+              <div class="dash-page-header" style="margin-bottom:16px;">
+                <h2 id="mgmt-items-title" class="dash-page-title" style="font-size:20px;">المنتجات</h2>
               </div>
-              <div id="mgmt-items-list" style="display:flex; flex-direction:column; gap:12px; overflow-y:auto; padding-bottom:80px; flex:1;"></div>
-              <button id="btn-add-item" style="position:absolute; bottom:0; right:32px; width:52px; height:52px; border-radius:50%; background:var(--primary); color:white; font-size:32px; border:none; cursor:pointer; box-shadow:var(--shadow-md); display:flex; align-items:center; justify-content:center;">+</button>
+              <div id="mgmt-items-list" style="display:flex; flex-direction:column; gap:10px; overflow-y:auto; padding-bottom:80px; flex:1;"></div>
+              <button id="btn-add-item" class="dash-fab">+</button>
             </div>
           </div>
         </div>
 
-        <!-- TABLES TAB -->
+        <!-- ══ TABLES TAB ══ -->
         <div class="dash-tab-pane" id="tab-tables" style="display:none;">
-          <div style="display:flex; justify-content:space-between; margin-bottom:24px;">
-            <h2 style="font-size:28px; font-weight:700;">الطاولات / Tables</h2>
-            <button id="btn-add-table" style="padding:0 24px; background:var(--primary); color:white; border:none; border-radius:8px; cursor:pointer;">+ إضافة طاولة</button>
+          <div class="dash-page-header">
+            <h1 class="dash-page-title">الطاولات</h1>
+            <button id="btn-add-table" class="dash-btn-primary">+ إضافة طاولة</button>
           </div>
           <div id="mgmt-tables-grid" class="tables-grid"></div>
         </div>
 
-        <!-- EXPENSES TAB -->
+        <!-- ══ EXPENSES TAB ══ -->
         <div class="dash-tab-pane" id="tab-expenses" style="display:none;">
-          <div style="display:flex; justify-content:space-between; margin-bottom:24px;">
-            <h2 style="font-size:28px; font-weight:700;">تصنيفات المصروفات / Expense Categories</h2>
-            <button id="btn-add-exp-cat" style="padding:0 24px; background:var(--primary); color:white; border:none; border-radius:8px; cursor:pointer;">+ إضافة صنف</button>
+          <div class="dash-page-header">
+            <h1 class="dash-page-title">تصنيفات المصروفات</h1>
+            <button id="btn-add-exp-cat" class="dash-btn-primary">+ إضافة صنف</button>
           </div>
-          <div id="mgmt-exp-cats-list" style="max-width:448px; display:flex; flex-direction:column; gap:8px;"></div>
+          <div class="dash-exp-hint">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            حدد نوع كل صنف (أساسي / خامات / ثانوي) لتصنيفه في التقارير
+          </div>
+          <div id="mgmt-exp-cats-list" style="max-width:520px; display:flex; flex-direction:column; gap:8px;"></div>
         </div>
 
-        <!-- CUSTOMERS TAB -->
+        <!-- ══ CUSTOMERS TAB ══ -->
         <div class="dash-tab-pane" id="tab-customers" style="display:none;">
-          <div style="display:flex; justify-content:space-between; margin-bottom:24px;">
-            <h2 style="font-size:28px; font-weight:700;">العملاء / Customers</h2>
-            <button id="btn-add-customer" style="padding:0 24px; background:var(--primary); color:white; border:none; border-radius:8px; cursor:pointer;">+ إضافة عميل</button>
+          <div class="dash-page-header">
+            <h1 class="dash-page-title">العملاء</h1>
+            <button id="btn-add-customer" class="dash-btn-primary">+ إضافة عميل</button>
           </div>
-          <div id="mgmt-customers-list" style="max-width:512px; display:flex; flex-direction:column; gap:8px;"></div>
+          <div id="mgmt-customers-list" style="max-width:700px; display:flex; flex-direction:column; gap:10px;"></div>
         </div>
 
-        <!-- SETTINGS TAB -->
+        <!-- ══ SETTINGS TAB ══ -->
         <div class="dash-tab-pane" id="tab-settings" style="display:none;">
-          <div style="display:flex; justify-content:space-between; margin-bottom:24px;">
-            <h2 style="font-size:28px; font-weight:700;">الإعدادات / Settings</h2>
-            <button id="btn-save-settings" style="padding:0 24px; background:var(--primary); color:white; border:none; border-radius:8px; cursor:pointer;">حفظ / Save</button>
+          <div class="dash-page-header">
+            <h1 class="dash-page-title">الإعدادات</h1>
+            <button id="btn-save-settings" class="dash-btn-primary">حفظ</button>
           </div>
-          <div style="max-width:512px;">
-            <div style="margin-bottom:16px;">
-              <label style="display:block; margin-bottom:6px; color:var(--text-secondary);">اسم المكان / Business name</label>
-              <input type="text" id="set-bname" style="width:100%; height:44px; border:1px solid var(--border); border-radius:8px; padding:0 12px;">
+          <div class="dash-settings-form">
+            <div class="dash-field">
+              <label>اسم المكان</label>
+              <input type="text" id="set-bname">
             </div>
-            <div style="margin-bottom:16px;">
-              <label style="display:block; margin-bottom:6px; color:var(--text-secondary);">رأس الفاتورة / Receipt header</label>
-              <input type="text" id="set-rheader" style="width:100%; height:44px; border:1px solid var(--border); border-radius:8px; padding:0 12px;">
+            <div class="dash-field">
+              <label>رأس الفاتورة</label>
+              <input type="text" id="set-rheader">
             </div>
-            <div style="margin-bottom:16px;">
-              <label style="display:block; margin-bottom:6px; color:var(--text-secondary);">ذيل الفاتورة / Receipt footer</label>
-              <input type="text" id="set-rfooter" style="width:100%; height:44px; border:1px solid var(--border); border-radius:8px; padding:0 12px;">
+            <div class="dash-field">
+              <label>ذيل الفاتورة</label>
+              <input type="text" id="set-rfooter">
             </div>
-            <div style="margin-bottom:16px;">
-              <label style="display:block; margin-bottom:6px; color:var(--text-secondary);">اللغة / Language</label>
-              <select id="set-lang" style="width:100%; height:44px; border:1px solid var(--border); border-radius:8px; padding:0 12px;">
+            <div class="dash-field">
+              <label>اللغة</label>
+              <select id="set-lang">
                 <option value="ar">العربية</option>
                 <option value="en">English</option>
               </select>
             </div>
-            <div style="margin-bottom:16px;">
-              <label style="display:block; margin-bottom:6px; color:var(--text-secondary);">الطابعة / Printer</label>
-              <select id="set-printer" style="width:100%; height:44px; border:1px solid var(--border); border-radius:8px; padding:0 12px;">
+            <div class="dash-field">
+              <label>الطابعة</label>
+              <select id="set-printer">
                 <option value="bluetooth">Bluetooth</option>
                 <option value="usb">USB</option>
               </select>
             </div>
-            <button id="btn-change-pin" style="width:100%; height:44px; margin-top:16px; background:transparent; border:1px solid var(--primary); color:var(--primary); border-radius:8px; cursor:pointer;">تغيير الرقم السري / Change PIN</button>
+            <button id="btn-change-pin" class="dash-btn-outline">🔒 تغيير الرقم السري</button>
           </div>
         </div>
 
+      </main>
+    </div>
+
+    <!-- ═══ DAILY REVENUE POPUP ═══ -->
+    <div class="cmodal-overlay" id="cm-daily-revenue">
+      <div class="cmodal-box" style="max-width:480px; width:95%;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <div class="cmodal-title" style="margin:0;">الإيراد اليومي</div>
+          <button id="cm-daily-close" style="background:none; border:none; cursor:pointer; color:#6B7280; font-size:20px;">✕</button>
+        </div>
+        <div id="daily-revenue-list" style="max-height:400px; overflow-y:auto;"></div>
+      </div>
+    </div>
+
+    <!-- ═══ CREDIT DETAIL POPUP (in customers tab) ═══ -->
+    <div class="cmodal-overlay" id="cm-credit-detail">
+      <div class="cmodal-box" style="max-width:500px; width:95%;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <div class="cmodal-title" style="margin:0;" id="cm-credit-detail-title">تفاصيل الآجل</div>
+          <button id="cm-credit-detail-close" style="background:none; border:none; cursor:pointer; color:#6B7280; font-size:20px;">✕</button>
+        </div>
+        <div id="credit-detail-list" style="max-height:440px; overflow-y:auto;"></div>
       </div>
     </div>
   `;
@@ -340,18 +473,120 @@ function injectDynamicUI() {
   // Add styles for dynamic elements
   const style = document.createElement('style');
   style.innerHTML = `
-    .dash-nav-item { padding: 16px 20px; background: none; border: none; color: rgba(255,255,255,0.8); width: 100%; text-align: start; cursor: pointer; font-size: 16px; transition: all 0.2s; }
-    .dash-nav-item span { margin-inline-end: 12px; font-size: 20px; }
-    .dash-nav-item:hover { background: rgba(255,255,255,0.05); color: white; }
-    .dash-nav-item.active { background: white; color: var(--primary); border-inline-start: 4px solid var(--primary-hover); }
-    .mgmt-row { background: var(--surface); border: 1px solid var(--border); padding: 16px; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
-    .mgmt-row.active { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
-    .pin-btn { height: 64px; border-radius: 12px; background: var(--sidebar-bg); border: none; font-size: 24px; font-weight: 600; color: var(--text-primary); cursor: pointer; transition: transform 0.1s; }
+    /* ─── Dashboard Shell ─── */
+    .dash-root { position:fixed; inset:0; background:var(--bg); z-index:200; display:none; flex-direction:row-reverse; }
+    .dash-sidebar { width:220px; flex-shrink:0; background:var(--primary); display:flex; flex-direction:column; overflow:hidden; }
+    .dash-brand { display:flex; align-items:center; gap:12px; padding:20px 16px; border-bottom:1px solid rgba(255,255,255,0.1); }
+    .dash-brand-logo { width:36px; height:36px; background:rgba(255,255,255,0.15); border-radius:10px; display:flex; align-items:center; justify-content:center; color:white; flex-shrink:0; }
+    .dash-brand-name { font-size:16px; font-weight:800; color:white; letter-spacing:0.5px; }
+    .dash-brand-sub { font-size:11px; color:rgba(255,255,255,0.55); margin-top:1px; }
+    .dash-nav { flex:1; padding:12px 0; overflow-y:auto; display:flex; flex-direction:column; gap:2px; }
+    .dash-nav-item { display:flex; align-items:center; gap:10px; padding:11px 16px; background:none; border:none; color:rgba(255,255,255,0.65); width:100%; text-align:start; cursor:pointer; font-size:13px; font-weight:500; border-radius:0; transition:all 0.15s; font-family:'Cairo',sans-serif; }
+    .dash-nav-item svg { flex-shrink:0; opacity:0.7; }
+    .dash-nav-item:hover { background:rgba(255,255,255,0.08); color:white; }
+    .dash-nav-item:hover svg { opacity:1; }
+    .dash-nav-item.active { background:rgba(255,255,255,0.14); color:white; font-weight:700; border-inline-end:3px solid rgba(255,255,255,0.9); }
+    .dash-nav-item.active svg { opacity:1; }
+    .dash-exit-btn { display:flex; align-items:center; gap:10px; padding:14px 16px; border-top:1px solid rgba(255,255,255,0.1); background:none; color:rgba(255,255,255,0.6); font-size:13px; cursor:pointer; transition:all 0.15s; border-left:none; border-right:none; border-bottom:none; font-family:'Cairo',sans-serif; }
+    .dash-exit-btn:hover { color:white; background:rgba(255,255,255,0.06); }
+
+    /* ─── Main Content ─── */
+    .dash-main { flex:1; overflow-y:auto; padding:28px 32px; background:var(--bg); }
+    .dash-tab-pane { animation: dashFadeIn 0.2s ease; }
+    @keyframes dashFadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+
+    /* ─── Page Header ─── */
+    .dash-page-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; }
+    .dash-page-title { font-size:22px; font-weight:800; color:var(--text-primary); }
+    .dash-page-sub { font-size:13px; color:var(--text-secondary); margin-top:2px; }
+    .dash-header-actions { display:flex; align-items:center; gap:10px; }
+
+    /* ─── Toggle Buttons ─── */
+    .dash-toggle-group { display:flex; background:var(--border); border-radius:8px; padding:3px; }
+    .dash-toggle-btn { padding:7px 18px; border-radius:6px; background:none; border:none; cursor:pointer; font-weight:600; font-size:13px; color:var(--text-secondary); transition:all 0.15s; font-family:'Cairo',sans-serif; }
+    .dash-toggle-btn.active { background:var(--surface); color:var(--primary); box-shadow:var(--shadow-sm); }
+
+    /* ─── Date Input ─── */
+    .dash-date-input { height:36px; border:1.5px solid var(--border); border-radius:8px; padding:0 10px; font-size:13px; color:var(--text-primary); background:var(--surface); cursor:pointer; font-family:'Cairo',sans-serif; outline:none; }
+    .dash-date-input:focus { border-color:var(--primary); }
+
+    /* ─── KPI Cards ─── */
+    .kpi-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:20px; }
+    .kpi-grid-3 { grid-template-columns:repeat(3,1fr); }
+    .kpi-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:18px 20px; display:flex; flex-direction:column; gap:8px; transition:box-shadow 0.15s; }
+    .kpi-card:hover { box-shadow:var(--shadow-md); }
+    .kpi-hero { grid-column:1/-1; background:linear-gradient(135deg, var(--primary) 0%, #3B1680 100%); color:white; border:none; flex-direction:row; align-items:center; gap:20px; padding:22px 28px; }
+    .kpi-hero .kpi-label { color:rgba(255,255,255,0.75); flex:1; }
+    .kpi-hero .kpi-value { font-size:36px; font-weight:800; }
+    .kpi-hero .kpi-hint { font-size:11px; color:rgba(255,255,255,0.5); }
+    .kpi-accent { background:var(--primary); color:white; border:none; }
+    .kpi-accent .kpi-label { color:rgba(255,255,255,0.75); }
+    .kpi-accent .kpi-value { color:white; }
+    .kpi-success { background:linear-gradient(135deg,#16A34A,#15803d); color:white; border:none; }
+    .kpi-success .kpi-label { color:rgba(255,255,255,0.8); }
+    .kpi-success .kpi-value { color:white; }
+    .kpi-danger { background:linear-gradient(135deg,#DC2626,#b91c1c); color:white; border:none; }
+    .kpi-danger .kpi-label { color:rgba(255,255,255,0.8); }
+    .kpi-danger .kpi-value { color:white; }
+    .kpi-icon-wrap { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .kpi-icon-white { background:rgba(255,255,255,0.18); color:white; }
+    .kpi-label { font-size:12px; color:var(--text-secondary); font-weight:600; }
+    .kpi-value { font-size:24px; font-weight:800; color:var(--text-primary); line-height:1; }
+    .kpi-sm { font-size:16px; }
+    .kpi-green { color:#16A34A; }
+    .kpi-blue { color:#1565C0; }
+    .kpi-orange { color:#E65100; }
+    .kpi-purple { color:#7B1FA2; }
+
+    /* ─── Section Titles ─── */
+    .dash-section-title { font-size:14px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:12px; }
+
+    /* ─── Credit Summary Bar ─── */
+    .credit-summary-bar { display:flex; flex-direction:column; gap:8px; }
+    .credit-summary-row { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:14px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .credit-summary-name { font-weight:700; font-size:14px; }
+    .credit-summary-amt { font-weight:800; font-size:16px; color:var(--error); }
+    .credit-summary-empty { text-align:center; color:var(--text-secondary); padding:24px; font-size:14px; }
+
+    /* ─── Daily Revenue List ─── */
+    .daily-row { display:flex; justify-content:space-between; align-items:center; padding:12px 4px; border-bottom:1px solid var(--border); font-size:14px; }
+    .daily-row:last-child { border-bottom:none; }
+    .daily-date { color:var(--text-secondary); font-size:13px; }
+    .daily-amt { font-weight:700; color:var(--primary); }
+
+    /* ─── Buttons ─── */
+    .dash-btn-primary { height:38px; padding:0 18px; background:var(--primary); color:white; border:none; border-radius:9px; cursor:pointer; font-weight:700; font-size:13px; transition:all 0.15s; font-family:'Cairo',sans-serif; }
+    .dash-btn-primary:hover { background:var(--primary-hover); box-shadow:0 4px 12px rgba(74,29,150,0.25); }
+    .dash-btn-outline { width:100%; height:44px; margin-top:8px; background:transparent; border:1.5px solid var(--primary); color:var(--primary); border-radius:9px; cursor:pointer; font-weight:600; font-size:14px; font-family:'Cairo',sans-serif; }
+    .dash-fab { position:absolute; bottom:0; right:24px; width:50px; height:50px; border-radius:50%; background:var(--primary); color:white; font-size:28px; border:none; cursor:pointer; box-shadow:var(--shadow-md); display:flex; align-items:center; justify-content:center; }
+
+    /* ─── Settings Form ─── */
+    .dash-settings-form { max-width:480px; display:flex; flex-direction:column; gap:14px; }
+    .dash-field { display:flex; flex-direction:column; gap:6px; }
+    .dash-field label { font-size:13px; font-weight:600; color:var(--text-secondary); }
+    .dash-field input, .dash-field select { height:44px; border:1.5px solid var(--border); border-radius:9px; padding:0 12px; font-size:14px; font-family:'Cairo',sans-serif; outline:none; transition:border-color 0.15s; }
+    .dash-field input:focus, .dash-field select:focus { border-color:var(--primary); }
+
+    /* ─── Expense Type Badge ─── */
+    .dash-exp-hint { background:var(--primary-light); border:1px solid rgba(74,29,150,0.15); border-radius:8px; padding:10px 14px; font-size:12px; color:var(--primary); display:flex; align-items:center; gap:8px; margin-bottom:16px; }
+    .exp-type-select { height:34px; border:1.5px solid var(--border); border-radius:8px; padding:0 8px; font-size:12px; background:var(--bg); cursor:pointer; font-family:'Cairo',sans-serif; }
+
+    /* ─── Customers Credit Detail ─── */
+    .cust-credit-badge { background:#FEF2F2; color:var(--error); font-size:12px; font-weight:700; padding:3px 10px; border-radius:20px; }
+
+    /* ─── Mgmt Row ─── */
+    .mgmt-row { background: var(--surface); border: 1.5px solid var(--border); padding: 14px 16px; border-radius: 10px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition:all 0.15s; }
+    .mgmt-row:hover { border-color:rgba(74,29,150,0.2); box-shadow:var(--shadow-xs); }
+    .mgmt-row.active { border-color: var(--primary); background:var(--primary-light); }
+
+    /* ─── PIN ─── */
+    .pin-btn { height: 64px; border-radius: 12px; background: var(--sidebar-bg); border: 1.5px solid var(--border); font-size: 22px; font-weight: 600; color: var(--text-primary); cursor: pointer; transition: all 0.1s; font-family:'Sora',sans-serif; }
+    .pin-btn:hover { background:var(--primary-light); border-color:var(--primary); }
     .pin-btn:active { transform: scale(0.95); }
-    .pin-dot { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--primary); }
-    .pin-dot.filled { background: var(--primary); }
-    .shake { transform: translateX(5px); animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
-    @keyframes shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
+    .pin-dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--primary); display:inline-block; transition:all 0.15s; }
+    .pin-dot.filled { background: var(--primary); transform:scale(1.1); }
+    .shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+    @keyframes shake { 10%,90%{transform:translate3d(-1px,0,0)} 20%,80%{transform:translate3d(2px,0,0)} 30%,50%,70%{transform:translate3d(-4px,0,0)} 40%,60%{transform:translate3d(4px,0,0)} }
   `;
   document.head.appendChild(style);
 }
@@ -962,7 +1197,9 @@ function handlePinInput(val) {
 }
 
 function openDashboard() {
-  document.getElementById('owner-dashboard').style.display = 'flex';
+  const dash = document.getElementById('owner-dashboard');
+  dash.style.display = 'flex';
+  dash.style.flexDirection = 'row-reverse';
   loadDashboardTab('reports');
 }
 
@@ -1003,53 +1240,76 @@ async function loadDashboardTab(tab) {
   if (tab === 'settings') loadSettingsMgmt();
 }
 
-async function loadReports(type = 'today') {
-  document.querySelectorAll('.toggle-btn').forEach(b => {
-    b.classList.remove('active');
-    b.style.background = 'none';
-    b.style.color = 'var(--text-secondary)';
-    b.style.boxShadow = 'none';
-  });
-  const activeBtn = document.getElementById(`rep-${type}`);
-  activeBtn.classList.add('active');
-  activeBtn.style.background = 'var(--bg)';
-  activeBtn.style.color = 'var(--primary)';
-  activeBtn.style.boxShadow = 'var(--shadow-sm)';
+// ── current report state ──
+let _repType = 'today';
+let _repDate = null; // null = use today / month logic
 
-  const orders = await dbOp('orders', 'getAll');
-  const creditOrders = await dbOp('credit_orders', 'getAll');
-  const expenses = await dbOp('expenses', 'getAll');
-  const orderItems = await dbOp('order_items', 'getAll');
-  const customers = await dbOp('customers', 'getAll');
+async function loadReports(type) {
+  if (type) _repType = type;
+
+  // Toggle buttons
+  document.querySelectorAll('.dash-toggle-btn').forEach(b => b.classList.remove('active'));
+  const activeBtn = document.getElementById(`rep-${_repType}`);
+  if (activeBtn) activeBtn.classList.add('active');
+
+  const orders       = await dbOp('orders',           'getAll');
+  const creditOrders = await dbOp('credit_orders',    'getAll');
+  const expenses     = await dbOp('expenses',         'getAll');
+  const orderItems   = await dbOp('order_items',      'getAll');
+  const customers    = await dbOp('customers',        'getAll');
+  const expCats      = await dbOp('expense_categories','getAll');
 
   const todayStr = isoDate().split('T')[0];
-  const monthStr = todayStr.substring(0, 7); // YYYY-MM
+  const monthStr = todayStr.substring(0, 7);
+  // Date picker override
+  const pickerVal = document.getElementById('rep-date-picker')?.value;
+  const chosenDate = pickerVal || (_repType === 'today' ? todayStr : null);
 
   const matchDate = (dateStr) => {
     if (!dateStr) return false;
-    if (type === 'today') return dateStr.startsWith(todayStr);
+    if (chosenDate && _repType === 'today') return dateStr.startsWith(chosenDate);
+    if (_repType === 'today') return dateStr.startsWith(todayStr);
     return dateStr.startsWith(monthStr);
   };
 
-  let revenue = 0;
+  // Update sub-label
+  const lbl = document.getElementById('rep-date-label');
+  if (lbl) {
+    if (chosenDate && chosenDate !== todayStr) lbl.textContent = `بيانات ${chosenDate}`;
+    else if (_repType === 'today') lbl.textContent = `اليوم — ${todayStr}`;
+    else lbl.textContent = `الشهر — ${monthStr}`;
+  }
+
+  // ── Revenue breakdown ──
+  let cashRev = 0, walletRev = 0, creditPaidRev = 0;
   orders.forEach(o => {
-    if (o.status === 'paid' && ['cash', 'wallet'].includes(o.payment_method) && matchDate(o.paid_at)) revenue += o.total;
+    if (o.status === 'paid' && matchDate(o.paid_at)) {
+      if (o.payment_method === 'cash')   cashRev   += o.total;
+      if (o.payment_method === 'wallet') walletRev += o.total;
+    }
   });
   creditOrders.forEach(co => {
-    if (co.is_paid && matchDate(co.paid_at)) revenue += co.amount;
+    if (co.is_paid && matchDate(co.paid_at)) creditPaidRev += co.amount;
   });
+  const revenue = cashRev + walletRev + creditPaidRev;
 
-  let expTotal = 0;
+  // ── Expenses breakdown by type ──
+  let expPrimary = 0, expRaw = 0, expSecondary = 0;
   expenses.forEach(e => {
-    if (matchDate(e.created_at)) expTotal += e.amount;
+    if (!matchDate(e.created_at)) return;
+    const cat = expCats.find(c => c.id === e.category_id);
+    const ctype = cat?.type || 'secondary';
+    if (ctype === 'primary')   expPrimary   += e.amount;
+    else if (ctype === 'raw')  expRaw       += e.amount;
+    else                       expSecondary += e.amount;
   });
+  const expTotal = expPrimary + expRaw + expSecondary;
 
-  // Top item
+  // ── Top item ──
   const itemCounts = {};
   orders.forEach(o => {
     if (o.status === 'paid' && matchDate(o.paid_at)) {
-      const items = orderItems.filter(oi => oi.order_id === o.id);
-      items.forEach(oi => {
+      orderItems.filter(oi => oi.order_id === o.id).forEach(oi => {
         itemCounts[oi.item_id] = (itemCounts[oi.item_id] || 0) + oi.quantity;
       });
     }
@@ -1058,58 +1318,88 @@ async function loadReports(type = 'today') {
   for (const [id, qty] of Object.entries(itemCounts)) {
     if (qty > topQty) { topQty = qty; topItemId = id; }
   }
-  let topItemName = '-';
+  let topItemName = '—';
   if (topItemId) {
     const it = await dbOp('menu_items', 'get', Number(topItemId));
-    if (it) topItemName = `${state.lang === 'ar' ? it.name_ar : it.name_en} (${topQty})`;
+    if (it) topItemName = `${it.name_ar} (${topQty})`;
   }
 
-  // Expected Cash on Hand
+  // ── Cash on Hand (always month-based) ──
   let cashOnHand = 0;
   orders.forEach(o => {
-    if (o.status === 'paid' && ['cash', 'wallet'].includes(o.payment_method) && o.paid_at && o.paid_at.startsWith(monthStr)) cashOnHand += o.total;
+    if (o.status === 'paid' && ['cash','wallet'].includes(o.payment_method) && o.paid_at?.startsWith(monthStr)) cashOnHand += o.total;
   });
-  creditOrders.forEach(co => {
-    if (co.is_paid && co.paid_at && co.paid_at.startsWith(monthStr)) cashOnHand += co.amount;
-  });
-  expenses.forEach(e => {
-    if (e.created_at && e.created_at.startsWith(monthStr)) cashOnHand -= e.amount;
-  });
+  creditOrders.forEach(co => { if (co.is_paid && co.paid_at?.startsWith(monthStr)) cashOnHand += co.amount; });
+  expenses.forEach(e => { if (e.created_at?.startsWith(monthStr)) cashOnHand -= e.amount; });
 
-  document.getElementById('rep-revenue').textContent = fmt(revenue);
-  document.getElementById('rep-expenses').textContent = fmt(expTotal);
-  document.getElementById('rep-net').textContent = fmt(revenue - expTotal);
-  document.getElementById('rep-top-item').textContent = topItemName;
-  document.getElementById('rep-cash-on-hand').textContent = fmt(cashOnHand) + ' ' + t('currency');
+  // ── Update KPI cards ──
+  const cur = t('currency');
+  document.getElementById('rep-cash-on-hand').textContent  = `${fmt(cashOnHand)} ${cur}`;
+  document.getElementById('rep-cash').textContent          = `${fmt(cashRev)} ${cur}`;
+  document.getElementById('rep-wallet').textContent        = `${fmt(walletRev)} ${cur}`;
+  document.getElementById('rep-credit-paid').textContent   = `${fmt(creditPaidRev)} ${cur}`;
+  document.getElementById('rep-revenue').textContent       = `${fmt(revenue)} ${cur}`;
+  document.getElementById('rep-net').textContent           = `${fmt(revenue - expTotal)} ${cur}`;
+  document.getElementById('rep-top-item').textContent      = topItemName;
+  document.getElementById('rep-exp-primary').textContent   = `${fmt(expPrimary)} ${cur}`;
+  document.getElementById('rep-exp-raw').textContent       = `${fmt(expRaw)} ${cur}`;
+  document.getElementById('rep-exp-secondary').textContent = `${fmt(expSecondary)} ${cur}`;
 
-  // Credit Report Table
+  // ── Credit Summary (unpaid) ──
   const unpaid = creditOrders.filter(co => !co.is_paid);
   const grouped = {};
   unpaid.forEach(co => {
-    if (!grouped[co.customer_id]) grouped[co.customer_id] = { id: co.customer_id, orders: [] };
-    grouped[co.customer_id].orders.push(co);
+    if (!grouped[co.customer_id]) grouped[co.customer_id] = { id: co.customer_id, total: 0 };
+    grouped[co.customer_id].total += co.amount;
   });
-
-  const tbody = document.getElementById('credit-report-table');
+  const bar = document.getElementById('credit-summary-bar');
   if (Object.keys(grouped).length > 0) {
-    tbody.innerHTML = Object.values(grouped).map(g => {
+    bar.innerHTML = Object.values(grouped).map(g => {
       const c = customers.find(x => x.id === g.id);
-      const cName = c ? c.name : 'Unknown';
-      return `
-        <tr><td colspan="4" style="background:var(--sidebar-bg);font-weight:700;padding:16px;">${cName}</td></tr>
-        ${g.orders.map(o => `
-          <tr>
-            <td style="padding:16px; border-bottom:1px solid var(--border);"></td>
-            <td style="padding:16px; border-bottom:1px solid var(--border);">${o.items_summary}</td>
-            <td style="padding:16px; border-bottom:1px solid var(--border);">${fmt(o.amount)}</td>
-            <td style="padding:16px; border-bottom:1px solid var(--border);"><button class="btn-outline" onclick="window.payCreditOrder(${o.id}, ${g.id})">تم الدفع / Paid</button></td>
-          </tr>
-        `).join('')}
-      `;
+      return `<div class="credit-summary-row">
+        <span class="credit-summary-name">${c ? c.name : 'عميل'}</span>
+        <span class="credit-summary-amt">${fmt(g.total)} ${cur}</span>
+      </div>`;
     }).join('');
   } else {
-    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;padding:20px;">لا توجد حسابات آجلة / No credit orders</td></tr>`;
+    bar.innerHTML = `<div class="credit-summary-empty">✓ لا توجد مبالغ آجلة مستحقة</div>`;
   }
+}
+
+// ── Daily revenue popup ──
+async function showDailyRevenue() {
+  const orders       = await dbOp('orders',        'getAll');
+  const creditOrders = await dbOp('credit_orders', 'getAll');
+
+  // Group by date
+  const byDate = {};
+  orders.forEach(o => {
+    if (o.status !== 'paid' || !o.paid_at) return;
+    const d = o.paid_at.split('T')[0];
+    if (!byDate[d]) byDate[d] = 0;
+    byDate[d] += o.total;
+  });
+  creditOrders.forEach(co => {
+    if (!co.is_paid || !co.paid_at) return;
+    const d = co.paid_at.split('T')[0];
+    if (!byDate[d]) byDate[d] = 0;
+    byDate[d] += co.amount;
+  });
+
+  const sorted = Object.entries(byDate).sort((a,b) => b[0].localeCompare(a[0]));
+  const cur = t('currency');
+  const list = document.getElementById('daily-revenue-list');
+
+  if (sorted.length === 0) {
+    list.innerHTML = `<div style="text-align:center; padding:32px; color:var(--text-secondary);">لا توجد بيانات بعد</div>`;
+  } else {
+    list.innerHTML = sorted.map(([date, amt]) => `
+      <div class="daily-row">
+        <span class="daily-date">${date}</span>
+        <span class="daily-amt">${fmt(amt)} ${cur}</span>
+      </div>`).join('');
+  }
+  openModal('cm-daily-revenue');
 }
 
 window.payCreditOrder = async function (creditId, customerId) {
@@ -1125,9 +1415,9 @@ window.payCreditOrder = async function (creditId, customerId) {
       cust.total_credit = Math.max(0, (cust.total_credit || 0) - co.amount);
       await dbOp('customers', 'put', cust);
     }
-    const type = document.getElementById('rep-month').classList.contains('active') ? 'month' : 'today';
-    loadReports(type);
-    showToast('تم دفع الآجل / Credit Paid');
+    loadCustomersMgmt();
+    loadReports();
+    showToast('تم دفع الآجل ✓');
   } catch (e) { console.error(e); }
 }
 
@@ -1369,13 +1659,27 @@ window.delTable = async (id) => {
 
 async function loadExpensesMgmt() {
   const cats = await dbOp('expense_categories', 'getAll');
-  document.getElementById('mgmt-exp-cats-list').innerHTML = cats.map(c => `
-    <div class="mgmt-row">
-      <span>${c.name}</span>
-      <button style="color:var(--error); background:none; border:none; cursor:pointer;" onclick="window.delExpCat(${c.id})">حذف</button>
-    </div>
-  `).join('');
+  const typeLabel = { primary: 'أساسي', raw: 'خامات', secondary: 'ثانوي' };
+  const typeColor = { primary: '#DC2626', raw: '#F59E0B', secondary: '#6B7280' };
+  document.getElementById('mgmt-exp-cats-list').innerHTML = cats.length === 0
+    ? `<div style="text-align:center;padding:32px;color:var(--text-secondary);">لا توجد تصنيفات بعد</div>`
+    : cats.map(c => `
+    <div class="mgmt-row" style="gap:12px;">
+      <span style="font-weight:700; flex:1;">${c.name}</span>
+      <select class="exp-type-select" onchange="window.updateExpCatType(${c.id}, this.value)" style="color:${typeColor[c.type||'secondary']};">
+        <option value="primary" ${(c.type||'secondary')==='primary'?'selected':''}>أساسي</option>
+        <option value="raw"     ${(c.type||'secondary')==='raw'?'selected':''}>خامات</option>
+        <option value="secondary" ${(c.type||'secondary')==='secondary'?'selected':''}>ثانوي</option>
+      </select>
+      <button style="color:var(--error); background:none; border:none; cursor:pointer;" onclick="window.delExpCat(${c.id})">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6l-1 14H6L5 6m5 0V4h4v2"/></svg>
+      </button>
+    </div>`).join('');
 }
+window.updateExpCatType = async (id, type) => {
+  const cat = await dbOp('expense_categories', 'get', id);
+  if (cat) { cat.type = type; await dbOp('expense_categories', 'put', cat); }
+};
 window.delExpCat = async (id) => {
   const ok = await showConfirmModal('cm-del-table', 'cm-del-table-ok', 'cm-del-table-cancel');
   if (!ok) return;
@@ -1385,14 +1689,39 @@ window.delExpCat = async (id) => {
 };
 
 async function loadCustomersMgmt() {
-  const custs = await dbOp('customers', 'getAll');
-  document.getElementById('mgmt-customers-list').innerHTML = custs.map(c => `
-    <div class="mgmt-row">
-      <div><div style="font-weight:700">${c.name}</div>${c.total_credit > 0 ? `<div style="color:var(--primary);font-size:12px;">آجل: ${fmt(c.total_credit)}</div>` : ''}</div>
-      <button style="color:var(--error); background:none; border:none; cursor:pointer;" onclick="window.delCust(${c.id})">حذف</button>
-    </div>
-  `).join('');
+  const custs        = await dbOp('customers',     'getAll');
+  const creditOrders = await dbOp('credit_orders', 'getAll');
+  const cur = t('currency');
+
+  document.getElementById('mgmt-customers-list').innerHTML = custs.length === 0
+    ? `<div style="text-align:center;padding:32px;color:var(--text-secondary);">لا يوجد عملاء بعد</div>`
+    : custs.map(c => {
+      const unpaid = creditOrders.filter(co => co.customer_id === c.id && !co.is_paid);
+      const unpaidTotal = unpaid.reduce((s, co) => s + co.amount, 0);
+      return `
+      <div class="mgmt-row" style="align-items:flex-start; flex-direction:column; gap:10px; cursor:default;">
+        <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+          <div style="font-weight:700; font-size:15px;">${c.name}</div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            ${unpaidTotal > 0 ? `<span class="cust-credit-badge">آجل: ${fmt(unpaidTotal)} ${cur}</span>` : '<span style="font-size:12px;color:var(--success);">✓ لا توجد ديون</span>'}
+            <button style="color:var(--error); background:none; border:none; cursor:pointer;" onclick="window.delCust(${c.id})">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6l-1 14H6L5 6m5 0V4h4v2"/></svg>
+            </button>
+          </div>
+        </div>
+        ${unpaid.length > 0 ? `
+        <div style="width:100%; border-top:1px solid var(--border); padding-top:10px; display:flex; flex-direction:column; gap:6px;">
+          ${unpaid.map(co => `
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:13px; gap:8px;">
+              <span style="color:var(--text-secondary); flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${co.items_summary}</span>
+              <span style="font-weight:700; color:var(--error); white-space:nowrap;">${fmt(co.amount)} ${cur}</span>
+              <button class="btn-outline" style="font-size:11px; padding:4px 10px; white-space:nowrap;" onclick="window.payCreditOrder(${co.id}, ${c.id})">تم الدفع</button>
+            </div>`).join('')}
+        </div>` : ''}
+      </div>`;
+    }).join('');
 }
+
 window.delCust = async (id) => {
   const ok = await showConfirmModal('cm-del-table', 'cm-del-table-ok', 'cm-del-table-cancel');
   if (!ok) return;
@@ -1560,6 +1889,29 @@ function bindEvents() {
 
   document.getElementById('rep-today').addEventListener('click', () => loadReports('today'));
   document.getElementById('rep-month').addEventListener('click', () => loadReports('month'));
+
+  // Date picker
+  const datePicker = document.getElementById('rep-date-picker');
+  if (datePicker) {
+    datePicker.addEventListener('change', () => {
+      _repType = 'today'; // treat picker as single-day
+      loadReports('today');
+    });
+  }
+
+  // Hero card → daily revenue popup
+  const heroCard = document.getElementById('kpi-hero-card');
+  if (heroCard) heroCard.addEventListener('click', showDailyRevenue);
+
+  // Daily revenue close
+  const dailyClose = document.getElementById('cm-daily-close');
+  if (dailyClose) dailyClose.addEventListener('click', () => closeModal('cm-daily-revenue'));
+  document.getElementById('cm-daily-revenue')?.addEventListener('click', (e) => { if (e.target === e.currentTarget) closeModal('cm-daily-revenue'); });
+
+  // Credit detail close
+  const creditDetailClose = document.getElementById('cm-credit-detail-close');
+  if (creditDetailClose) creditDetailClose.addEventListener('click', () => closeModal('cm-credit-detail'));
+  document.getElementById('cm-credit-detail')?.addEventListener('click', (e) => { if (e.target === e.currentTarget) closeModal('cm-credit-detail'); });
 
   // Mgmt Add Actions
   document.getElementById('btn-add-category').addEventListener('click', () => {
