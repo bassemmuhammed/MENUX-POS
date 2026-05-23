@@ -1,0 +1,16 @@
+{
+  "name": "MENUX",
+  "short_name": "MENUX",
+  "start_url": "/Pos-cafe/index.html",
+  "scope": "/Pos-cafe/",
+  "display": "standalone",
+  "background_color": "#253237",
+  "theme_color": "#253237",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
