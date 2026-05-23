@@ -277,6 +277,15 @@ function injectDynamicUI() {
               <div style="font-size:10px;color:rgba(255,255,255,0.55);margin-top:2px;">اضغط لعرض اليومي ▾</div>
             </div>
 
+            <!-- رصيد الدرج -->
+            <div class="kpi-card" style="border-color:rgba(74,29,150,0.2);">
+              <div class="kpi-icon-wrap" style="background:#F3EEFF;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4A1D96" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M7 15h.01"/><path d="M11 15h2"/></svg>
+              </div>
+              <div class="kpi-label">رصيد الدرج</div>
+              <div class="kpi-value kpi-purple" id="rep-drawer-balance">0.00</div>
+            </div>
+
             <!-- ٢. إيراد نقدي -->
             <div class="kpi-card" id="kpi-cash-card" style="cursor:pointer;" title="اضغط لعرض فواتير الكاش">
               <div class="kpi-icon-wrap" style="background:#E8F5E9;">
@@ -340,26 +349,29 @@ function injectDynamicUI() {
           <!-- Row 2: المصروفات -->
           <div class="dash-section-title">المصروفات</div>
           <div class="kpi-grid kpi-grid-3">
-            <div class="kpi-card kpi-danger">
+            <div class="kpi-card kpi-danger" id="kpi-exp-primary-card" style="cursor:pointer;" title="اضغط لتفاصيل المصروفات الأساسية">
               <div class="kpi-icon-wrap" style="background:rgba(255,255,255,0.2);">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
               </div>
               <div class="kpi-label">مصروفات أساسية</div>
               <div class="kpi-value" id="rep-exp-primary">0.00</div>
+              <div style="font-size:10px;color:rgba(255,255,255,0.55);margin-top:2px;">اضغط للتفاصيل ▾</div>
             </div>
-            <div class="kpi-card" style="border-color:rgba(245,158,11,0.3);">
+            <div class="kpi-card" id="kpi-exp-raw-card" style="cursor:pointer;border-color:rgba(245,158,11,0.3);" title="اضغط لتفاصيل مصروفات الخامات">
               <div class="kpi-icon-wrap" style="background:#FFF8E1;">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/></svg>
               </div>
               <div class="kpi-label">مصروفات خامات</div>
               <div class="kpi-value kpi-orange" id="rep-exp-raw">0.00</div>
+              <div style="font-size:10px;color:var(--text-secondary);margin-top:2px;">اضغط للتفاصيل ▾</div>
             </div>
-            <div class="kpi-card">
+            <div class="kpi-card" id="kpi-exp-secondary-card" style="cursor:pointer;" title="اضغط لتفاصيل المصروفات الثانوية">
               <div class="kpi-icon-wrap" style="background:#F5F5F5;">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9E9E9E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
               </div>
               <div class="kpi-label">مصروفات ثانوية</div>
               <div class="kpi-value" id="rep-exp-secondary">0.00</div>
+              <div style="font-size:10px;color:var(--text-secondary);margin-top:2px;">اضغط للتفاصيل ▾</div>
             </div>
           </div>
 
@@ -478,6 +490,64 @@ function injectDynamicUI() {
       </div>
     </div>
 
+    <!-- ═══ EXPENSE PRIMARY DETAIL POPUP ═══ -->
+    <div class="cmodal-overlay" id="cm-exp-primary-detail">
+      <div class="cmodal-box" style="max-width:520px; width:95%; padding:0; border-radius:16px; overflow:hidden;">
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:18px 20px; border-bottom:1px solid var(--border);">
+          <div class="cmodal-title" style="margin:0;">تفاصيل المصروفات الأساسية</div>
+          <button id="cm-exp-primary-close" style="background:none; border:none; cursor:pointer; color:#6B7280; font-size:20px;">✕</button>
+        </div>
+        <div style="padding:12px 16px; border-bottom:1px solid var(--border);">
+          <input type="text" id="exp-primary-search" placeholder="🔍  ابحث بالصنف أو الملاحظة..."
+            style="width:100%;height:38px;border:1.5px solid var(--border);border-radius:9px;padding:0 12px;font-size:13px;font-family:'Cairo',sans-serif;outline:none;box-sizing:border-box;">
+        </div>
+        <div id="exp-primary-detail-list" style="max-height:400px; overflow-y:auto; padding:4px 8px;"></div>
+      </div>
+    </div>
+
+    <!-- ═══ EXPENSE RAW DETAIL POPUP ═══ -->
+    <div class="cmodal-overlay" id="cm-exp-raw-detail">
+      <div class="cmodal-box" style="max-width:520px; width:95%; padding:0; border-radius:16px; overflow:hidden;">
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:18px 20px; border-bottom:1px solid var(--border);">
+          <div class="cmodal-title" style="margin:0;">تفاصيل مصروفات الخامات</div>
+          <button id="cm-exp-raw-close" style="background:none; border:none; cursor:pointer; color:#6B7280; font-size:20px;">✕</button>
+        </div>
+        <div style="padding:12px 16px; border-bottom:1px solid var(--border);">
+          <input type="text" id="exp-raw-search" placeholder="🔍  ابحث بالصنف أو الملاحظة..."
+            style="width:100%;height:38px;border:1.5px solid var(--border);border-radius:9px;padding:0 12px;font-size:13px;font-family:'Cairo',sans-serif;outline:none;box-sizing:border-box;">
+        </div>
+        <div id="exp-raw-detail-list" style="max-height:400px; overflow-y:auto; padding:4px 8px;"></div>
+      </div>
+    </div>
+
+    <!-- ═══ EXPENSE SECONDARY DETAIL POPUP ═══ -->
+    <div class="cmodal-overlay" id="cm-exp-secondary-detail">
+      <div class="cmodal-box" style="max-width:520px; width:95%; padding:0; border-radius:16px; overflow:hidden;">
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:18px 20px; border-bottom:1px solid var(--border);">
+          <div class="cmodal-title" style="margin:0;">تفاصيل المصروفات الثانوية</div>
+          <button id="cm-exp-secondary-close" style="background:none; border:none; cursor:pointer; color:#6B7280; font-size:20px;">✕</button>
+        </div>
+        <div style="padding:12px 16px; border-bottom:1px solid var(--border);">
+          <input type="text" id="exp-secondary-search" placeholder="🔍  ابحث بالصنف أو الملاحظة..."
+            style="width:100%;height:38px;border:1.5px solid var(--border);border-radius:9px;padding:0 12px;font-size:13px;font-family:'Cairo',sans-serif;outline:none;box-sizing:border-box;">
+        </div>
+        <div id="exp-secondary-detail-list" style="max-height:400px; overflow-y:auto; padding:4px 8px;"></div>
+      </div>
+    </div>
+
+    <!-- ═══ DRAWER BALANCE MODAL ═══ -->
+    <div class="cmodal-overlay" id="cm-drawer-balance">
+      <div class="cmodal-box">
+        <div class="cmodal-title">رصيد الدرج</div>
+        <div class="cmodal-msg">أدخل رصيد الدرج الحالي</div>
+        <input class="cmodal-input" id="cm-drawer-amount" type="number" placeholder="0.00" min="0" step="0.5" inputmode="decimal">
+        <div class="cmodal-btns">
+          <button class="cmodal-btn cancel" id="cm-drawer-cancel">إلغاء</button>
+          <button class="cmodal-btn primary" id="cm-drawer-ok">حفظ</button>
+        </div>
+      </div>
+    </div>
+
     <!-- ═══ EXPENSE PAYMENT METHOD MODAL ═══ -->
     <div class="cmodal-overlay" id="cm-exp-payment">
       <div class="cmodal-box">
@@ -524,45 +594,61 @@ function injectDynamicUI() {
 
     <!-- ═══ EXPENSE CREDIT DETAIL POPUP ═══ -->
     <div class="cmodal-overlay" id="cm-exp-credit-detail">
-      <div class="cmodal-box" style="max-width:500px; width:95%;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <div class="cmodal-box" style="max-width:520px; width:95%; padding:0; border-radius:16px; overflow:hidden;">
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:18px 20px; border-bottom:1px solid var(--border);">
           <div class="cmodal-title" style="margin:0;">فواتير بضاعة الآجل المدفوعة — الشهر</div>
           <button id="cm-exp-credit-detail-close" style="background:none; border:none; cursor:pointer; color:#6B7280; font-size:20px;">✕</button>
         </div>
-        <div id="exp-credit-detail-list" style="max-height:440px; overflow-y:auto;"></div>
+        <div style="padding:12px 16px; border-bottom:1px solid var(--border);">
+          <input type="text" id="exp-credit-search" placeholder="🔍  ابحث بالمورد أو الملاحظة..."
+            style="width:100%;height:38px;border:1.5px solid var(--border);border-radius:9px;padding:0 12px;font-size:13px;font-family:'Cairo',sans-serif;outline:none;box-sizing:border-box;">
+        </div>
+        <div id="exp-credit-detail-list" style="max-height:400px; overflow-y:auto; padding:4px 8px;"></div>
       </div>
     </div>
 
     <!-- ═══ CREDIT PAID POPUP (آجل مدفوع خلال الشهر) ═══ -->
     <div class="cmodal-overlay" id="cm-credit-paid-detail">
-      <div class="cmodal-box" style="max-width:500px; width:95%;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <div class="cmodal-box" style="max-width:520px; width:95%; padding:0; border-radius:16px; overflow:hidden;">
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:18px 20px; border-bottom:1px solid var(--border);">
           <div class="cmodal-title" style="margin:0;">تقارير الآجل المدفوع</div>
           <button id="cm-credit-paid-close" style="background:none; border:none; cursor:pointer; color:#6B7280; font-size:20px;">✕</button>
         </div>
-        <div id="credit-paid-detail-list" style="max-height:440px; overflow-y:auto;"></div>
+        <div style="padding:12px 16px; border-bottom:1px solid var(--border);">
+          <input type="text" id="credit-paid-search" placeholder="🔍  ابحث باسم العميل..."
+            style="width:100%;height:38px;border:1.5px solid var(--border);border-radius:9px;padding:0 12px;font-size:13px;font-family:'Cairo',sans-serif;outline:none;box-sizing:border-box;">
+        </div>
+        <div id="credit-paid-detail-list" style="max-height:400px; overflow-y:auto; padding:4px 8px;"></div>
       </div>
     </div>
 
     <!-- ═══ CASH INVOICES POPUP (فواتير كاش خلال الشهر) ═══ -->
     <div class="cmodal-overlay" id="cm-cash-invoices">
-      <div class="cmodal-box" style="max-width:500px; width:95%;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <div class="cmodal-box" style="max-width:520px; width:95%; padding:0; border-radius:16px; overflow:hidden;">
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:18px 20px; border-bottom:1px solid var(--border);">
           <div class="cmodal-title" style="margin:0;">فواتير الكاش المقفولة</div>
           <button id="cm-cash-invoices-close" style="background:none; border:none; cursor:pointer; color:#6B7280; font-size:20px;">✕</button>
         </div>
-        <div id="cash-invoices-list" style="max-height:440px; overflow-y:auto;"></div>
+        <div style="padding:12px 16px; border-bottom:1px solid var(--border);">
+          <input type="text" id="cash-invoices-search" placeholder="🔍  ابحث بالفاتورة أو الطاولة أو الصنف..."
+            style="width:100%;height:38px;border:1.5px solid var(--border);border-radius:9px;padding:0 12px;font-size:13px;font-family:'Cairo',sans-serif;outline:none;box-sizing:border-box;">
+        </div>
+        <div id="cash-invoices-list" style="max-height:400px; overflow-y:auto; padding:4px 0;"></div>
       </div>
     </div>
 
     <!-- ═══ WALLET INVOICES POPUP (فواتير محفظة خلال الشهر) ═══ -->
     <div class="cmodal-overlay" id="cm-wallet-invoices">
-      <div class="cmodal-box" style="max-width:500px; width:95%;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <div class="cmodal-box" style="max-width:520px; width:95%; padding:0; border-radius:16px; overflow:hidden;">
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:18px 20px; border-bottom:1px solid var(--border);">
           <div class="cmodal-title" style="margin:0;">فواتير المحفظة المقفولة</div>
           <button id="cm-wallet-invoices-close" style="background:none; border:none; cursor:pointer; color:#6B7280; font-size:20px;">✕</button>
         </div>
-        <div id="wallet-invoices-list" style="max-height:440px; overflow-y:auto;"></div>
+        <div style="padding:12px 16px; border-bottom:1px solid var(--border);">
+          <input type="text" id="wallet-invoices-search" placeholder="🔍  ابحث بالفاتورة أو الطاولة أو الصنف..."
+            style="width:100%;height:38px;border:1.5px solid var(--border);border-radius:9px;padding:0 12px;font-size:13px;font-family:'Cairo',sans-serif;outline:none;box-sizing:border-box;">
+        </div>
+        <div id="wallet-invoices-list" style="max-height:400px; overflow-y:auto; padding:4px 0;"></div>
       </div>
     </div>
 
@@ -594,8 +680,8 @@ function injectDynamicUI() {
   const style = document.createElement('style');
   style.innerHTML = `
     /* ─── Dashboard Shell ─── */
-    .dash-root { position:fixed; inset:0; background:var(--bg); z-index:200; display:none; flex-direction:row-reverse; }
-    .dash-sidebar { width:220px; flex-shrink:0; background:var(--primary); display:flex; flex-direction:column; overflow:hidden; }
+    .dash-root { position:fixed; inset:0; background:var(--bg); z-index:200; display:none; flex-direction:row; }
+    .dash-sidebar { width:220px; flex-shrink:0; background:var(--primary); display:flex; flex-direction:column; overflow:hidden; order:2; }
     .dash-brand { display:flex; align-items:center; gap:12px; padding:20px 16px; border-bottom:1px solid rgba(255,255,255,0.1); }
     .dash-brand-logo { width:36px; height:36px; background:rgba(255,255,255,0.15); border-radius:10px; display:flex; align-items:center; justify-content:center; color:white; flex-shrink:0; }
     .dash-brand-name { font-size:16px; font-weight:800; color:white; letter-spacing:0.5px; }
@@ -1466,6 +1552,10 @@ async function loadReports(type) {
     }
   });
 
+  // ── Drawer Balance (from settings) ──
+  const drawerSetting = await dbOp('settings', 'get', 'drawer_balance');
+  const drawerBalance = Number(drawerSetting?.value || 0);
+
   // ── Update KPI cards ──
   const cur = t('currency');
   document.getElementById('rep-cash-on-hand').textContent  = `${fmt(cashOnHand)} ${cur}`;
@@ -1473,13 +1563,15 @@ async function loadReports(type) {
   document.getElementById('rep-wallet').textContent        = `${fmt(walletRev)} ${cur}`;
   document.getElementById('rep-credit-paid').textContent   = `${fmt(creditPaidRev)} ${cur}`;
   document.getElementById('rep-revenue').textContent       = `${fmt(revenue)} ${cur}`;
-  document.getElementById('rep-net').textContent           = `${fmt(revenue - expTotal)} ${cur}`;
+  document.getElementById('rep-net').textContent           = `${fmt(revenue + drawerBalance - expTotal)} ${cur}`;
   document.getElementById('rep-top-item').textContent      = topItemName;
   document.getElementById('rep-exp-primary').textContent   = `${fmt(expPrimary)} ${cur}`;
   document.getElementById('rep-exp-raw').textContent       = `${fmt(expRaw)} ${cur}`;
   document.getElementById('rep-exp-secondary').textContent = `${fmt(expSecondary)} ${cur}`;
   const expCreditEl = document.getElementById('rep-exp-credit-paid');
   if (expCreditEl) expCreditEl.textContent = `${fmt(expCreditPaid)} ${cur}`;
+  const drawerEl = document.getElementById('rep-drawer-balance');
+  if (drawerEl) drawerEl.textContent = `${fmt(drawerBalance)} ${cur}`;
 
   // ── Expense Purchases (unpaid) bar ──
   const unpaidPurchases = expPurchases.filter(ep => !ep.is_paid || ep.paid_amount < ep.amount);
@@ -1527,6 +1619,9 @@ async function loadReports(type) {
 }
 
 // ── Cash Invoices Popup ──
+// يخزن بيانات الفواتير للـ search
+let _cashInvoicesData = [];
+
 async function showCashInvoices() {
   const orders = await dbOp('orders', 'getAll');
   const orderItems = await dbOp('order_items', 'getAll');
@@ -1542,32 +1637,63 @@ async function showCashInvoices() {
   };
   const cur = t('currency');
   const cashOrders = orders.filter(o => o.status === 'paid' && o.payment_method === 'cash' && matchDate(o.paid_at));
-  const list = document.getElementById('cash-invoices-list');
-  if (!list) return;
-  if (cashOrders.length === 0) {
-    list.innerHTML = `<div style="text-align:center;padding:32px;color:var(--text-secondary);">لا توجد فواتير كاش في هذه الفترة</div>`;
-  } else {
-    const total = cashOrders.reduce((s, o) => s + o.total, 0);
-    list.innerHTML = cashOrders.map(o => {
-      const items = orderItems.filter(oi => oi.order_id === o.id);
-      const summary = items.map(oi => `${oi.name_ar} ×${oi.quantity}`).join('، ');
-      return `<div class="daily-row" style="flex-direction:column;align-items:flex-start;gap:4px;">
-        <div style="display:flex;justify-content:space-between;width:100%;align-items:center;">
-          <span style="font-weight:700;font-size:14px;">فاتورة #${String(o.id).slice(-4)} — طاولة ${o.table_id}</span>
-          <span class="daily-amt">${fmt(o.total)} ${cur}</span>
-        </div>
-        <div style="font-size:12px;color:var(--text-secondary);">${o.paid_at ? o.paid_at.split('T')[0] + ' ' + (o.paid_at.split('T')[1]||'').substring(0,5) : '—'}</div>
-        ${summary ? `<div style="font-size:11px;color:var(--text-secondary);">${summary}</div>` : ''}
-      </div>`;
-    }).join('') +
-    `<div style="border-top:2px solid var(--border);margin-top:8px;padding-top:10px;display:flex;justify-content:space-between;font-weight:800;font-size:15px;">
-      <span>الإجمالي</span><span style="color:#16A34A;">${fmt(total)} ${cur}</span>
-    </div>`;
+
+  // خزّن البيانات للسيرش
+  _cashInvoicesData = cashOrders.map(o => ({
+    ...o,
+    items: orderItems.filter(oi => oi.order_id === o.id),
+    summary: orderItems.filter(oi => oi.order_id === o.id).map(oi => `${oi.name_ar} ×${oi.quantity}`).join('، ')
+  }));
+
+  renderCashInvoicesList('', cur);
+
+  // ربط السيرش
+  const searchEl = document.getElementById('cash-invoices-search');
+  if (searchEl) {
+    searchEl.value = '';
+    searchEl.oninput = () => renderCashInvoicesList(searchEl.value, cur);
   }
   openModal('cm-cash-invoices');
 }
 
+function renderCashInvoicesList(query, cur) {
+  const list = document.getElementById('cash-invoices-list');
+  if (!list) return;
+  const q = query.trim().toLowerCase();
+  const filtered = q
+    ? _cashInvoicesData.filter(o =>
+        `فاتورة ${o.id} طاولة ${o.table_id} ${o.summary}`.toLowerCase().includes(q))
+    : _cashInvoicesData;
+
+  if (filtered.length === 0) {
+    list.innerHTML = `<div style="text-align:center;padding:32px;color:var(--text-secondary);">${q ? 'لا نتائج للبحث' : 'لا توجد فواتير كاش في هذه الفترة'}</div>`;
+    return;
+  }
+  const total = filtered.reduce((s, o) => s + o.total, 0);
+  list.innerHTML = filtered.map(o => `
+    <div style="padding:12px 16px;border-bottom:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+        <span style="font-weight:700;font-size:14px;">فاتورة #${String(o.id).slice(-4)} — طاولة ${o.table_id}</span>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-weight:800;font-size:14px;color:#16A34A;">${fmt(o.total)} ${cur}</span>
+          <button onclick="window.reprintInvoice(${o.id},'cash')"
+            style="height:30px;padding:0 10px;background:var(--primary-light);color:var(--primary);border:1.5px solid rgba(74,29,150,0.2);border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Cairo',sans-serif;display:flex;align-items:center;gap:4px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            طباعة
+          </button>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-secondary);">${o.paid_at ? o.paid_at.split('T')[0] + ' ' + (o.paid_at.split('T')[1]||'').substring(0,5) : '—'}</div>
+      ${o.summary ? `<div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">${o.summary}</div>` : ''}
+    </div>`).join('') +
+    `<div style="padding:12px 16px;display:flex;justify-content:space-between;font-weight:800;font-size:15px;border-top:2px solid var(--border);">
+      <span>الإجمالي</span><span style="color:#16A34A;">${fmt(total)} ${cur}</span>
+    </div>`;
+}
+
 // ── Wallet Invoices Popup ──
+let _walletInvoicesData = [];
+
 async function showWalletInvoices() {
   const orders = await dbOp('orders', 'getAll');
   const orderItems = await dbOp('order_items', 'getAll');
@@ -1583,32 +1709,60 @@ async function showWalletInvoices() {
   };
   const cur = t('currency');
   const walletOrders = orders.filter(o => o.status === 'paid' && o.payment_method === 'wallet' && matchDate(o.paid_at));
-  const list = document.getElementById('wallet-invoices-list');
-  if (!list) return;
-  if (walletOrders.length === 0) {
-    list.innerHTML = `<div style="text-align:center;padding:32px;color:var(--text-secondary);">لا توجد فواتير محفظة في هذه الفترة</div>`;
-  } else {
-    const total = walletOrders.reduce((s, o) => s + o.total, 0);
-    list.innerHTML = walletOrders.map(o => {
-      const items = orderItems.filter(oi => oi.order_id === o.id);
-      const summary = items.map(oi => `${oi.name_ar} ×${oi.quantity}`).join('، ');
-      return `<div class="daily-row" style="flex-direction:column;align-items:flex-start;gap:4px;">
-        <div style="display:flex;justify-content:space-between;width:100%;align-items:center;">
-          <span style="font-weight:700;font-size:14px;">فاتورة #${String(o.id).slice(-4)} — طاولة ${o.table_id}</span>
-          <span class="daily-amt" style="color:#1565C0;">${fmt(o.total)} ${cur}</span>
-        </div>
-        <div style="font-size:12px;color:var(--text-secondary);">${o.paid_at ? o.paid_at.split('T')[0] + ' ' + (o.paid_at.split('T')[1]||'').substring(0,5) : '—'}</div>
-        ${summary ? `<div style="font-size:11px;color:var(--text-secondary);">${summary}</div>` : ''}
-      </div>`;
-    }).join('') +
-    `<div style="border-top:2px solid var(--border);margin-top:8px;padding-top:10px;display:flex;justify-content:space-between;font-weight:800;font-size:15px;">
-      <span>الإجمالي</span><span style="color:#1565C0;">${fmt(total)} ${cur}</span>
-    </div>`;
+
+  _walletInvoicesData = walletOrders.map(o => ({
+    ...o,
+    items: orderItems.filter(oi => oi.order_id === o.id),
+    summary: orderItems.filter(oi => oi.order_id === o.id).map(oi => `${oi.name_ar} ×${oi.quantity}`).join('، ')
+  }));
+
+  renderWalletInvoicesList('', cur);
+
+  const searchEl = document.getElementById('wallet-invoices-search');
+  if (searchEl) {
+    searchEl.value = '';
+    searchEl.oninput = () => renderWalletInvoicesList(searchEl.value, cur);
   }
   openModal('cm-wallet-invoices');
 }
 
+function renderWalletInvoicesList(query, cur) {
+  const list = document.getElementById('wallet-invoices-list');
+  if (!list) return;
+  const q = query.trim().toLowerCase();
+  const filtered = q
+    ? _walletInvoicesData.filter(o =>
+        `فاتورة ${o.id} طاولة ${o.table_id} ${o.summary}`.toLowerCase().includes(q))
+    : _walletInvoicesData;
+
+  if (filtered.length === 0) {
+    list.innerHTML = `<div style="text-align:center;padding:32px;color:var(--text-secondary);">${q ? 'لا نتائج للبحث' : 'لا توجد فواتير محفظة في هذه الفترة'}</div>`;
+    return;
+  }
+  const total = filtered.reduce((s, o) => s + o.total, 0);
+  list.innerHTML = filtered.map(o => `
+    <div style="padding:12px 16px;border-bottom:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+        <span style="font-weight:700;font-size:14px;">فاتورة #${String(o.id).slice(-4)} — طاولة ${o.table_id}</span>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-weight:800;font-size:14px;color:#1565C0;">${fmt(o.total)} ${cur}</span>
+          <button onclick="window.reprintInvoice(${o.id},'wallet')"
+            style="height:30px;padding:0 10px;background:var(--primary-light);color:var(--primary);border:1.5px solid rgba(74,29,150,0.2);border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Cairo',sans-serif;display:flex;align-items:center;gap:4px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            طباعة
+          </button>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-secondary);">${o.paid_at ? o.paid_at.split('T')[0] + ' ' + (o.paid_at.split('T')[1]||'').substring(0,5) : '—'}</div>
+      ${o.summary ? `<div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">${o.summary}</div>` : ''}
+    </div>`).join('') +
+    `<div style="padding:12px 16px;display:flex;justify-content:space-between;font-weight:800;font-size:15px;border-top:2px solid var(--border);">
+      <span>الإجمالي</span><span style="color:#1565C0;">${fmt(total)} ${cur}</span>
+    </div>`;
+}
+
 // ── Credit Paid Detail Popup (آجل مدفوع — الاسم والمبلغ والتاريخ) ──
+let _creditPaidData = [];
 async function showCreditPaidDetail() {
   const creditOrders = await dbOp('credit_orders', 'getAll');
   const customers    = await dbOp('customers',     'getAll');
@@ -1623,29 +1777,37 @@ async function showCreditPaidDetail() {
     return d.startsWith(monthStr);
   };
   const cur = t('currency');
-  const paidCredit = creditOrders.filter(co => co.is_paid && matchDate(co.paid_at));
+  _creditPaidData = creditOrders
+    .filter(co => co.is_paid && matchDate(co.paid_at))
+    .map(co => ({ ...co, custName: (customers.find(c => c.id === co.customer_id)?.name || 'عميل') }));
+
+  renderCreditPaidList('', cur);
+  const searchEl = document.getElementById('credit-paid-search');
+  if (searchEl) { searchEl.value = ''; searchEl.oninput = () => renderCreditPaidList(searchEl.value, cur); }
+  openModal('cm-credit-paid-detail');
+}
+function renderCreditPaidList(query, cur) {
   const list = document.getElementById('credit-paid-detail-list');
   if (!list) return;
-  if (paidCredit.length === 0) {
-    list.innerHTML = `<div style="text-align:center;padding:32px;color:var(--text-secondary);">لا توجد مدفوعات آجل في هذه الفترة</div>`;
-  } else {
-    const total = paidCredit.reduce((s, co) => s + co.amount, 0);
-    list.innerHTML = paidCredit.map(co => {
-      const cust = customers.find(c => c.id === co.customer_id);
-      return `<div class="daily-row" style="flex-direction:column;align-items:flex-start;gap:4px;">
-        <div style="display:flex;justify-content:space-between;width:100%;align-items:center;">
-          <span style="font-weight:700;font-size:14px;">${cust ? cust.name : 'عميل'}</span>
-          <span class="daily-amt" style="color:#E65100;">${fmt(co.amount)} ${cur}</span>
-        </div>
-        <div style="font-size:12px;color:var(--text-secondary);">${co.paid_at ? co.paid_at.split('T')[0] : '—'}</div>
-        ${co.items_summary ? `<div style="font-size:11px;color:var(--text-secondary);">${co.items_summary}</div>` : ''}
-      </div>`;
-    }).join('') +
+  const q = query.trim().toLowerCase();
+  const filtered = q ? _creditPaidData.filter(co => co.custName.toLowerCase().includes(q) || (co.items_summary||'').toLowerCase().includes(q)) : _creditPaidData;
+  if (filtered.length === 0) {
+    list.innerHTML = `<div style="text-align:center;padding:32px;color:var(--text-secondary);">${q ? 'لا نتائج للبحث' : 'لا توجد مدفوعات آجل في هذه الفترة'}</div>`;
+    return;
+  }
+  const total = filtered.reduce((s, co) => s + co.amount, 0);
+  list.innerHTML = filtered.map(co => `
+    <div class="daily-row" style="flex-direction:column;align-items:flex-start;gap:4px;">
+      <div style="display:flex;justify-content:space-between;width:100%;align-items:center;">
+        <span style="font-weight:700;font-size:14px;">${co.custName}</span>
+        <span class="daily-amt" style="color:#E65100;">${fmt(co.amount)} ${cur}</span>
+      </div>
+      <div style="font-size:12px;color:var(--text-secondary);">${co.paid_at ? co.paid_at.split('T')[0] : '—'}</div>
+      ${co.items_summary ? `<div style="font-size:11px;color:var(--text-secondary);">${co.items_summary}</div>` : ''}
+    </div>`).join('') +
     `<div style="border-top:2px solid var(--border);margin-top:8px;padding-top:10px;display:flex;justify-content:space-between;font-weight:800;font-size:15px;">
       <span>الإجمالي المحصل</span><span style="color:#E65100;">${fmt(total)} ${cur}</span>
     </div>`;
-  }
-  openModal('cm-credit-paid-detail');
 }
 
 // ── Top Items Detail Popup (كل المنتجات بالكمية) ──
@@ -1706,6 +1868,65 @@ async function showTopItemsDetail() {
   openModal('cm-top-items');
 }
 
+
+// ── Expense Detail Popup (by type: primary / raw / secondary) ──
+let _expDetailData = {};
+async function showExpenseDetail(type) {
+  const expenses = await dbOp('expenses', 'getAll');
+  const expCats  = await dbOp('expense_categories', 'getAll');
+  const todayStr = isoDate().split('T')[0];
+  const monthStr = todayStr.substring(0, 7);
+  const pickerVal = document.getElementById('rep-date-picker')?.value;
+  const chosenDate = pickerVal || (_repType === 'today' ? todayStr : null);
+  const matchDate = (d) => {
+    if (!d) return false;
+    if (chosenDate && _repType === 'today') return d.startsWith(chosenDate);
+    if (_repType === 'today') return d.startsWith(todayStr);
+    return d.startsWith(monthStr);
+  };
+  const cur = t('currency');
+  const typeColors = { primary: 'var(--error)', raw: '#E65100', secondary: 'var(--text-secondary)' };
+  const modalIds  = { primary: 'cm-exp-primary-detail', raw: 'cm-exp-raw-detail', secondary: 'cm-exp-secondary-detail' };
+  const listIds   = { primary: 'exp-primary-detail-list', raw: 'exp-raw-detail-list', secondary: 'exp-secondary-detail-list' };
+  const searchIds = { primary: 'exp-primary-search', raw: 'exp-raw-search', secondary: 'exp-secondary-search' };
+  const typeLabels = { primary: 'مصروفات أساسية', raw: 'مصروفات خامات', secondary: 'مصروفات ثانوية' };
+
+  _expDetailData[type] = expenses
+    .filter(e => matchDate(e.created_at) && (expCats.find(c => c.id === e.category_id)?.type || 'secondary') === type)
+    .map(e => ({ ...e, catName: expCats.find(c => c.id === e.category_id)?.name || '' }));
+
+  renderExpenseDetailList(type, '', cur, typeColors, listIds, typeLabels);
+  const searchEl = document.getElementById(searchIds[type]);
+  if (searchEl) {
+    searchEl.value = '';
+    searchEl.oninput = () => renderExpenseDetailList(type, searchEl.value, cur, typeColors, listIds, typeLabels);
+  }
+  openModal(modalIds[type]);
+}
+
+function renderExpenseDetailList(type, query, cur, typeColors, listIds, typeLabels) {
+  const list = document.getElementById(listIds[type]);
+  if (!list) return;
+  const q = query.trim().toLowerCase();
+  const data = _expDetailData[type] || [];
+  const filtered = q ? data.filter(e => (e.note||'').toLowerCase().includes(q) || e.catName.toLowerCase().includes(q)) : data;
+  if (filtered.length === 0) {
+    list.innerHTML = `<div style="text-align:center;padding:32px;color:var(--text-secondary);">${q ? 'لا نتائج للبحث' : 'لا توجد ' + typeLabels[type] + ' في هذه الفترة'}</div>`;
+    return;
+  }
+  const total = filtered.reduce((s, e) => s + e.amount, 0);
+  list.innerHTML = filtered.map(e => `
+    <div class="daily-row" style="flex-direction:column;align-items:flex-start;gap:4px;">
+      <div style="display:flex;justify-content:space-between;width:100%;align-items:center;">
+        <span style="font-weight:700;font-size:14px;">${e.note || e.catName || '—'}</span>
+        <span style="font-weight:800;font-size:14px;color:${typeColors[type]};">${fmt(e.amount)} ${cur}</span>
+      </div>
+      <div style="font-size:12px;color:var(--text-secondary);">${e.catName}${e.created_at ? ' · ' + e.created_at.split('T')[0] : ''}</div>
+    </div>`).join('') +
+    `<div style="border-top:2px solid var(--border);margin-top:8px;padding-top:10px;display:flex;justify-content:space-between;font-weight:800;font-size:15px;">
+      <span>الإجمالي</span><span style="color:${typeColors[type]};">${fmt(total)} ${cur}</span>
+    </div>`;
+}
 
 async function showDailyRevenue() {
   const orders       = await dbOp('orders',        'getAll');
@@ -1797,43 +2018,95 @@ window.openExpCreditPayModal = async function(expPurchaseId) {
 };
 
 // ── Show Expense Credit Detail Popup (paid this month) ──
+let _expCreditDetailData = [];
 async function showExpCreditDetail() {
   const expPurchases = await dbOp('expense_purchases', 'getAll');
   const monthStr = isoDate().split('T')[0].substring(0, 7);
   const cur = t('currency');
 
-  const paidThisMonth = expPurchases.filter(ep =>
+  _expCreditDetailData = expPurchases.filter(ep =>
     (ep.is_paid === 1 || ep.paid_amount > 0) && ep.paid_at?.startsWith(monthStr)
   );
 
-  const list = document.getElementById('exp-credit-detail-list');
-  if (!list) return;
-
-  if (paidThisMonth.length === 0) {
-    list.innerHTML = `<div style="text-align:center;padding:32px;color:var(--text-secondary);">لا توجد فواتير بضاعة آجل مدفوعة هذا الشهر</div>`;
-  } else {
-    const total = paidThisMonth.reduce((s, ep) => s + (ep.paid_amount || ep.amount), 0);
-    list.innerHTML = paidThisMonth.map(ep => `
-      <div class="daily-row" style="flex-direction:column;align-items:flex-start;gap:4px;">
-        <div style="display:flex;justify-content:space-between;width:100%;align-items:center;">
-          <span style="font-weight:700;font-size:14px;">${ep.supplier_name || ep.category_name}</span>
-          <span class="daily-amt">${fmt(ep.paid_amount || ep.amount)} ${cur}</span>
-        </div>
-        <div style="display:flex;gap:12px;">
-          <span class="daily-date">${ep.paid_at ? ep.paid_at.split('T')[0] : '—'}</span>
-          ${ep.note && ep.note !== ep.supplier_name ? `<span style="font-size:11px;color:var(--text-secondary);">${ep.note}</span>` : ''}
-          <span style="font-size:11px;background:${ep.is_paid ? '#E8F5E9' : '#FFF3E0'};color:${ep.is_paid ? '#16A34A' : '#E65100'};padding:1px 8px;border-radius:20px;font-weight:600;">
-            ${ep.is_paid ? 'مدفوع كامل' : `جزئي (${fmt(ep.amount)} الأصلي)`}
-          </span>
-        </div>
-      </div>`).join('') +
-      `<div style="border-top:2px solid var(--border);margin-top:8px;padding-top:10px;display:flex;justify-content:space-between;font-weight:800;font-size:15px;">
-        <span>الإجمالي المدفوع</span>
-        <span style="color:var(--error);">${fmt(total)} ${cur}</span>
-      </div>`;
+  renderExpCreditDetailList('', cur);
+  const searchEl = document.getElementById('exp-credit-search');
+  if (searchEl) {
+    searchEl.value = '';
+    searchEl.oninput = () => renderExpCreditDetailList(searchEl.value, cur);
   }
   openModal('cm-exp-credit-detail');
 }
+
+function renderExpCreditDetailList(query, cur) {
+  const list = document.getElementById('exp-credit-detail-list');
+  if (!list) return;
+  const q = query.trim().toLowerCase();
+  const filtered = q
+    ? _expCreditDetailData.filter(ep =>
+        (ep.supplier_name||'').toLowerCase().includes(q) ||
+        (ep.category_name||'').toLowerCase().includes(q) ||
+        (ep.note||'').toLowerCase().includes(q))
+    : _expCreditDetailData;
+  if (filtered.length === 0) {
+    list.innerHTML = `<div style="text-align:center;padding:32px;color:var(--text-secondary);">${q ? 'لا نتائج للبحث' : 'لا توجد فواتير بضاعة آجل مدفوعة هذا الشهر'}</div>`;
+    return;
+  }
+  const total = filtered.reduce((s, ep) => s + (ep.paid_amount || ep.amount), 0);
+  list.innerHTML = filtered.map(ep => `
+    <div class="daily-row" style="flex-direction:column;align-items:flex-start;gap:4px;">
+      <div style="display:flex;justify-content:space-between;width:100%;align-items:center;">
+        <span style="font-weight:700;font-size:14px;">${ep.supplier_name || ep.category_name}</span>
+        <span class="daily-amt">${fmt(ep.paid_amount || ep.amount)} ${cur}</span>
+      </div>
+      <div style="display:flex;gap:12px;">
+        <span class="daily-date">${ep.paid_at ? ep.paid_at.split('T')[0] : '—'}</span>
+        ${ep.note && ep.note !== ep.supplier_name ? `<span style="font-size:11px;color:var(--text-secondary);">${ep.note}</span>` : ''}
+        <span style="font-size:11px;background:${ep.is_paid ? '#E8F5E9' : '#FFF3E0'};color:${ep.is_paid ? '#16A34A' : '#E65100'};padding:1px 8px;border-radius:20px;font-weight:600;">
+          ${ep.is_paid ? 'مدفوع كامل' : `جزئي (${fmt(ep.amount)} الأصلي)`}
+        </span>
+      </div>
+    </div>`).join('') +
+    `<div style="border-top:2px solid var(--border);margin-top:8px;padding-top:10px;display:flex;justify-content:space-between;font-weight:800;font-size:15px;">
+      <span>الإجمالي المدفوع</span>
+      <span style="color:var(--error);">${fmt(total)} ${cur}</span>
+    </div>`;
+}
+
+// ── إعادة طباعة فاتورة مقفولة من الداشبورد ──
+window.reprintInvoice = async function(orderId, method) {
+  try {
+    const order   = await dbOp('orders',      'get', orderId);
+    const items   = await dbOp('order_items', 'getAll');
+    if (!order) return showToast('الفاتورة غير موجودة', true);
+    const orderItems = items.filter(oi => oi.order_id === orderId);
+
+    document.getElementById('print-invoice-id').innerText = `رقم الفاتورة #${String(order.id).slice(-4)}`;
+    const d = order.paid_at ? new Date(order.paid_at) : new Date();
+    document.getElementById('print-date-time').innerText =
+      `${d.toLocaleDateString('en-GB')} ${d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}`;
+    document.getElementById('print-table-num').innerText = `رقم الطاولة: ${order.table_id || '—'}`;
+
+    const tbody = document.getElementById('print-invoice-items');
+    tbody.innerHTML = '';
+    let subtotal = 0, count = 0;
+    orderItems.forEach(item => {
+      const price = parseFloat(item.price) || 0;
+      const qty   = parseInt(item.quantity) || 0;
+      subtotal += price * qty;
+      count    += qty;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td class="col-qty">${qty}</td><td class="col-item">${item.name_ar}</td><td class="col-price">${(price*qty).toFixed(2)}</td>`;
+      tbody.appendChild(tr);
+    });
+    const discount = parseFloat(order.discount) || 0;
+    const cur = t('currency');
+    document.getElementById('invoice-subtotal').innerText = `${subtotal.toFixed(2)} ${cur}`;
+    document.getElementById('invoice-discount').innerText = `${discount.toFixed(2)} ${cur}`;
+    document.getElementById('invoice-total').innerText    = `${(subtotal-discount).toFixed(2)} ${cur}`;
+    document.getElementById('invoice-items-count').innerText = `عدد المنتجات: ${count}`;
+    window.print();
+  } catch(e) { console.error(e); showToast('خطأ في الطباعة', true); }
+};
 
 window.payCreditOrder = async function (creditId, customerId) {
   try {
@@ -2430,6 +2703,46 @@ function bindEvents() {
   // أكثر مبيعاً → تفاصيل المنتجات
   const topItemCard = document.getElementById('kpi-top-item-card');
   if (topItemCard) topItemCard.addEventListener('click', showTopItemsDetail);
+
+  // مصروفات أساسية → تفاصيل
+  const expPrimaryCard = document.getElementById('kpi-exp-primary-card');
+  if (expPrimaryCard) expPrimaryCard.addEventListener('click', () => showExpenseDetail('primary'));
+
+  // مصروفات خامات → تفاصيل
+  const expRawCard = document.getElementById('kpi-exp-raw-card');
+  if (expRawCard) expRawCard.addEventListener('click', () => showExpenseDetail('raw'));
+
+  // مصروفات ثانوية → تفاصيل
+  const expSecondaryCard = document.getElementById('kpi-exp-secondary-card');
+  if (expSecondaryCard) expSecondaryCard.addEventListener('click', () => showExpenseDetail('secondary'));
+
+  // إغلاق popups المصروفات
+  document.getElementById('cm-exp-primary-close')?.addEventListener('click', () => closeModal('cm-exp-primary-detail'));
+  document.getElementById('cm-exp-primary-detail')?.addEventListener('click', (e) => { if (e.target === e.currentTarget) closeModal('cm-exp-primary-detail'); });
+  document.getElementById('cm-exp-raw-close')?.addEventListener('click', () => closeModal('cm-exp-raw-detail'));
+  document.getElementById('cm-exp-raw-detail')?.addEventListener('click', (e) => { if (e.target === e.currentTarget) closeModal('cm-exp-raw-detail'); });
+  document.getElementById('cm-exp-secondary-close')?.addEventListener('click', () => closeModal('cm-exp-secondary-detail'));
+  document.getElementById('cm-exp-secondary-detail')?.addEventListener('click', (e) => { if (e.target === e.currentTarget) closeModal('cm-exp-secondary-detail'); });
+
+  // زر رصيد الدرج في الهيدر
+  const btnDrawer = document.getElementById('btn-drawer-balance');
+  if (btnDrawer) btnDrawer.addEventListener('click', async () => {
+    const current = await dbOp('settings', 'get', 'drawer_balance');
+    document.getElementById('cm-drawer-amount').value = current?.value || '';
+    openModal('cm-drawer-balance');
+  });
+
+  // حفظ رصيد الدرج
+  document.getElementById('cm-drawer-ok')?.addEventListener('click', async () => {
+    const val = Number(document.getElementById('cm-drawer-amount').value);
+    if (isNaN(val) || val < 0) return showToast('أدخل مبلغاً صحيحاً', true);
+    await dbOp('settings', 'put', { key: 'drawer_balance', value: val });
+    closeModal('cm-drawer-balance');
+    showToast('تم حفظ رصيد الدرج ✓');
+    if (document.getElementById('owner-dashboard').style.display !== 'none') loadReports();
+  });
+  document.getElementById('cm-drawer-cancel')?.addEventListener('click', () => closeModal('cm-drawer-balance'));
+  document.getElementById('cm-drawer-balance')?.addEventListener('click', (e) => { if (e.target === e.currentTarget) closeModal('cm-drawer-balance'); });
 
   // Daily revenue close
   const dailyClose = document.getElementById('cm-daily-close');
