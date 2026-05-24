@@ -261,36 +261,67 @@
   </div>
 
   <!-- فاتورة الطباعة -->
-  <div id="invoice-print" dir="rtl">
-    <div class="invoice-logo">
-      <img src="logo.png" alt="logo" />
+  <div id="invoice-print">
+    <!-- اللوجو -->
+    <div class="inv-logo-wrap">
+      <img src="logo.png" alt="MENUX" class="inv-logo" />
     </div>
-    <div class="invoice-meta text-center">
-      <div id="print-invoice-id" style="border:1px solid #000; padding:5px 15px; display:inline-block; font-weight:bold; margin-bottom:10px;">رقم الفاتورة #0</div>
-      <div id="print-date-time" style="margin-bottom:5px;">تمت الطباعة في:</div>
-      <div id="print-table-num" style="font-weight:bold;">رقم الطاولة: -</div>
+
+    <!-- رقم الطاولة بارز -->
+    <div class="inv-table-badge">
+      <span class="inv-table-label">Table#</span>
+      <span class="inv-table-num" id="print-table-num">—</span>
     </div>
-    <div class="full-line"></div>
-    <table class="invoice-table">
+
+    <!-- التاريخ والوقت ورقم الفاتورة -->
+    <div class="inv-meta-row">
+      <span id="print-date-time">—</span>
+    </div>
+    <div class="inv-meta-row inv-check">
+      <span>Check# <strong id="print-invoice-id">0000</strong></span>
+    </div>
+
+    <div class="inv-divider"></div>
+
+    <!-- هيدر الجدول -->
+    <table class="inv-table">
       <thead>
         <tr>
-          <th class="col-qty">الكمية</th>
-          <th class="col-item">الصنف</th>
-          <th class="col-price">السعر</th>
+          <th class="inv-th-qty">Qty</th>
+          <th class="inv-th-item">Item</th>
+          <th class="inv-th-price">Price</th>
         </tr>
       </thead>
       <tbody id="print-invoice-items"></tbody>
     </table>
-    <div class="full-line"></div>
-    <div class="invoice-totals">
-      <div class="flex-between"><span>المجموع الفرعي</span><span id="invoice-subtotal">0.00 ر.س</span></div>
-      <div class="flex-between"><span>خصم</span><span id="invoice-discount">0.00 ر.س</span></div>
-      <div class="full-line"></div>
-      <div class="flex-between total-row"><span>الإجمالي</span><span id="invoice-total">0.00 ر.س</span></div>
+
+    <div class="inv-divider"></div>
+
+    <!-- المجاميع -->
+    <div class="inv-totals">
+      <div class="inv-total-row">
+        <span>Subtotal</span>
+        <span id="invoice-subtotal">0.00</span>
+      </div>
+      <div class="inv-total-row inv-discount-row" id="inv-discount-wrap">
+        <span>Discount</span>
+        <span id="invoice-discount">0.00</span>
+      </div>
     </div>
-    <div class="invoice-footer">
-      <p id="invoice-items-count">عدد المنتجات: 0</p>
-      <p>Powered by MENUX</p>
+
+    <div class="inv-divider inv-divider-bold"></div>
+
+    <div class="inv-grand-total">
+      <span>Total</span>
+      <span id="invoice-total">0.00</span>
+    </div>
+
+    <div class="inv-divider"></div>
+
+    <!-- الفوتر -->
+    <div class="inv-footer">
+      <p id="invoice-items-count">Products Count 0</p>
+      <p class="inv-powered">Powered by MENUX</p>
     </div>
   </div>
 

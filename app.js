@@ -1297,64 +1297,82 @@ async function completeOrder(method, customerId = null) {
   } catch (e) { console.error(e); showToast('Error', true); }
 }
 async function printBill() {
-    try {
-        const order = getCurrentOrder();
-        if (!order) return;
+  try {
+    const order = getCurrentOrder();
+    if (!order) return;
 
-        // 1. تحديث رقم الفاتورة والوقت
-        document.getElementById('print-invoice-id').innerText = `رقم الفاتورة #${order.id ? order.id.toString().slice(-4) : '0000'}`;
-        const now = new Date();
-        document.getElementById('print-date-time').innerText = `${now.toLocaleDateString('en-GB')} ${now.toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit'})}`;
-        
-        // 2. تحديث رقم الطاولة (بنسحبه من order.table_id أو من الحالة)
-        const tableNum = order.table_id || state.currentTable || '-';
-        document.getElementById('print-table-num').innerText = `رقم الطاولة: ${tableNum}`;
+    const cur = t('currency');
+    const now = new Date();
 
-        // 3. تفريغ وتعبئة الجدول
-        const tbody = document.getElementById('print-invoice-items');
-        tbody.innerHTML = ''; 
+    // ── 1. رقم الطاولة البارز ──
+    const tblObj = state.tables.find(tb => tb.id == state.currentTable);
+    const tblDisplay = tblObj ? tblObj.name.replace(/[^\d]/g, '') || tblObj.name : (order.table_id || state.currentTable || '—');
+    document.getElementById('print-table-num').textContent = tblDisplay;
 
-        let subtotal = 0;
-        let count = 0;
+    // ── 2. التاريخ والوقت ──
+    const dateStr = now.toLocaleDateString('en-GB');
+    const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+    document.getElementById('print-date-time').textContent = `Printed At: ${dateStr} ${timeStr}`;
 
-        order.items.forEach(item => {
-            const price = parseFloat(item.price) || 0;
-            const qty = parseInt(item.quantity) || 0;
-            subtotal += (price * qty);
-            count += qty;
+    // ── 3. رقم الفاتورة ──
+    const invoiceNum = order.id ? String(order.id).padStart(6, '0') : '000000';
+    document.getElementById('print-invoice-id').textContent = invoiceNum;
 
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td class="col-qty">${qty}</td>
-                <td class="col-item">${item.name_ar || item.name}</td>
-                <td class="col-price">${(price * qty).toFixed(2)}</td>
-            `;
-            tbody.appendChild(tr);
-        });
+    // ── 4. تعبئة الأصناف ──
+    const tbody = document.getElementById('print-invoice-items');
+    tbody.innerHTML = '';
+    let subtotal = 0, count = 0;
 
-        // 4. تحديث المجاميع
-        const discount = parseFloat(order.discount) || 0;
-        document.getElementById('invoice-subtotal').innerText = `${subtotal.toFixed(2)} ج.م`;
-        document.getElementById('invoice-discount').innerText = `${discount.toFixed(2)} ج.م`;
-        document.getElementById('invoice-total').innerText = `${(subtotal - discount).toFixed(2)} ج.م`;
-        document.getElementById('invoice-items-count').innerText = `عدد المنتجات: ${count}`;
+    order.items.forEach(item => {
+      const price     = parseFloat(item.price) || 0;
+      const qty       = parseInt(item.quantity) || 0;
+      const lineTotal = price * qty;
+      subtotal += lineTotal;
+      count    += qty;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="inv-td-qty">${qty}</td>
+        <td class="inv-td-item">${item.name_ar || item.name_en || item.name}</td>
+        <td class="inv-td-price">${cur} ${lineTotal.toFixed(2)}</td>`;
+      tbody.appendChild(tr);
+    });
 
-        // 5. تغيير لون الطاولة لـ printed
-        if (state.currentTable) {
-          const tbl = state.tables.find(t => t.id == state.currentTable);
-          if (tbl && tbl.status !== 'empty') {
-            tbl.status = 'printed';
-            await dbOp('tables', 'put', tbl);
-            const order = getCurrentOrder();
-            if (order) { order.status = 'printed'; await dbOp('orders', 'put', { ...order, items: undefined }); }
-            renderTables();
-          }
-        }
-        // 6. الطباعة
-        window.print();
-    } catch (e) {
-        console.error("خطأ في الطباعة:", e);
+    // ── 5. المجاميع ──
+    const discount = parseFloat(order.discount) || 0;
+    const total    = subtotal - discount;
+    document.getElementById('invoice-subtotal').textContent = `${cur} ${subtotal.toFixed(2)}`;
+    document.getElementById('invoice-discount').textContent = `${cur} ${discount.toFixed(2)}`;
+    document.getElementById('invoice-total').textContent    = `${cur} ${total.toFixed(2)}`;
+    document.getElementById('invoice-items-count').textContent = `Products Count ${count}`;
+
+    // إخفاء سطر الخصم لو مفيش خصم
+    const discRow = document.getElementById('inv-discount-wrap');
+    if (discRow) discRow.style.display = discount > 0 ? '' : 'none';
+
+    // ── 6. تغيير حالة الطاولة لـ printed ──
+    if (state.currentTable) {
+      const tbl = state.tables.find(tb => tb.id == state.currentTable);
+      if (tbl && tbl.status !== 'empty') {
+        tbl.status = 'printed';
+        await dbOp('tables', 'put', tbl);
+        const o2 = getCurrentOrder();
+        if (o2) { o2.status = 'printed'; await dbOp('orders', 'put', { ...o2, items: undefined }); }
+        renderTables();
+      }
     }
+
+    // ── 7. طباعة مباشرة — silent print بدون dialog الويندوز ──
+    // نعطي المتصفح frame كامل يرندر فيه الفاتورة ثم نطبع
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        window.print();
+      });
+    });
+
+  } catch (e) {
+    console.error('خطأ في الطباعة:', e);
+    showToast('حدث خطأ أثناء الطباعة', true);
+  }
 }
 let enteredPin = '';
 
@@ -1467,28 +1485,33 @@ async function loadReports(type) {
   const expCats      = await dbOp('expense_categories','getAll');
   const expPurchases = await dbOp('expense_purchases', 'getAll');
 
-  const todayStr = isoDate().split('T')[0];
-  const monthStr = todayStr.substring(0, 7);
-  // Date picker override
-  const pickerVal = document.getElementById('rep-date-picker')?.value;
-  const chosenDate = pickerVal || (_repType === 'today' ? todayStr : null);
+  const todayStr = isoDate().split('T')[0];   // e.g. "2026-05-24"
+  const monthStr = todayStr.substring(0, 7);  // e.g. "2026-05"
 
+  // Date picker: إذا غيّر المستخدم التاريخ يدوياً
+  const pickerVal = document.getElementById('rep-date-picker')?.value || '';
+
+  // الفترة الفعلية للفلترة
+  const filterDate  = pickerVal || todayStr;
+  const filterMonth = pickerVal ? pickerVal.substring(0, 7) : monthStr;
+
+  // matchDate صارمة — تطابق يوم بيوم أو شهر بشهر
   const matchDate = (dateStr) => {
     if (!dateStr) return false;
-    if (chosenDate && _repType === 'today') return dateStr.startsWith(chosenDate);
-    if (_repType === 'today') return dateStr.startsWith(todayStr);
-    return dateStr.startsWith(monthStr);
+    const d = (dateStr.split('T')[0]);
+    if (_repType === 'today') return d === filterDate;
+    return d.substring(0, 7) === filterMonth;
   };
 
   // Update sub-label
   const lbl = document.getElementById('rep-date-label');
   if (lbl) {
-    if (chosenDate && chosenDate !== todayStr) lbl.textContent = `بيانات ${chosenDate}`;
+    if (pickerVal && pickerVal !== todayStr) lbl.textContent = `بيانات ${pickerVal}`;
     else if (_repType === 'today') lbl.textContent = `اليوم — ${todayStr}`;
-    else lbl.textContent = `الشهر — ${monthStr}`;
+    else lbl.textContent = `الشهر — ${filterMonth}`;
   }
 
-  // ── Revenue breakdown ──
+  // ── Revenue breakdown (كل الأرقام بتتبع matchDate = يومي أو شهري) ──
   let cashRev = 0, walletRev = 0, creditPaidRev = 0;
   orders.forEach(o => {
     if (o.status === 'paid' && matchDate(o.paid_at)) {
@@ -1496,12 +1519,14 @@ async function loadReports(type) {
       if (o.payment_method === 'wallet') walletRev += o.total;
     }
   });
+  // آجل مدفوع — يومي حسب matchDate
   creditOrders.forEach(co => {
     if (co.is_paid && matchDate(co.paid_at)) creditPaidRev += co.amount;
   });
-  const revenue = cashRev + walletRev + creditPaidRev;
+  // إجمالي الإيراد = كاش + محفظة (بدون آجل مدفوع — هيتضاف منفرداً في صافي الدخل)
+  const revenue = cashRev + walletRev;
 
-  // ── Expenses breakdown by type ──
+  // ── Expenses breakdown by type (يومي حسب matchDate) ──
   let expPrimary = 0, expRaw = 0, expSecondary = 0;
   expenses.forEach(e => {
     if (!matchDate(e.created_at)) return;
@@ -1512,6 +1537,14 @@ async function loadReports(type) {
     else                       expSecondary += e.amount;
   });
   const expTotal = expPrimary + expRaw + expSecondary;
+
+  // ── بضاعة آجل مدفوعة (يومي حسب matchDate) ──
+  let expCreditPaid = 0;
+  expPurchases.forEach(ep => {
+    if ((ep.is_paid === 1 || ep.paid_amount > 0) && matchDate(ep.paid_at || ep.created_at)) {
+      expCreditPaid += ep.paid_amount || ep.amount;
+    }
+  });
 
   // ── Top item ──
   const itemCounts = {};
@@ -1532,29 +1565,28 @@ async function loadReports(type) {
     if (it) topItemName = `${it.name_ar} (${topQty})`;
   }
 
-  // ── Cash on Hand (always month-based) ──
+  // ── المتوقع في الخزنة (شهري دائماً — تراكمي) ──
   let cashOnHand = 0;
   orders.forEach(o => {
     if (o.status === 'paid' && ['cash','wallet'].includes(o.payment_method) && o.paid_at?.startsWith(monthStr)) cashOnHand += o.total;
   });
   creditOrders.forEach(co => { if (co.is_paid && co.paid_at?.startsWith(monthStr)) cashOnHand += co.amount; });
   expenses.forEach(e => { if (e.created_at?.startsWith(monthStr)) cashOnHand -= e.amount; });
-  // اطرح بضاعة الآجل المدفوعة من الخزينة
   expPurchases.forEach(ep => {
-    // اطرح أي مبلغ مدفوع (كامل أو جزئي) من الخزينة
     if (ep.paid_amount > 0 && ep.paid_at?.startsWith(monthStr)) cashOnHand -= ep.paid_amount;
   });
-  // بضاعة آجل مدفوعة في الفترة المختارة
-  let expCreditPaid = 0;
-  expPurchases.forEach(ep => {
-    if ((ep.is_paid === 1 || ep.paid_amount > 0) && matchDate(ep.paid_at || ep.created_at)) {
-      expCreditPaid += ep.paid_amount || ep.amount;
-    }
-  });
 
-  // ── Drawer Balance (from settings) ──
-  const drawerSetting = await dbOp('settings', 'get', 'drawer_balance');
-  const drawerBalance = Number(drawerSetting?.value || 0);
+  // ── رصيد الدرج — يومي: صفر في اليوم التالي ──
+  const drawerSetting     = await dbOp('settings', 'get', 'drawer_balance');
+  const drawerDateSetting = await dbOp('settings', 'get', 'drawer_balance_date');
+  const drawerSavedDate   = drawerDateSetting?.value || '';
+  const drawerBalance = (drawerSavedDate === filterDate)
+    ? Number(drawerSetting?.value || 0)
+    : 0;
+
+  // ── صافي الدخل (يومي) ──
+  // = إجمالي الإيراد (كاش+محفظة) + آجل مدفوع + رصيد الدرج - بضاعة آجل مدفوعة - مصروفات
+  const netIncome = revenue + creditPaidRev + drawerBalance - expCreditPaid - expTotal;
 
   // ── Update KPI cards ──
   const cur = t('currency');
@@ -1562,8 +1594,24 @@ async function loadReports(type) {
   document.getElementById('rep-cash').textContent          = `${fmt(cashRev)} ${cur}`;
   document.getElementById('rep-wallet').textContent        = `${fmt(walletRev)} ${cur}`;
   document.getElementById('rep-credit-paid').textContent   = `${fmt(creditPaidRev)} ${cur}`;
-  document.getElementById('rep-revenue').textContent       = `${fmt(revenue)} ${cur}`;
-  document.getElementById('rep-net').textContent           = `${fmt(revenue + drawerBalance - expTotal)} ${cur}`;
+  // إجمالي الإيراد في الـ card = كاش + محفظة + آجل مدفوع (للعرض فقط)
+  document.getElementById('rep-revenue').textContent       = `${fmt(revenue + creditPaidRev)} ${cur}`;
+
+  // صافي الدخل: إيراد الفترة - مصروفات الفترة (يومي أو شهري حسب الـ toggle)
+  const netEl = document.getElementById('rep-net');
+  if (netEl) {
+    netEl.textContent = `${netIncome < 0 ? '-' : ''}${fmt(Math.abs(netIncome))} ${cur}`;
+    // لون أحمر لو سالب
+    const netCard = netEl.closest('.kpi-card');
+    if (netCard) {
+      if (netIncome < 0) {
+        netCard.style.background = 'linear-gradient(135deg, #DC2626, #b91c1c)';
+      } else {
+        netCard.style.background = '';
+      }
+    }
+  }
+
   document.getElementById('rep-top-item').textContent      = topItemName;
   document.getElementById('rep-exp-primary').textContent   = `${fmt(expPrimary)} ${cur}`;
   document.getElementById('rep-exp-raw').textContent       = `${fmt(expRaw)} ${cur}`;
@@ -1627,13 +1675,14 @@ async function showCashInvoices() {
   const orderItems = await dbOp('order_items', 'getAll');
   const todayStr = isoDate().split('T')[0];
   const monthStr = todayStr.substring(0, 7);
-  const pickerVal = document.getElementById('rep-date-picker')?.value;
-  const chosenDate = pickerVal || (_repType === 'today' ? todayStr : null);
+  const pickerVal = document.getElementById('rep-date-picker')?.value || '';
+  const filterDate  = pickerVal || todayStr;
+  const filterMonth = pickerVal ? pickerVal.substring(0, 7) : monthStr;
   const matchDate = (d) => {
     if (!d) return false;
-    if (chosenDate && _repType === 'today') return d.startsWith(chosenDate);
-    if (_repType === 'today') return d.startsWith(todayStr);
-    return d.startsWith(monthStr);
+    const day = d.split('T')[0];
+    if (_repType === 'today') return day === filterDate;
+    return day.substring(0, 7) === filterMonth;
   };
   const cur = t('currency');
   const cashOrders = orders.filter(o => o.status === 'paid' && o.payment_method === 'cash' && matchDate(o.paid_at));
@@ -1699,13 +1748,14 @@ async function showWalletInvoices() {
   const orderItems = await dbOp('order_items', 'getAll');
   const todayStr = isoDate().split('T')[0];
   const monthStr = todayStr.substring(0, 7);
-  const pickerVal = document.getElementById('rep-date-picker')?.value;
-  const chosenDate = pickerVal || (_repType === 'today' ? todayStr : null);
+  const pickerVal = document.getElementById('rep-date-picker')?.value || '';
+  const filterDate  = pickerVal || todayStr;
+  const filterMonth = pickerVal ? pickerVal.substring(0, 7) : monthStr;
   const matchDate = (d) => {
     if (!d) return false;
-    if (chosenDate && _repType === 'today') return d.startsWith(chosenDate);
-    if (_repType === 'today') return d.startsWith(todayStr);
-    return d.startsWith(monthStr);
+    const day = d.split('T')[0];
+    if (_repType === 'today') return day === filterDate;
+    return day.substring(0, 7) === filterMonth;
   };
   const cur = t('currency');
   const walletOrders = orders.filter(o => o.status === 'paid' && o.payment_method === 'wallet' && matchDate(o.paid_at));
@@ -1768,13 +1818,14 @@ async function showCreditPaidDetail() {
   const customers    = await dbOp('customers',     'getAll');
   const todayStr = isoDate().split('T')[0];
   const monthStr = todayStr.substring(0, 7);
-  const pickerVal = document.getElementById('rep-date-picker')?.value;
-  const chosenDate = pickerVal || (_repType === 'today' ? todayStr : null);
+  const pickerVal = document.getElementById('rep-date-picker')?.value || '';
+  const filterDate  = pickerVal || todayStr;
+  const filterMonth = pickerVal ? pickerVal.substring(0, 7) : monthStr;
   const matchDate = (d) => {
     if (!d) return false;
-    if (chosenDate && _repType === 'today') return d.startsWith(chosenDate);
-    if (_repType === 'today') return d.startsWith(todayStr);
-    return d.startsWith(monthStr);
+    const day = d.split('T')[0];
+    if (_repType === 'today') return day === filterDate;
+    return day.substring(0, 7) === filterMonth;
   };
   const cur = t('currency');
   _creditPaidData = creditOrders
@@ -1817,13 +1868,14 @@ async function showTopItemsDetail() {
   const menuItems  = await dbOp('menu_items',  'getAll');
   const todayStr = isoDate().split('T')[0];
   const monthStr = todayStr.substring(0, 7);
-  const pickerVal = document.getElementById('rep-date-picker')?.value;
-  const chosenDate = pickerVal || (_repType === 'today' ? todayStr : null);
+  const pickerVal = document.getElementById('rep-date-picker')?.value || '';
+  const filterDate  = pickerVal || todayStr;
+  const filterMonth = pickerVal ? pickerVal.substring(0, 7) : monthStr;
   const matchDate = (d) => {
     if (!d) return false;
-    if (chosenDate && _repType === 'today') return d.startsWith(chosenDate);
-    if (_repType === 'today') return d.startsWith(todayStr);
-    return d.startsWith(monthStr);
+    const day = d.split('T')[0];
+    if (_repType === 'today') return day === filterDate;
+    return day.substring(0, 7) === filterMonth;
   };
   const itemCounts = {};
   const itemRevenue = {};
@@ -1876,13 +1928,14 @@ async function showExpenseDetail(type) {
   const expCats  = await dbOp('expense_categories', 'getAll');
   const todayStr = isoDate().split('T')[0];
   const monthStr = todayStr.substring(0, 7);
-  const pickerVal = document.getElementById('rep-date-picker')?.value;
-  const chosenDate = pickerVal || (_repType === 'today' ? todayStr : null);
+  const pickerVal = document.getElementById('rep-date-picker')?.value || '';
+  const filterDate  = pickerVal || todayStr;
+  const filterMonth = pickerVal ? pickerVal.substring(0, 7) : monthStr;
   const matchDate = (d) => {
     if (!d) return false;
-    if (chosenDate && _repType === 'today') return d.startsWith(chosenDate);
-    if (_repType === 'today') return d.startsWith(todayStr);
-    return d.startsWith(monthStr);
+    const day = d.split('T')[0];
+    if (_repType === 'today') return day === filterDate;
+    return day.substring(0, 7) === filterMonth;
   };
   const cur = t('currency');
   const typeColors = { primary: 'var(--error)', raw: '#E65100', secondary: 'var(--text-secondary)' };
@@ -2724,19 +2777,24 @@ function bindEvents() {
   document.getElementById('cm-exp-secondary-close')?.addEventListener('click', () => closeModal('cm-exp-secondary-detail'));
   document.getElementById('cm-exp-secondary-detail')?.addEventListener('click', (e) => { if (e.target === e.currentTarget) closeModal('cm-exp-secondary-detail'); });
 
-  // زر رصيد الدرج في الهيدر
+  // زر رصيد الدرج في الهيدر — يظهر صفر إذا كان محفوظاً ليوم سابق
   const btnDrawer = document.getElementById('btn-drawer-balance');
   if (btnDrawer) btnDrawer.addEventListener('click', async () => {
-    const current = await dbOp('settings', 'get', 'drawer_balance');
-    document.getElementById('cm-drawer-amount').value = current?.value || '';
+    const todayStr = isoDate().split('T')[0];
+    const current  = await dbOp('settings', 'get', 'drawer_balance');
+    const savedDate = (await dbOp('settings', 'get', 'drawer_balance_date'))?.value || '';
+    const isToday = savedDate === todayStr;
+    document.getElementById('cm-drawer-amount').value = isToday ? (current?.value || '') : '';
     openModal('cm-drawer-balance');
   });
 
-  // حفظ رصيد الدرج
+  // حفظ رصيد الدرج — يُخزَّن مع تاريخ اليوم حتى يُعاد ضبطه صفراً في اليوم التالي
   document.getElementById('cm-drawer-ok')?.addEventListener('click', async () => {
     const val = Number(document.getElementById('cm-drawer-amount').value);
     if (isNaN(val) || val < 0) return showToast('أدخل مبلغاً صحيحاً', true);
+    const todayStr = isoDate().split('T')[0];
     await dbOp('settings', 'put', { key: 'drawer_balance', value: val });
+    await dbOp('settings', 'put', { key: 'drawer_balance_date', value: todayStr });
     closeModal('cm-drawer-balance');
     showToast('تم حفظ رصيد الدرج ✓');
     if (document.getElementById('owner-dashboard').style.display !== 'none') loadReports();
