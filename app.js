@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════
    CAFÉ POS — Application Logic
-   Offline-first · Bilingual (AR/EN) · IndexedDB (v2)
+   Supabase Edition · Bilingual (AR/EN)
    ═══════════════════════════════════════════════════ */
 
 // ──────────────── DYNAMIC UI INJECTION ────────────────
@@ -835,101 +835,60 @@ const state = {
   settings: {}
 };
 
-// ──────────────── INDEXED DB ────────────────
+// ──────────────── SUPABASE INIT ────────────────
 
-const DB_NAME = 'cafe-pos-db';
-const DB_VERSION = 3; // v3: added expense_purchases store
-let db = null;
+// 🔴 ضع بياناتك هنا
+const SUPABASE_URL = 'https://wbyovaggjnnafbcrlimr.supabase.co'; 
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndieW92YWdnam5uYWZiY3JsaW1yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY5Njk1NDIsImV4cCI6MjEwMjU0NTU0Mn0.7aOgvhdB4YMoQJAZ90ow8tMEJZN4-jqh8p6-T2MfBCg'; 
 
-function openDB() {
-  return new Promise((resolve, reject) => {
-    const req = indexedDB.open(DB_NAME, DB_VERSION);
-    req.onupgradeneeded = (e) => {
-      const d = e.target.result;
-      const stores = [
-        { name: 'categories', keyPath: 'id', autoInc: true },
-        { name: 'menu_items', keyPath: 'id', autoInc: true },
-        { name: 'tables', keyPath: 'id', autoInc: true },
-        { name: 'orders', keyPath: 'id', autoInc: true },
-        { name: 'order_items', keyPath: 'id', autoInc: true },
-        { name: 'expenses', keyPath: 'id', autoInc: true },
-        { name: 'expense_categories', keyPath: 'id', autoInc: true },
-        { name: 'customers', keyPath: 'id', autoInc: true },
-        { name: 'credit_orders', keyPath: 'id', autoInc: true },
-        { name: 'settings', keyPath: 'key', autoInc: false },
-        { name: 'expense_purchases', keyPath: 'id', autoInc: true }
-      ];
-      stores.forEach(s => {
-        if (!d.objectStoreNames.contains(s.name)) {
-          d.createObjectStore(s.name, s.autoInc ? { keyPath: s.keyPath, autoIncrement: true } : { keyPath: s.keyPath });
-        }
-      });
-    };
-    req.onsuccess = (e) => { db = e.target.result; resolve(db); };
-    req.onerror = (e) => reject(e);
-  });
-}
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-function dbOp(storeName, method, data = null) {
-  return new Promise((resolve, reject) => {
-    if (!db) return reject('DB not initialized');
-    const mode = (method === 'get' || method === 'getAll') ? 'readonly' : 'readwrite';
-    const tx = db.transaction(storeName, mode);
-    const store = tx.objectStore(storeName);
-    let req;
+// دالة openDB و seedDB مش محتاجينهم، Supabase بيعمل ده لوحده
+async function openDB() { return true; }
+async function seedDB() { return true; }
 
-    if (method === 'getAll') req = store.getAll();
-    else if (method === 'get') req = store.get(data);
-    else if (method === 'add' || method === 'put') req = store[method](data);
-    else if (method === 'delete') req = store.delete(data);
-    else if (method === 'clear') req = store.clear();
+// ──────────────── DB WRAPPER (تعديل لدعم Supabase) ────────────────
 
-    req.onsuccess = () => resolve(req.result);
-    req.onerror = () => reject(req.error);
-  });
-}
-
-// ──────────────── SEEDING ────────────────
-
-async function seedDB() {
-  const settings = await dbOp('settings', 'getAll');
-  if (settings.length > 0) return; // Already seeded
-
-  // Seed Settings
-  await dbOp('settings', 'put', { key: 'business_name', value: 'Café POS' });
-  await dbOp('settings', 'put', { key: 'language', value: 'ar' });
-  await dbOp('settings', 'put', { key: 'printer', value: 'bluetooth' });
-  await dbOp('settings', 'put', { key: 'owner_pin', value: '2525' });
-
-  // Seed Tables
-  for (let i = 1; i <= 20; i++) {
-    await dbOp('tables', 'add', { name: `طاولة ${i}`, status: 'empty' });
-  }
-
-  // Seed Categories
-  const cats = [
-    { name_ar: 'قهوة ساخنة', name_en: 'Hot Coffee', sort_order: 1, emoji: '🔥' },
-    { name_ar: 'مشروبات باردة', name_en: 'Cold Drinks', sort_order: 2, emoji: '🧊' },
-    { name_ar: 'مشروبات خاصة', name_en: 'Specialty', sort_order: 3, emoji: '✨' },
-    { name_ar: 'أطعمة', name_en: 'Food', sort_order: 4, emoji: '🥪' },
-    { name_ar: 'حلويات', name_en: 'Desserts', sort_order: 5, emoji: '🍰' }
-  ];
-  let catIds = [];
-  for (const c of cats) {
-    const id = await dbOp('categories', 'add', c);
-    catIds.push(id);
-  }
-
-  // Seed Items
-  const items = [
-    { category_id: catIds[0], name_ar: 'إسبريسو', name_en: 'Espresso', price: 12, is_available: 1 },
-    { category_id: catIds[0], name_ar: 'كابتشينو', name_en: 'Cappuccino', price: 18, is_available: 1 },
-    { category_id: catIds[1], name_ar: 'لاتيه مثلج', name_en: 'Iced Latte', price: 20, is_available: 1 },
-    { category_id: catIds[3], name_ar: 'كلوب ساندويتش', name_en: 'Club Sandwich', price: 28, is_available: 1 },
-    { category_id: catIds[4], name_ar: 'تشيز كيك', name_en: 'Cheesecake', price: 22, is_available: 1 }
-  ];
-  for (const i of items) {
-    await dbOp('menu_items', 'add', i);
+async function dbOp(storeName, method, data = null) {
+  try {
+    if (method === 'getAll') {
+      const { data: result, error } = await supabase.from(storeName).select('*');
+      if (error) throw error;
+      return result || [];
+    } 
+    else if (method === 'get') {
+      const { data: result, error } = await supabase.from(storeName).select('*').eq('id', data).single();
+      // PGRST116 يعني إن السجل غير موجود، مش خطأ نقف عنده
+      if (error && error.code !== 'PGRST116') throw error; 
+      return result;
+    } 
+    else if (method === 'add') {
+      if (data && data.items) delete data.items; // تنظيف خصائص مش موجودة في الجدول
+      const { data: result, error } = await supabase.from(storeName).insert(data).select().single();
+      if (error) throw error;
+      // نرجع الـ ID عشان الكود القديم يشتغل زي ما هو
+      return result ? result.id : null; 
+    } 
+    else if (method === 'put') {
+      if (data && data.items) delete data.items; // تنظيف خصائص مش موجودة في الجدول
+      // upsert بتضيف لو جديد أو تحدث لو موجود بناءً على الـ Primary Key
+      const { data: result, error } = await supabase.from(storeName).upsert(data).select().single();
+      if (error) throw error;
+      return result;
+    } 
+    else if (method === 'delete') {
+      const { error } = await supabase.from(storeName).delete().eq('id', data);
+      if (error) throw error;
+    }
+    else if (method === 'clear') {
+      // مفيش clear مباشر في Supabase، بنمسح كل اللي مش ID بـ 0
+      const { error } = await supabase.from(storeName).delete().neq('id', 0);
+      if (error) throw error;
+    }
+  } catch (error) {
+    console.error(`DB Error on ${storeName} (${method}):`, error.message);
+    showToast('خطأ في قاعدة البيانات: ' + error.message, true);
+    return null;
   }
 }
 
@@ -2945,5 +2904,5 @@ window.deleteCategory = async function(id) {
     showToast('تم حذف القسم', false);
     if (typeof loadMenuTab === 'function') loadMenuTab();
     if (typeof refreshCashierMenu === 'function') refreshCashierMenu();
-  } catch (e) { console.error("خطأ أثناء الحذف:", e); }
+    } catch (e) { console.error("خطأ أثناء الحذف:", e); }
 };
