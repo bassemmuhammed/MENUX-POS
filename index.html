@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" translate="no">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google" content="notranslate">
   <title>MENUX</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,14 +29,6 @@
           <button class="top-btn" id="btn-print">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
             <span>طباعة</span>
-          </button>
-          <button class="top-btn" id="btn-expenses">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 10h20"/></svg>
-            <span>المصروفات</span>
-          </button>
-          <button class="top-btn" id="btn-drawer-balance">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
-            <span>رصيد الدرج</span>
           </button>
           <button class="top-btn" id="btn-more">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="5" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="12" cy="19" r="1.5" fill="currentColor"/></svg>
@@ -77,7 +70,7 @@
     </main>
   </div>
 
-  <!-- النوافذ المنبثقة (سيتم حقن الباقي تلقائياً من app.js) -->
+  <!-- نافذة الطاولات -->
   <div class="modal-overlay" id="tables-modal" hidden>
     <div class="modal">
       <div class="modal-header">
@@ -87,6 +80,31 @@
         </button>
       </div>
       <div class="tables-grid" id="tables-grid"></div>
+    </div>
+  </div>
+
+  <!-- نافذة الدفع -->
+  <div class="modal-overlay" id="payment-modal" hidden>
+    <div class="modal payment-modal-box">
+      <div class="modal-header" style="justify-content: center; border-bottom: none; padding-bottom: 0;">
+        <h2>اختر طريقة الدفع</h2>
+      </div>
+      <div class="payment-total" id="payment-total-amount">0.00 <small>ر.س</small></div>
+      <div class="payment-options-grid">
+        <button class="payment-option-card" data-method="cash">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/></svg>
+          نقدي (Cash)
+        </button>
+        <button class="payment-option-card" data-method="wallet">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 10H18a2 2 0 0 0 0 4h4"/></svg>
+          محفظة (Wallet)
+        </button>
+        <button class="payment-option-card" data-method="credit">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z"/></svg>
+          آجل (Credit)
+        </button>
+      </div>
+      <button class="modal-cancel-btn" id="close-payment-modal">إلغاء</button>
     </div>
   </div>
 
