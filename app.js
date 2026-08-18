@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════
-   CAFÉ POS — Application Logic (Original Full Code)
+   CAFÉ POS — Application Logic (Original Full Code + Supabase + Checkout)
    ═══════════════════════════════════════════════════ */
 
 function injectDynamicUI() {
