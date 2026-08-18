@@ -96,7 +96,6 @@ input, select { font-family: 'Cairo', sans-serif; outline: none; }
 .total-label { font-size: 16px; font-weight: 700; }
 .total-value { font-family: 'Sora', sans-serif; font-size: 24px; font-weight: 800; color: var(--primary); }
 
-/* زرار الدفع الجديد */
 .checkout-btn { margin-top: 16px; background: var(--primary); color: white; padding: 16px; border-radius: var(--radius-md); font-size: 16px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25); }
 .checkout-btn:hover { background: var(--primary-hover); transform: translateY(-1px); }
 
