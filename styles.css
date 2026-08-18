@@ -41,6 +41,11 @@
   padding: 0;
 }
 
+/* إصلاح مشكلة النوافذ المنبثقة المعلقة */
+[hidden] {
+  display: none !important;
+}
+
 html, body {
   height: 100vh;
   overflow: hidden;
