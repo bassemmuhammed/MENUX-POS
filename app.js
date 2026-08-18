@@ -239,14 +239,12 @@ function injectDynamicUI() {
 
         <!-- ══ REPORTS TAB ══ -->
         <div class="dash-tab-pane active" id="tab-reports">
-          <!-- Header row -->
           <div class="dash-page-header">
             <div>
               <h1 class="dash-page-title">التقارير</h1>
               <p class="dash-page-sub" id="rep-date-label">اليوم</p>
             </div>
             <div class="dash-header-actions">
-              <!-- Date picker -->
               <input type="date" id="rep-date-picker" class="dash-date-input" title="اختر يوماً">
               <div class="dash-toggle-group">
                 <button id="rep-today" class="dash-toggle-btn active">اليوم</button>
@@ -255,9 +253,7 @@ function injectDynamicUI() {
             </div>
           </div>
 
-          <!-- KPI Cards Row 1: الإيراد — من اليمين للشمال -->
           <div class="kpi-grid" style="grid-template-columns: repeat(4, 1fr);">
-            <!-- المتوقع في الخزنة — Hero card ممتد كامل العرض -->
             <div class="kpi-card kpi-hero" id="kpi-hero-card" style="cursor:pointer; grid-column: 1 / -1;" title="اضغط لرؤية التاريخ اليومي">
               <div class="kpi-icon-wrap kpi-icon-white">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
@@ -267,7 +263,6 @@ function injectDynamicUI() {
               <div class="kpi-hint">اضغط لعرض الإيراد اليومي ▾</div>
             </div>
 
-            <!-- ١. إجمالي الإيراد -->
             <div class="kpi-card kpi-accent" id="kpi-revenue-card" style="cursor:pointer;" title="اضغط لرؤية التاريخ اليومي">
               <div class="kpi-icon-wrap kpi-icon-white">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
@@ -277,7 +272,6 @@ function injectDynamicUI() {
               <div style="font-size:10px;color:rgba(255,255,255,0.55);margin-top:2px;">اضغط لعرض اليومي ▾</div>
             </div>
 
-            <!-- رصيد الدرج -->
             <div class="kpi-card" style="border-color:rgba(74,29,150,0.2);">
               <div class="kpi-icon-wrap" style="background:#F3EEFF;">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4A1D96" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M7 15h.01"/><path d="M11 15h2"/></svg>
@@ -286,7 +280,6 @@ function injectDynamicUI() {
               <div class="kpi-value kpi-purple" id="rep-drawer-balance">0.00</div>
             </div>
 
-            <!-- ٢. إيراد نقدي -->
             <div class="kpi-card" id="kpi-cash-card" style="cursor:pointer;" title="اضغط لعرض فواتير الكاش">
               <div class="kpi-icon-wrap" style="background:#E8F5E9;">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/></svg>
@@ -296,7 +289,6 @@ function injectDynamicUI() {
               <div style="font-size:10px;color:var(--text-secondary);margin-top:2px;">اضغط للفواتير ▾</div>
             </div>
 
-            <!-- ٣. محفظة -->
             <div class="kpi-card" id="kpi-wallet-card" style="cursor:pointer;" title="اضغط لعرض فواتير المحفظة">
               <div class="kpi-icon-wrap" style="background:#E3F2FD;">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1565C0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 10H18a2 2 0 0 0 0 4h4"/></svg>
@@ -306,7 +298,6 @@ function injectDynamicUI() {
               <div style="font-size:10px;color:var(--text-secondary);margin-top:2px;">اضغط للفواتير ▾</div>
             </div>
 
-            <!-- ٤. آجل مدفوع -->
             <div class="kpi-card" id="kpi-credit-paid-card" style="cursor:pointer;" title="اضغط لعرض تقارير الآجل المدفوع">
               <div class="kpi-icon-wrap" style="background:#FFF3E0;">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E65100" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z"/></svg>
@@ -316,7 +307,6 @@ function injectDynamicUI() {
               <div style="font-size:10px;color:var(--text-secondary);margin-top:2px;">اضغط للتفاصيل ▾</div>
             </div>
 
-            <!-- ٥. بضاعة آجل مدفوعة -->
             <div class="kpi-card" id="kpi-exp-credit-card" style="cursor:pointer;" title="اضغط لعرض تفاصيل فواتير بضاعة الآجل">
               <div class="kpi-icon-wrap" style="background:#FFF3E0;">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E65100" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z"/><path d="M12 11v4"/><path d="M10 13h4"/></svg>
@@ -326,7 +316,6 @@ function injectDynamicUI() {
               <div style="font-size:10px;color:var(--text-secondary);margin-top:2px;">اضغط للتفاصيل ▾</div>
             </div>
 
-            <!-- ٦. صافي الدخل -->
             <div class="kpi-card kpi-success">
               <div class="kpi-icon-wrap" style="background:rgba(255,255,255,0.2);">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-5"/></svg>
@@ -335,7 +324,6 @@ function injectDynamicUI() {
               <div class="kpi-value" id="rep-net">0.00</div>
             </div>
 
-            <!-- ٧. أكثر منتج مبيعاً -->
             <div class="kpi-card" id="kpi-top-item-card" style="cursor:pointer;" title="اضغط لعرض تفاصيل المبيعات">
               <div class="kpi-icon-wrap" style="background:#F3E5F5;">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7B1FA2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
@@ -346,7 +334,6 @@ function injectDynamicUI() {
             </div>
           </div>
 
-          <!-- Row 2: المصروفات -->
           <div class="dash-section-title">المصروفات</div>
           <div class="kpi-grid kpi-grid-3">
             <div class="kpi-card kpi-danger" id="kpi-exp-primary-card" style="cursor:pointer;" title="اضغط لتفاصيل المصروفات الأساسية">
@@ -375,13 +362,11 @@ function injectDynamicUI() {
             </div>
           </div>
 
-          <!-- Row 3: بضاعة الآجل -->
           <div class="dash-section-title">بضاعة الآجل (غير مدفوعة)</div>
           <div class="credit-summary-bar" id="exp-purchases-bar">
             <div class="credit-summary-empty">لا توجد بضاعة آجل غير مدفوعة</div>
           </div>
 
-          <!-- Row 4: مديونية العملاء -->
           <div class="dash-section-title" style="margin-top:20px;">مديونية العملاء (غير مدفوعة)</div>
           <div class="credit-summary-bar" id="credit-summary-bar">
             <div class="credit-summary-empty">لا توجد مبالغ آجلة</div>
@@ -594,7 +579,7 @@ function injectDynamicUI() {
 
     <!-- ═══ EXPENSE CREDIT DETAIL POPUP ═══ -->
     <div class="cmodal-overlay" id="cm-exp-credit-detail">
-      <div class="cmodal-box" style="max-width:520px; width:95%; padding:0; border-radius:16px; overflow:hidden;">
+      <div class="cmodal-box" style="max-width:520px; width:95%; padding:0; border-radius:16px;overflow:hidden;">
         <div style="display:flex; justify-content:space-between; align-items:center; padding:18px 20px; border-bottom:1px solid var(--border);">
           <div class="cmodal-title" style="margin:0;">فواتير بضاعة الآجل المدفوعة — الشهر</div>
           <button id="cm-exp-credit-detail-close" style="background:none; border:none; cursor:pointer; color:#6B7280; font-size:20px;">✕</button>
@@ -828,7 +813,7 @@ const state = {
   currentTable: null,
   selectedCategory: null,
   searchQuery: '',
-  orders: {}, // Active orders loaded into memory { tableId: order }
+  orders: {}, 
   categories: [],
   menuItems: [],
   tables: [],
@@ -837,13 +822,11 @@ const state = {
 
 // ──────────────── SUPABASE INIT ────────────────
 
-// 🔴 ضع بياناتك هنا
 const SUPABASE_URL = 'https://wbyovaggjnnafbcrlimr.supabase.co'; 
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndieW92YWdnam5uYWZiY3JsaW1yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY5Njk1NDIsImV4cCI6MjEwMjU0NTU0Mn0.7aOgvhdB4YMoQJAZ90ow8tMEJZN4-jqh8p6-T2MfBCg'; 
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// دالة openDB و seedDB مش محتاجينهم، Supabase بيعمل ده لوحده
 async function openDB() { return true; }
 async function seedDB() { return true; }
 
@@ -852,37 +835,33 @@ async function seedDB() { return true; }
 async function dbOp(storeName, method, data = null) {
   try {
     if (method === 'getAll') {
-      const { data: result, error } = await supabase.from(storeName).select('*');
+      const { data: result, error } = await supabaseClient.from(storeName).select('*');
       if (error) throw error;
       return result || [];
     } 
     else if (method === 'get') {
-      const { data: result, error } = await supabase.from(storeName).select('*').eq('id', data).single();
-      // PGRST116 يعني إن السجل غير موجود، مش خطأ نقف عنده
+      const { data: result, error } = await supabaseClient.from(storeName).select('*').eq('id', data).single();
       if (error && error.code !== 'PGRST116') throw error; 
       return result;
     } 
     else if (method === 'add') {
-      if (data && data.items) delete data.items; // تنظيف خصائص مش موجودة في الجدول
-      const { data: result, error } = await supabase.from(storeName).insert(data).select().single();
+      if (data && data.items) delete data.items; 
+      const { data: result, error } = await supabaseClient.from(storeName).insert(data).select().single();
       if (error) throw error;
-      // نرجع الـ ID عشان الكود القديم يشتغل زي ما هو
       return result ? result.id : null; 
     } 
     else if (method === 'put') {
-      if (data && data.items) delete data.items; // تنظيف خصائص مش موجودة في الجدول
-      // upsert بتضيف لو جديد أو تحدث لو موجود بناءً على الـ Primary Key
-      const { data: result, error } = await supabase.from(storeName).upsert(data).select().single();
+      if (data && data.items) delete data.items; 
+      const { data: result, error } = await supabaseClient.from(storeName).upsert(data).select().single();
       if (error) throw error;
       return result;
     } 
     else if (method === 'delete') {
-      const { error } = await supabase.from(storeName).delete().eq('id', data);
+      const { error } = await supabaseClient.from(storeName).delete().eq('id', data);
       if (error) throw error;
     }
     else if (method === 'clear') {
-      // مفيش clear مباشر في Supabase، بنمسح كل اللي مش ID بـ 0
-      const { error } = await supabase.from(storeName).delete().neq('id', 0);
+      const { error } = await supabaseClient.from(storeName).delete().neq('id', 0);
       if (error) throw error;
     }
   } catch (error) {
@@ -934,7 +913,6 @@ function closeModal(id) {
   if (el) { el.classList.remove('open'); }
 }
 
-// Show a custom modal and return a Promise that resolves with true (ok) or false (cancel)
 function showConfirmModal(modalId, okBtnId, cancelBtnId) {
   return new Promise((resolve) => {
     openModal(modalId);
@@ -959,7 +937,6 @@ function showConfirmModal(modalId, okBtnId, cancelBtnId) {
   });
 }
 
-// Show an input modal and return Promise with value string or null
 function showInputModal(modalId, inputId, okBtnId, cancelBtnId) {
   return new Promise((resolve) => {
     openModal(modalId);
@@ -1166,7 +1143,7 @@ async function addToOrder(itemId) {
     }
 
     updateTotals(order);
-    await dbOp('orders', 'put', { ...order, items: undefined }); // save updated totals
+    await dbOp('orders', 'put', { ...order, items: undefined });
     renderOrder();
   } catch (e) { console.error(e); showToast('Error', true); }
 }
@@ -1263,21 +1240,17 @@ async function printBill() {
     const cur = t('currency');
     const now = new Date();
 
-    // ── 1. رقم الطاولة البارز ──
     const tblObj = state.tables.find(tb => tb.id == state.currentTable);
     const tblDisplay = tblObj ? tblObj.name.replace(/[^\d]/g, '') || tblObj.name : (order.table_id || state.currentTable || '—');
     document.getElementById('print-table-num').textContent = tblDisplay;
 
-    // ── 2. التاريخ والوقت ──
     const dateStr = now.toLocaleDateString('en-GB');
     const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
     document.getElementById('print-date-time').textContent = `Printed At: ${dateStr} ${timeStr}`;
 
-    // ── 3. رقم الفاتورة ──
     const invoiceNum = order.id ? String(order.id).padStart(6, '0') : '000000';
     document.getElementById('print-invoice-id').textContent = invoiceNum;
 
-    // ── 4. تعبئة الأصناف ──
     const tbody = document.getElementById('print-invoice-items');
     tbody.innerHTML = '';
     let subtotal = 0, count = 0;
@@ -1296,7 +1269,6 @@ async function printBill() {
       tbody.appendChild(tr);
     });
 
-    // ── 5. المجاميع ──
     const discount = parseFloat(order.discount) || 0;
     const total    = subtotal - discount;
     document.getElementById('invoice-subtotal').textContent = `${cur} ${subtotal.toFixed(2)}`;
@@ -1304,11 +1276,9 @@ async function printBill() {
     document.getElementById('invoice-total').textContent    = `${cur} ${total.toFixed(2)}`;
     document.getElementById('invoice-items-count').textContent = `Products Count ${count}`;
 
-    // إخفاء سطر الخصم لو مفيش خصم
     const discRow = document.getElementById('inv-discount-wrap');
     if (discRow) discRow.style.display = discount > 0 ? '' : 'none';
 
-    // ── 6. تغيير حالة الطاولة لـ printed ──
     if (state.currentTable) {
       const tbl = state.tables.find(tb => tb.id == state.currentTable);
       if (tbl && tbl.status !== 'empty') {
@@ -1320,8 +1290,6 @@ async function printBill() {
       }
     }
 
-    // ── 7. طباعة مباشرة — silent print بدون dialog الويندوز ──
-    // نعطي المتصفح frame كامل يرندر فيه الفاتورة ثم نطبع
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         window.print();
@@ -1424,14 +1392,12 @@ async function loadDashboardTab(tab) {
   if (tab === 'settings') loadSettingsMgmt();
 }
 
-// ── current report state ──
 let _repType = 'today';
-let _repDate = null; // null = use today / month logic
+let _repDate = null;
 
 async function loadReports(type) {
   if (type) _repType = type;
 
-  // Toggle buttons
   document.querySelectorAll('.dash-toggle-btn').forEach(b => b.classList.remove('active'));
   const activeBtn = document.getElementById(`rep-${_repType}`);
   if (activeBtn) activeBtn.classList.add('active');
@@ -1444,17 +1410,14 @@ async function loadReports(type) {
   const expCats      = await dbOp('expense_categories','getAll');
   const expPurchases = await dbOp('expense_purchases', 'getAll');
 
-  const todayStr = isoDate().split('T')[0];   // e.g. "2026-05-24"
-  const monthStr = todayStr.substring(0, 7);  // e.g. "2026-05"
+  const todayStr = isoDate().split('T')[0];
+  const monthStr = todayStr.substring(0, 7);
 
-  // Date picker: إذا غيّر المستخدم التاريخ يدوياً
   const pickerVal = document.getElementById('rep-date-picker')?.value || '';
 
-  // الفترة الفعلية للفلترة
   const filterDate  = pickerVal || todayStr;
   const filterMonth = pickerVal ? pickerVal.substring(0, 7) : monthStr;
 
-  // matchDate صارمة — تطابق يوم بيوم أو شهر بشهر
   const matchDate = (dateStr) => {
     if (!dateStr) return false;
     const d = (dateStr.split('T')[0]);
@@ -1462,7 +1425,6 @@ async function loadReports(type) {
     return d.substring(0, 7) === filterMonth;
   };
 
-  // Update sub-label
   const lbl = document.getElementById('rep-date-label');
   if (lbl) {
     if (pickerVal && pickerVal !== todayStr) lbl.textContent = `بيانات ${pickerVal}`;
@@ -1470,7 +1432,6 @@ async function loadReports(type) {
     else lbl.textContent = `الشهر — ${filterMonth}`;
   }
 
-  // ── Revenue breakdown (كل الأرقام بتتبع matchDate = يومي أو شهري) ──
   let cashRev = 0, walletRev = 0, creditPaidRev = 0;
   orders.forEach(o => {
     if (o.status === 'paid' && matchDate(o.paid_at)) {
@@ -1478,14 +1439,11 @@ async function loadReports(type) {
       if (o.payment_method === 'wallet') walletRev += o.total;
     }
   });
-  // آجل مدفوع — يومي حسب matchDate
   creditOrders.forEach(co => {
     if (co.is_paid && matchDate(co.paid_at)) creditPaidRev += co.amount;
   });
-  // إجمالي الإيراد = كاش + محفظة (بدون آجل مدفوع — هيتضاف منفرداً في صافي الدخل)
   const revenue = cashRev + walletRev;
 
-  // ── Expenses breakdown by type (يومي حسب matchDate) ──
   let expPrimary = 0, expRaw = 0, expSecondary = 0;
   expenses.forEach(e => {
     if (!matchDate(e.created_at)) return;
@@ -1497,7 +1455,6 @@ async function loadReports(type) {
   });
   const expTotal = expPrimary + expRaw + expSecondary;
 
-  // ── بضاعة آجل مدفوعة (يومي حسب matchDate) ──
   let expCreditPaid = 0;
   expPurchases.forEach(ep => {
     if ((ep.is_paid === 1 || ep.paid_amount > 0) && matchDate(ep.paid_at || ep.created_at)) {
@@ -1505,7 +1462,6 @@ async function loadReports(type) {
     }
   });
 
-  // ── Top item ──
   const itemCounts = {};
   orders.forEach(o => {
     if (o.status === 'paid' && matchDate(o.paid_at)) {
@@ -1524,7 +1480,6 @@ async function loadReports(type) {
     if (it) topItemName = `${it.name_ar} (${topQty})`;
   }
 
-  // ── المتوقع في الخزنة (شهري دائماً — تراكمي) ──
   let cashOnHand = 0;
   orders.forEach(o => {
     if (o.status === 'paid' && ['cash','wallet'].includes(o.payment_method) && o.paid_at?.startsWith(monthStr)) cashOnHand += o.total;
@@ -1535,7 +1490,6 @@ async function loadReports(type) {
     if (ep.paid_amount > 0 && ep.paid_at?.startsWith(monthStr)) cashOnHand -= ep.paid_amount;
   });
 
-  // ── رصيد الدرج — يومي: صفر في اليوم التالي ──
   const drawerSetting     = await dbOp('settings', 'get', 'drawer_balance');
   const drawerDateSetting = await dbOp('settings', 'get', 'drawer_balance_date');
   const drawerSavedDate   = drawerDateSetting?.value || '';
@@ -1543,24 +1497,18 @@ async function loadReports(type) {
     ? Number(drawerSetting?.value || 0)
     : 0;
 
-  // ── صافي الدخل (يومي) ──
-  // = إجمالي الإيراد (كاش+محفظة) + آجل مدفوع + رصيد الدرج - بضاعة آجل مدفوعة - مصروفات
   const netIncome = revenue + creditPaidRev + drawerBalance - expCreditPaid - expTotal;
 
-  // ── Update KPI cards ──
   const cur = t('currency');
   document.getElementById('rep-cash-on-hand').textContent  = `${fmt(cashOnHand)} ${cur}`;
   document.getElementById('rep-cash').textContent          = `${fmt(cashRev)} ${cur}`;
   document.getElementById('rep-wallet').textContent        = `${fmt(walletRev)} ${cur}`;
   document.getElementById('rep-credit-paid').textContent   = `${fmt(creditPaidRev)} ${cur}`;
-  // إجمالي الإيراد في الـ card = كاش + محفظة + آجل مدفوع (للعرض فقط)
   document.getElementById('rep-revenue').textContent       = `${fmt(revenue + creditPaidRev)} ${cur}`;
 
-  // صافي الدخل: إيراد الفترة - مصروفات الفترة (يومي أو شهري حسب الـ toggle)
   const netEl = document.getElementById('rep-net');
   if (netEl) {
     netEl.textContent = `${netIncome < 0 ? '-' : ''}${fmt(Math.abs(netIncome))} ${cur}`;
-    // لون أحمر لو سالب
     const netCard = netEl.closest('.kpi-card');
     if (netCard) {
       if (netIncome < 0) {
@@ -1580,7 +1528,6 @@ async function loadReports(type) {
   const drawerEl = document.getElementById('rep-drawer-balance');
   if (drawerEl) drawerEl.textContent = `${fmt(drawerBalance)} ${cur}`;
 
-  // ── Expense Purchases (unpaid) bar ──
   const unpaidPurchases = expPurchases.filter(ep => !ep.is_paid || ep.paid_amount < ep.amount);
   const purchasesBar = document.getElementById('exp-purchases-bar');
   if (purchasesBar) {
@@ -1604,7 +1551,6 @@ async function loadReports(type) {
     }
   }
 
-  // ── Credit Summary (unpaid customers) ──
   const unpaid = creditOrders.filter(co => !co.is_paid);
   const grouped = {};
   unpaid.forEach(co => {
@@ -1625,8 +1571,6 @@ async function loadReports(type) {
   }
 }
 
-// ── Cash Invoices Popup ──
-// يخزن بيانات الفواتير للـ search
 let _cashInvoicesData = [];
 
 async function showCashInvoices() {
@@ -1646,7 +1590,6 @@ async function showCashInvoices() {
   const cur = t('currency');
   const cashOrders = orders.filter(o => o.status === 'paid' && o.payment_method === 'cash' && matchDate(o.paid_at));
 
-  // خزّن البيانات للسيرش
   _cashInvoicesData = cashOrders.map(o => ({
     ...o,
     items: orderItems.filter(oi => oi.order_id === o.id),
@@ -1655,7 +1598,6 @@ async function showCashInvoices() {
 
   renderCashInvoicesList('', cur);
 
-  // ربط السيرش
   const searchEl = document.getElementById('cash-invoices-search');
   if (searchEl) {
     searchEl.value = '';
@@ -1699,7 +1641,6 @@ function renderCashInvoicesList(query, cur) {
     </div>`;
 }
 
-// ── Wallet Invoices Popup ──
 let _walletInvoicesData = [];
 
 async function showWalletInvoices() {
@@ -1770,7 +1711,6 @@ function renderWalletInvoicesList(query, cur) {
     </div>`;
 }
 
-// ── Credit Paid Detail Popup (آجل مدفوع — الاسم والمبلغ والتاريخ) ──
 let _creditPaidData = [];
 async function showCreditPaidDetail() {
   const creditOrders = await dbOp('credit_orders', 'getAll');
@@ -1820,7 +1760,6 @@ function renderCreditPaidList(query, cur) {
     </div>`;
 }
 
-// ── Top Items Detail Popup (كل المنتجات بالكمية) ──
 async function showTopItemsDetail() {
   const orders     = await dbOp('orders',      'getAll');
   const orderItems = await dbOp('order_items', 'getAll');
@@ -1880,7 +1819,6 @@ async function showTopItemsDetail() {
 }
 
 
-// ── Expense Detail Popup (by type: primary / raw / secondary) ──
 let _expDetailData = {};
 async function showExpenseDetail(type) {
   const expenses = await dbOp('expenses', 'getAll');
@@ -1944,7 +1882,6 @@ async function showDailyRevenue() {
   const orders       = await dbOp('orders',        'getAll');
   const creditOrders = await dbOp('credit_orders', 'getAll');
 
-  // Group by date
   const byDate = {};
   orders.forEach(o => {
     if (o.status !== 'paid' || !o.paid_at) return;
@@ -1975,7 +1912,6 @@ async function showDailyRevenue() {
   openModal('cm-daily-revenue');
 }
 
-// ── Expense Credit Pay Modal ──
 window.openExpCreditPayModal = async function(expPurchaseId) {
   const ep = await dbOp('expense_purchases', 'get', expPurchaseId);
   if (!ep) return;
@@ -1988,7 +1924,6 @@ window.openExpCreditPayModal = async function(expPurchaseId) {
   openModal('cm-exp-credit-pay');
   window._pendingExpPurchase = { id: expPurchaseId, remaining };
 
-  // Full pay handler (re-assign each time)
   const fullBtn = document.getElementById('cm-exp-full-pay');
   const partialBtn = document.getElementById('cm-exp-partial-pay');
   const cancelBtn = document.getElementById('cm-exp-credit-pay-cancel');
@@ -2029,7 +1964,6 @@ window.openExpCreditPayModal = async function(expPurchaseId) {
   cancelBtn.onclick = () => { cleanup(); closeModal('cm-exp-credit-pay'); };
 };
 
-// ── Show Expense Credit Detail Popup (paid this month) ──
 let _expCreditDetailData = [];
 async function showExpCreditDetail() {
   const expPurchases = await dbOp('expense_purchases', 'getAll');
@@ -2084,7 +2018,6 @@ function renderExpCreditDetailList(query, cur) {
     </div>`;
 }
 
-// ── إعادة طباعة فاتورة مقفولة من الداشبورد ──
 window.reprintInvoice = async function(orderId, method) {
   try {
     const order   = await dbOp('orders',      'get', orderId);
@@ -2139,8 +2072,6 @@ window.payCreditOrder = async function (creditId, customerId) {
   } catch (e) { console.error(e); }
 }
 
-// ========== MENU TAB FUNCTIONS ==========
-
 let mgmtSelCat = null;
 
 async function loadMenuTab() {
@@ -2189,7 +2120,6 @@ async function selectCategory(categoryId) {
     const items = await dbOp('menu_items', 'getAll');
     const catItems = items.filter(i => i.category_id === categoryId);
 
-    // Re-render categories to update the active highlight
     const categories = await dbOp('categories', 'getAll');
     categories.sort((a, b) => a.sort_order - b.sort_order);
     renderCategoriesList(categories);
@@ -2346,8 +2276,6 @@ async function refreshCashierMenu() {
   } catch (e) { console.error('Error refreshing cashier:', e); }
 }
 
-// ========== END MENU TAB FUNCTIONS ==========
-
 async function loadTablesMgmt() {
   const tables = await dbOp('tables', 'getAll');
   document.getElementById('mgmt-tables-grid').innerHTML = tables.map(t => `
@@ -2458,10 +2386,7 @@ async function loadSettingsMgmt() {
   document.getElementById('set-printer').value = getS('printer') || 'bluetooth';
 }
 
-// ──────────────── EVENTS ────────────────
-
 function bindEvents() {
-  // Smart modal helpers — يشتغلوا على النوعين: hidden-based و cmodal-overlay
   const openModal = (id) => {
     const el = document.getElementById(id);
     if (!el) return;
@@ -2475,7 +2400,6 @@ function bindEvents() {
     else { el.hidden = true; }
   };
 
-  // Modals
   document.getElementById('btn-tables').addEventListener('click', () => { renderTables(); openModal('tables-modal'); });
   document.getElementById('close-tables').addEventListener('click', () => closeModal('tables-modal'));
   document.getElementById('tables-modal').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeModal('tables-modal'); });
@@ -2490,7 +2414,7 @@ function bindEvents() {
       : '<option value="">لا توجد أقسام — أضف من الداشبورد</option>';
     document.getElementById('expense-amount').value = '';
     document.getElementById('expense-note').value = '';
-    openModal('expenses-modal'); // global openModal (classList.add('open'))
+    openModal('expenses-modal');
   });
   document.getElementById('close-expenses').addEventListener('click', () => closeModal('expenses-modal'));
   document.getElementById('expenses-modal').addEventListener('click', (e) => {
@@ -2504,19 +2428,15 @@ function bindEvents() {
     if (!cid) return showToast('اختر القسم أولاً', true);
     if (!amt || amt <= 0) return showToast('أدخل مبلغاً صحيحاً', true);
 
-    // Close expenses modal and open payment method chooser
     closeModal('expenses-modal');
     document.getElementById('cm-exp-payment-msg').textContent =
       `${cname} — ${fmt(amt)} ${t('currency')}${note ? ' | ' + note : ''}`;
 
-    // Open payment method modal and wait for choice
     openModal('cm-exp-payment');
 
-    // Store pending expense data temporarily
     window._pendingExpense = { cid: Number(cid), cname, amt, note };
   });
 
-  // Expense payment: CASH
   document.getElementById('cm-exp-pay-cash').addEventListener('click', async () => {
     const pe = window._pendingExpense;
     if (!pe) return;
@@ -2530,15 +2450,13 @@ function bindEvents() {
     if (document.getElementById('owner-dashboard').style.display !== 'none') loadReports();
   });
 
-  // Expense payment: CREDIT (آجل)
   document.getElementById('cm-exp-pay-credit').addEventListener('click', async () => {
     const pe = window._pendingExpense;
     if (!pe) return;
     closeModal('cm-exp-payment');
-    // Save as expense_purchase (آجل غير مدفوع)
     await dbOp('expense_purchases', 'add', {
       category_id: pe.cid, category_name: pe.cname,
-      supplier_name: pe.note || pe.cname, // اسم المورد من النوت
+      supplier_name: pe.note || pe.cname,
       amount: pe.amt, paid_amount: 0, is_paid: 0,
       note: pe.note, created_at: isoDate(), paid_at: null
     });
@@ -2547,7 +2465,6 @@ function bindEvents() {
     if (document.getElementById('owner-dashboard').style.display !== 'none') loadReports();
   });
 
-  // Expense payment modal cancel
   document.getElementById('cm-exp-pay-cancel').addEventListener('click', () => {
     closeModal('cm-exp-payment');
     window._pendingExpense = null;
@@ -2556,13 +2473,11 @@ function bindEvents() {
     if (e.target === e.currentTarget) { closeModal('cm-exp-payment'); window._pendingExpense = null; }
   });
 
-  // Expense credit detail close
   document.getElementById('cm-exp-credit-detail-close').addEventListener('click', () => closeModal('cm-exp-credit-detail'));
   document.getElementById('cm-exp-credit-detail').addEventListener('click', (e) => {
     if (e.target === e.currentTarget) closeModal('cm-exp-credit-detail');
   });
 
-  // btn-credit handler (triggered via pay-credit-btn click)
   async function openCreditModal() {
     if (!state.currentTable) return showToast(t('select-table-first'), true);
     const order = getCurrentOrder();
@@ -2580,7 +2495,6 @@ function bindEvents() {
     closeModal('credit-modal');
   });
 
-  // Table selection
   document.getElementById('tables-grid').addEventListener('click', (e) => {
     const cell = e.target.closest('.table-cell');
     if (cell) selectTable(cell.dataset.tableId);
@@ -2640,7 +2554,6 @@ function bindEvents() {
   });
   document.getElementById('pay-credit-btn').addEventListener('click', () => openCreditModal());
 
-  // زر المسح في الهيدر
   document.getElementById('btn-clear-order').addEventListener('click', async () => {
     const order = getCurrentOrder();
     if (!order || !order.items || order.items.length === 0) return showToast('السلة فارغة بالفعل', true);
@@ -2660,7 +2573,6 @@ function bindEvents() {
     } catch(e) { console.error(e); showToast('حدث خطأ', true); }
   });
 
-  // Dashboard Nav & PIN
   document.getElementById('pin-pad').addEventListener('click', (e) => {
     if (e.target.tagName === 'BUTTON') {
       let val = e.target.textContent;
@@ -2679,56 +2591,44 @@ function bindEvents() {
   document.getElementById('rep-today').addEventListener('click', () => loadReports('today'));
   document.getElementById('rep-month').addEventListener('click', () => loadReports('month'));
 
-  // Date picker
   const datePicker = document.getElementById('rep-date-picker');
   if (datePicker) {
     datePicker.addEventListener('change', () => {
-      _repType = 'today'; // treat picker as single-day
+      _repType = 'today';
       loadReports('today');
     });
   }
 
-  // Hero card (المتوقع في الخزنة) → daily revenue popup
   const heroCard = document.getElementById('kpi-hero-card');
   if (heroCard) heroCard.addEventListener('click', showDailyRevenue);
 
-  // إجمالي الإيراد → daily revenue popup
   const revenueCard = document.getElementById('kpi-revenue-card');
   if (revenueCard) revenueCard.addEventListener('click', showDailyRevenue);
 
-  // كاش → فواتير الكاش
   const cashCard = document.getElementById('kpi-cash-card');
   if (cashCard) cashCard.addEventListener('click', showCashInvoices);
 
-  // محفظة → فواتير المحفظة
   const walletCard = document.getElementById('kpi-wallet-card');
   if (walletCard) walletCard.addEventListener('click', showWalletInvoices);
 
-  // آجل مدفوع → تفاصيل الآجل
   const creditPaidCard = document.getElementById('kpi-credit-paid-card');
   if (creditPaidCard) creditPaidCard.addEventListener('click', showCreditPaidDetail);
 
-  // بضاعة آجل مدفوعة card → detail popup
   const expCreditCard = document.getElementById('kpi-exp-credit-card');
   if (expCreditCard) expCreditCard.addEventListener('click', showExpCreditDetail);
 
-  // أكثر مبيعاً → تفاصيل المنتجات
   const topItemCard = document.getElementById('kpi-top-item-card');
   if (topItemCard) topItemCard.addEventListener('click', showTopItemsDetail);
 
-  // مصروفات أساسية → تفاصيل
   const expPrimaryCard = document.getElementById('kpi-exp-primary-card');
   if (expPrimaryCard) expPrimaryCard.addEventListener('click', () => showExpenseDetail('primary'));
 
-  // مصروفات خامات → تفاصيل
   const expRawCard = document.getElementById('kpi-exp-raw-card');
   if (expRawCard) expRawCard.addEventListener('click', () => showExpenseDetail('raw'));
 
-  // مصروفات ثانوية → تفاصيل
   const expSecondaryCard = document.getElementById('kpi-exp-secondary-card');
   if (expSecondaryCard) expSecondaryCard.addEventListener('click', () => showExpenseDetail('secondary'));
 
-  // إغلاق popups المصروفات
   document.getElementById('cm-exp-primary-close')?.addEventListener('click', () => closeModal('cm-exp-primary-detail'));
   document.getElementById('cm-exp-primary-detail')?.addEventListener('click', (e) => { if (e.target === e.currentTarget) closeModal('cm-exp-primary-detail'); });
   document.getElementById('cm-exp-raw-close')?.addEventListener('click', () => closeModal('cm-exp-raw-detail'));
@@ -2736,7 +2636,6 @@ function bindEvents() {
   document.getElementById('cm-exp-secondary-close')?.addEventListener('click', () => closeModal('cm-exp-secondary-detail'));
   document.getElementById('cm-exp-secondary-detail')?.addEventListener('click', (e) => { if (e.target === e.currentTarget) closeModal('cm-exp-secondary-detail'); });
 
-  // زر رصيد الدرج في الهيدر — يظهر صفر إذا كان محفوظاً ليوم سابق
   const btnDrawer = document.getElementById('btn-drawer-balance');
   if (btnDrawer) btnDrawer.addEventListener('click', async () => {
     const todayStr = isoDate().split('T')[0];
@@ -2747,7 +2646,6 @@ function bindEvents() {
     openModal('cm-drawer-balance');
   });
 
-  // حفظ رصيد الدرج — يُخزَّن مع تاريخ اليوم حتى يُعاد ضبطه صفراً في اليوم التالي
   document.getElementById('cm-drawer-ok')?.addEventListener('click', async () => {
     const val = Number(document.getElementById('cm-drawer-amount').value);
     if (isNaN(val) || val < 0) return showToast('أدخل مبلغاً صحيحاً', true);
@@ -2761,37 +2659,29 @@ function bindEvents() {
   document.getElementById('cm-drawer-cancel')?.addEventListener('click', () => closeModal('cm-drawer-balance'));
   document.getElementById('cm-drawer-balance')?.addEventListener('click', (e) => { if (e.target === e.currentTarget) closeModal('cm-drawer-balance'); });
 
-  // Daily revenue close
   const dailyClose = document.getElementById('cm-daily-close');
   if (dailyClose) dailyClose.addEventListener('click', () => closeModal('cm-daily-revenue'));
   document.getElementById('cm-daily-revenue')?.addEventListener('click', (e) => { if (e.target === e.currentTarget) closeModal('cm-daily-revenue'); });
 
-  // Credit detail close
   const creditDetailClose = document.getElementById('cm-credit-detail-close');
   if (creditDetailClose) creditDetailClose.addEventListener('click', () => closeModal('cm-credit-detail'));
   document.getElementById('cm-credit-detail')?.addEventListener('click', (e) => { if (e.target === e.currentTarget) closeModal('cm-credit-detail'); });
 
-  // Exp credit detail close
   document.getElementById('cm-exp-credit-detail-close')?.addEventListener('click', () => closeModal('cm-exp-credit-detail'));
   document.getElementById('cm-exp-credit-detail')?.addEventListener('click', (e) => { if (e.target === e.currentTarget) closeModal('cm-exp-credit-detail'); });
 
-  // Credit paid detail close
   document.getElementById('cm-credit-paid-close')?.addEventListener('click', () => closeModal('cm-credit-paid-detail'));
   document.getElementById('cm-credit-paid-detail')?.addEventListener('click', (e) => { if (e.target === e.currentTarget) closeModal('cm-credit-paid-detail'); });
 
-  // Cash invoices close
   document.getElementById('cm-cash-invoices-close')?.addEventListener('click', () => closeModal('cm-cash-invoices'));
   document.getElementById('cm-cash-invoices')?.addEventListener('click', (e) => { if (e.target === e.currentTarget) closeModal('cm-cash-invoices'); });
 
-  // Wallet invoices close
   document.getElementById('cm-wallet-invoices-close')?.addEventListener('click', () => closeModal('cm-wallet-invoices'));
   document.getElementById('cm-wallet-invoices')?.addEventListener('click', (e) => { if (e.target === e.currentTarget) closeModal('cm-wallet-invoices'); });
 
-  // Top items close
   document.getElementById('cm-top-items-close')?.addEventListener('click', () => closeModal('cm-top-items'));
   document.getElementById('cm-top-items')?.addEventListener('click', (e) => { if (e.target === e.currentTarget) closeModal('cm-top-items'); });
 
-  // Mgmt Add Actions
   document.getElementById('btn-add-category').addEventListener('click', () => {
     document.getElementById('cat-form-id').value = '';
     document.getElementById('cat-form-ar').value = '';
@@ -2815,17 +2705,15 @@ function bindEvents() {
     refreshCashierMenu();
   });
   document.getElementById('btn-cancel-confirm').addEventListener('click', () => document.getElementById('confirm-modal').hidden = true);
- // 1. تشغيل زر إضافة طاولة
+ 
   const btnAddTable = document.getElementById('btn-add-table');
   if (btnAddTable) {
     btnAddTable.addEventListener('click', async () => {
       const name = await showInputModal('cm-add-table', 'cm-table-name', 'cm-add-table-ok', 'cm-add-table-cancel');
       if (!name) return;
       try {
-        // استخرج رقم من الاسم لو موجود (مثال: "طاولة 5" → 5)، وإلا استخدم وقت
         const numMatch = name.match(/\d+/);
         const tableId = numMatch ? parseInt(numMatch[0]) : Date.now() % 10000;
-        // تحقق إن الرقم مش مكرر
         const existing = state.tables.find(t => t.id == tableId);
         if (existing) return showToast('رقم الطاولة موجود بالفعل', true);
         await dbOp('tables', 'put', { id: tableId, name, status: 'empty' });
@@ -2870,15 +2758,12 @@ function bindEvents() {
   });
 }
 
-// ──────────────── INIT ────────────────
-
 async function init() {
   try {
     injectDynamicUI();
     await openDB();
     await seedDB();
     await loadInitialData();
-    // One-time migration to set PIN to 2525 if it's not already set to a 4-digit PIN
     if (state.settings.owner_pin !== '2525' && (state.settings.owner_pin?.length !== 4)) {
       await dbOp('settings', 'put', { key: 'owner_pin', value: '2525' });
       state.settings.owner_pin = '2525';
@@ -2904,5 +2789,5 @@ window.deleteCategory = async function(id) {
     showToast('تم حذف القسم', false);
     if (typeof loadMenuTab === 'function') loadMenuTab();
     if (typeof refreshCashierMenu === 'function') refreshCashierMenu();
-    } catch (e) { console.error("خطأ أثناء الحذف:", e); }
+  } catch (e) { console.error("خطأ أثناء الحذف:", e); }
 };
