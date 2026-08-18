@@ -17,19 +17,20 @@ html, body { height: 100vh; overflow: hidden; font-family: 'Cairo', sans-serif; 
 button { font-family: 'Cairo', sans-serif; cursor: pointer; border: none; outline: none; transition: all 0.2s; }
 input, select { font-family: 'Cairo', sans-serif; outline: none; }
 
+/* flex-direction: row مع dir=rtl بيخلي المنيو يمين والسلة شمال */
 .main-content { display: flex; height: 100vh; width: 100%; flex-direction: row; }
 
-/* المنيو (يمين) - تم جعله يبدأ من الشمال باتجاه اليمين */
+/* المنيو (يمين) */
 .menu-panel { 
   flex: 1; 
   background: var(--surface); 
   display: flex; 
   flex-direction: column; 
   overflow: hidden; 
-  direction: ltr; /* عكس اتجاه المنيو بالكامل ليبدأ من الشمال */
+  direction: ltr; /* دي بتخلي العناصر جواه تبدأ من الشمال لليمين */
 }
 .menu-panel > * {
-  direction: rtl; /* إرجاع النصوص لاتجاهها الطبيعي */
+  direction: rtl; /* النصوص جوه المنيو ترجع لاتجاهها الطبيعي */
 }
 
 .action-bar { display: flex; align-items: center; gap: 12px; padding: 16px 24px; border-bottom: 1px solid var(--border); overflow-x: auto; }
