@@ -23,7 +23,8 @@ html, body { height: 100vh; overflow: hidden; font-family: 'Cairo', sans-serif; 
 button { font-family: 'Cairo', sans-serif; cursor: pointer; border: none; outline: none; transition: all 0.2s ease; }
 input, select { font-family: 'Cairo', sans-serif; outline: none; }
 
-.main-content { display: flex; height: 100vh; width: 100%; }
+/* مع dir="rtl" في HTML، الـ flex-direction: row بتحط المنيو يمين والسلة شمال تلقائياً */
+.main-content { display: flex; height: 100vh; width: 100%; flex-direction: row; }
 
 /* ORDER PANEL (يسار) */
 .order-panel { width: 380px; background: var(--bg); border-left: 1px solid var(--border); display: flex; flex-direction: column; box-shadow: -4px 0 6px -1px rgba(0, 0, 0, 0.05); }
@@ -58,13 +59,14 @@ input, select { font-family: 'Cairo', sans-serif; outline: none; }
 .checkout-btn { margin-top: 16px; background: var(--primary); color: white; padding: 20px; border-radius: var(--radius-md); font-size: 20px; font-weight: 800; width: 100%; display: flex; align-items: center; justify-content: center; gap: 12px; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25); }
 .checkout-btn:hover { background: var(--primary-hover); transform: translateY(-2px); }
 
-/* MENU PANEL (يمين) */
-.menu-panel { flex: 1; background: var(--surface); display: flex; flex-direction: column; overflow: hidden; }
-.action-bar { display: flex; flex-direction: row-reverse; align-items: center; gap: 12px; padding: 16px 24px; background: var(--surface); border-bottom: 1px solid var(--border); overflow-x: auto; white-space: nowrap; }
+/* MENU PANEL (يمين) - direction: ltr لتجعل المحتوى الداخلي يبدأ من الشمال */
+.menu-panel { flex: 1; background: var(--surface); display: flex; flex-direction: column; overflow: hidden; direction: ltr; }
+.menu-panel > * { direction: rtl; } /* النصوص داخل المنيو ترجع لاتجاهها العربي الطبيعي */
+.action-bar { display: flex; align-items: center; gap: 12px; padding: 16px 24px; background: var(--surface); border-bottom: 1px solid var(--border); overflow-x: auto; white-space: nowrap; }
 .top-btn { display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: var(--surface-2); color: var(--text-secondary); border-radius: var(--radius-md); font-size: 14px; font-weight: 600; }
 .top-btn:hover { background: var(--primary-light); color: var(--primary); }
 .top-btn-danger:hover { background: var(--danger-light); color: var(--danger); }
-.category-tabs { display: flex; flex-direction: row-reverse; gap: 12px; padding: 16px 24px; overflow-x: auto; border-bottom: 1px solid var(--border); }
+.category-tabs { display: flex; gap: 12px; padding: 16px 24px; overflow-x: auto; border-bottom: 1px solid var(--border); }
 .cat-tab { display: flex; align-items: center; gap: 8px; padding: 10px 20px; background: var(--surface-2); color: var(--text-secondary); border-radius: 999px; font-size: 14px; font-weight: 700; }
 .cat-tab:hover { background: #e2e8f0; }
 .cat-tab.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25); }
