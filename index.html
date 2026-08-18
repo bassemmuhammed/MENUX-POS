@@ -4,380 +4,121 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="google" content="notranslate">
-  <title>MENUX POS</title>
+  <title>MENUX</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+  <meta name="theme-color" content="#1a0533">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-    :root {
-      --primary: #4F46E5; --primary-hover: #4338CA; --primary-light: #EEF2FF;
-      --bg: #F8FAFC; --surface: #FFFFFF; --surface-2: #F1F5F9;
-      --text-primary: #0F172A; --text-secondary: #64748B; --border: #E2E8F0;
-      --success: #10B981; --danger: #EF4444; --warning: #F59E0B;
-      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05); --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-      --radius-md: 12px; --radius-lg: 16px; --radius-xl: 20px;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    [hidden] { display: none !important; }
-    html, body { height: 100vh; overflow: hidden; font-family: 'Cairo', sans-serif; background-color: var(--bg); color: var(--text-primary); }
-    button { font-family: 'Cairo', sans-serif; cursor: pointer; border: none; outline: none; transition: all 0.2s; }
-    input, select { font-family: 'Cairo', sans-serif; outline: none; }
-    .main-content { display: flex; height: 100vh; width: 100%; }
-    
-    /* المنيو (يمين) */
-    .menu-panel { flex: 1; background: var(--surface); display: flex; flex-direction: column; overflow: hidden; border-left: 1px solid var(--border); }
-    .action-bar { display: flex; align-items: center; gap: 12px; padding: 16px 24px; border-bottom: 1px solid var(--border); overflow-x: auto; }
-    .top-btn { display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: var(--surface-2); color: var(--text-secondary); border-radius: var(--radius-md); font-size: 14px; font-weight: 600; }
-    .top-btn:hover { background: var(--primary-light); color: var(--primary); }
-    .top-btn-danger:hover { background: #FEE2E2; color: var(--danger); }
-    .category-tabs { display: flex; gap: 12px; padding: 16px 24px; overflow-x: auto; border-bottom: 1px solid var(--border); }
-    .cat-tab { display: flex; align-items: center; gap: 8px; padding: 10px 20px; background: var(--surface-2); color: var(--text-secondary); border-radius: 999px; font-size: 14px; font-weight: 700; }
-    .cat-tab:hover { background: #e2e8f0; }
-    .cat-tab.active { background: var(--primary); color: white; }
-    .cat-tab-icon { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; }
-    .cat-tab-icon svg { width: 100%; height: 100%; }
-    .menu-grid { flex: 1; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; padding: 24px; overflow-y: auto; align-content: start; }
-    .menu-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: var(--shadow-sm); }
-    .menu-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--primary-light); }
-    .menu-card-body { margin-bottom: 12px; }
-    .menu-card-name-ar { display: block; font-size: 16px; font-weight: 700; margin-bottom: 4px; }
-    .menu-card-name-en { display: block; font-size: 12px; color: var(--text-secondary); }
-    .menu-card-footer { display: flex; align-items: center; justify-content: space-between; }
-    .menu-card-price { font-family: 'Sora', sans-serif; font-size: 16px; font-weight: 700; color: var(--primary); }
-    .menu-card-add-icon { width: 32px; height: 32px; background: var(--primary-light); color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; }
-    .menu-card:hover .menu-card-add-icon { background: var(--primary); color: white; transform: scale(1.1); }
-
-    /* السلة (يسار) */
-    .order-panel { width: 380px; background: var(--bg); display: flex; flex-direction: column; box-shadow: -4px 0 6px -1px rgba(0, 0, 0, 0.05); }
-    .order-header { padding: 24px; background: var(--surface); border-bottom: 1px solid var(--border); }
-    .table-title { font-size: 20px; font-weight: 800; }
-    .table-title-placeholder { color: var(--text-secondary); font-weight: 600; font-size: 16px; }
-    .order-divider { height: 1px; background: var(--border); }
-    .order-items { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
-    .empty-state { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: var(--text-secondary); gap: 16px; }
-    .order-item { background: var(--surface); padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
-    .order-item-info { display: flex; justify-content: space-between; align-items: start; }
-    .order-item-name-ar { font-size: 15px; font-weight: 700; }
-    .order-item-controls { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
-    .qty-control { display: flex; align-items: center; background: var(--surface-2); border-radius: 999px; padding: 4px; }
-    .qty-btn { width: 28px; height: 28px; border-radius: 50%; background: var(--surface); font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); }
-    .qty-btn:hover { background: var(--primary); color: white; }
-    .qty-value { min-width: 30px; text-align: center; font-family: 'Sora', sans-serif; font-weight: 700; font-size: 14px; }
-    .order-item-total { font-family: 'Sora', sans-serif; font-weight: 700; font-size: 14px; }
-    .order-item-remove { background: transparent; color: var(--danger); font-size: 12px; font-weight: 600; padding: 4px 8px; border-radius: 8px; margin-top: 8px; }
-    .order-summary { background: var(--surface); border-top: 1px solid var(--border); padding: 20px 24px; display: flex; flex-direction: column; gap: 12px; }
-    .summary-row { display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
-    .summary-label { color: var(--text-secondary); font-weight: 600; }
-    .summary-value { font-family: 'Sora', sans-serif; font-weight: 600; }
-    .discount-input { width: 80px; padding: 6px 10px; border: 1px solid var(--border); border-radius: 8px; text-align: center; font-family: 'Sora', sans-serif; background: var(--surface-2); }
-    .total-row { display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 1px dashed var(--border); }
-    .total-label { font-size: 16px; font-weight: 700; }
-    .total-value { font-family: 'Sora', sans-serif; font-size: 24px; font-weight: 800; color: var(--primary); }
-    .checkout-btn { margin-top: 16px; background: var(--primary); color: white; padding: 16px; border-radius: var(--radius-md); font-size: 16px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25); }
-    .checkout-btn:hover { background: var(--primary-hover); transform: translateY(-1px); }
-
-    /* النوافذ */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
-    .modal { background: var(--surface); border-radius: var(--radius-xl); width: 100%; max-width: 800px; max-height: 90vh; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
-    .modal-header { padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
-    .modal-header h2 { font-size: 18px; font-weight: 800; }
-    .modal-close { background: var(--surface-2); border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); }
-    .modal-close:hover { background: #FEE2E2; color: var(--danger); }
-    .payment-modal-box { max-width: 400px; text-align: center; padding: 32px 24px; }
-    .payment-total { font-family: 'Sora', sans-serif; font-size: 48px; font-weight: 800; color: var(--primary); margin: 16px 0 32px; }
-    .payment-options-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-    .payment-option-card { background: var(--surface-2); border: 1px solid var(--border); padding: 20px; border-radius: var(--radius-lg); font-size: 18px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 12px; color: var(--text-primary); }
-    .payment-option-card:hover { background: var(--primary); color: white; border-color: var(--primary); }
-    .modal-cancel-btn { margin-top: 16px; background: transparent; color: var(--text-secondary); font-weight: 600; font-size: 14px; }
-    .tables-grid { padding: 24px; display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 16px; overflow-y: auto; }
-    .table-cell { aspect-ratio: 1; background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius-lg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; font-weight: 700; color: var(--text-secondary); }
-    .table-cell:hover { border-color: var(--primary); color: var(--primary); }
-    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--text-primary); color: white; padding: 12px 24px; border-radius: var(--radius-md); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); font-size: 14px; font-weight: 600; z-index: 9999; opacity: 0; }
-    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-    
-    /* Dashboard */
-    .dash-root { position:fixed; inset:0; background:var(--bg); z-index:200; display:none; flex-direction:row; }
-    .dash-sidebar { width:220px; flex-shrink:0; background:var(--primary); display:flex; flex-direction:column; overflow:hidden; }
-    .dash-nav { flex:1; padding:12px 0; display:flex; flex-direction:column; gap:2px; }
-    .dash-nav-item { display:flex; align-items:center; gap:10px; padding:11px 16px; color:rgba(255,255,255,0.65); cursor:pointer; font-size:13px; font-weight:500; }
-    .dash-nav-item.active { background:rgba(255,255,255,0.14); color:white; font-weight:700; }
-    .dash-main { flex:1; overflow-y:auto; padding:28px 32px; }
-    .dash-tab-pane { display: none; }
-    .dash-tab-pane.active { display: block; }
-    .dash-btn-primary { height:38px; padding:0 18px; background:var(--primary); color:white; border:none; border-radius:9px; cursor:pointer; font-weight:700; font-size:13px; }
-    .mgmt-row { background: var(--surface); border: 1.5px solid var(--border); padding: 14px 16px; border-radius: 10px; margin-bottom: 8px; }
-    .kpi-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 18px; margin-bottom: 15px; }
-  </style>
 </head>
 <body>
   <div id="app">
     <main class="main-content">
+      <!-- السلة (يسار) -->
+      <aside class="order-panel" id="order-panel">
+        <div class="order-header">
+          <h2 class="table-title" id="table-title">
+            <span class="table-title-placeholder" data-i18n="no-table">لم يتم اختيار طاولة</span>
+          </h2>
+        </div>
+        <div class="order-divider"></div>
+        <div class="order-items" id="order-items"></div>
+        <div class="order-summary" id="order-summary">
+          <div class="summary-row">
+            <span class="summary-label" data-i18n="subtotal">المجموع الفرعي</span>
+            <span class="summary-value" id="subtotal">0.00 <small data-i18n="currency">ر.س</small></span>
+          </div>
+          <div class="summary-row discount-row">
+            <span class="summary-label" data-i18n="discount">الخصم</span>
+            <input type="number" class="discount-input" id="discount-input" placeholder="0" min="0" step="0.5" inputmode="decimal">
+          </div>
+          <div class="total-row">
+            <span class="total-label" data-i18n="total">الإجمالي</span>
+            <span class="total-value" id="total-value">0.00 <small data-i18n="currency">ر.س</small></span>
+          </div>
+          <button class="checkout-btn" id="btn-checkout">
+            <span>المتابعة للدفع</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </aside>
+
       <!-- المنيو (يمين) -->
-      <section class="menu-panel">
-        <div class="action-bar">
-          <button class="top-btn" id="btn-tables"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span>الطاولات</span></button>
-          <button class="top-btn top-btn-danger" id="btn-clear-order"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg><span>مسح</span></button>
-          <button class="top-btn" id="btn-print"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg><span>طباعة</span></button>
-          <button class="top-btn" id="btn-expenses"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 10h20"/></svg><span>المصروفات</span></button>
-          <button class="top-btn" id="btn-more"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="5" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="12" cy="19" r="1.5" fill="currentColor"/></svg><span>المزيد</span></button>
+      <section class="menu-panel" id="menu-panel">
+        <div class="action-bar" id="top-bar">
+          <button class="top-btn" id="btn-tables">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+            <span data-i18n="tables">الطاولات</span>
+          </button>
+          <button class="top-btn top-btn-danger" id="btn-clear-order">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+            <span>مسح</span>
+          </button>
+          <button class="top-btn" id="btn-print">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            <span data-i18n="print">طباعة</span>
+          </button>
+          <button class="top-btn" id="btn-expenses">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 10h20"/></svg>
+            <span data-i18n="expenses">المصروفات</span>
+          </button>
+          <button class="top-btn" id="btn-drawer-balance">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+            <span>رصيد الدرج</span>
+          </button>
+          <button class="top-btn" id="btn-more">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="5" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="12" cy="19" r="1.5" fill="currentColor"/></svg>
+            <span data-i18n="more">المزيد</span>
+          </button>
         </div>
         <div class="category-tabs" id="category-tabs"></div>
         <div class="menu-grid" id="menu-grid"></div>
       </section>
-
-      <!-- السلة (يسار) -->
-      <aside class="order-panel">
-        <div class="order-header"><h2 class="table-title" id="table-title"><span class="table-title-placeholder">لم يتم اختيار طاولة</span></h2></div>
-        <div class="order-divider"></div>
-        <div class="order-items" id="order-items"></div>
-        <div class="order-summary">
-          <div class="summary-row"><span class="summary-label">المجموع الفرعي</span><span class="summary-value" id="subtotal">0.00 <small>ر.س</small></span></div>
-          <div class="summary-row"><span class="summary-label">الخصم</span><input type="number" class="discount-input" id="discount-input" placeholder="0" min="0" step="0.5"></div>
-          <div class="total-row"><span class="total-label">الإجمالي</span><span class="total-value" id="total-value">0.00 <small>ر.س</small></span></div>
-          <button class="checkout-btn" id="btn-checkout"><span>المتابعة للدفع</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
-        </div>
-      </aside>
     </main>
   </div>
 
-  <!-- النوافذ -->
-  <div class="modal-overlay" id="tables-modal" hidden>
-    <div class="modal"><div class="modal-header"><h2>اختر طاولة</h2><button class="modal-close" id="close-tables">✕</button></div><div class="tables-grid" id="tables-grid"></div></div>
-  </div>
-
+  <!-- نافذة الدفع الجديدة -->
   <div class="modal-overlay" id="payment-modal" hidden>
     <div class="modal payment-modal-box">
-      <div class="modal-header" style="justify-content: center; border-bottom: none;"><h2>اختر طريقة الدفع</h2></div>
+      <div class="modal-header" style="justify-content: center; border-bottom: none; padding-bottom: 0;">
+        <h2>اختر طريقة الدفع</h2>
+      </div>
       <div class="payment-total" id="payment-total-amount">0.00 <small>ر.س</small></div>
       <div class="payment-options-grid">
-        <button class="payment-option-card" data-method="cash">نقدي (Cash)</button>
-        <button class="payment-option-card" data-method="wallet">محفظة (Wallet)</button>
-        <button class="payment-option-card" data-method="credit">آجل (Credit)</button>
+        <button class="payment-option-card" data-method="cash">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/></svg>
+          نقدي (Cash)
+        </button>
+        <button class="payment-option-card" data-method="wallet">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 10H18a2 2 0 0 0 0 4h4"/></svg>
+          محفظة (Wallet)
+        </button>
+        <button class="payment-option-card" data-method="credit">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z"/></svg>
+          آجل (Credit)
+        </button>
       </div>
       <button class="modal-cancel-btn" id="close-payment-modal">إلغاء</button>
     </div>
   </div>
 
-  <div class="modal-overlay" id="expenses-modal" hidden>
-    <div class="modal" style="max-width:420px;"><div class="modal-header"><h2>المصروفات</h2><button class="modal-close" id="close-expenses">✕</button></div>
-      <div style="padding:20px;">
-        <select id="expense-category" style="width:100%; height:44px; border:1.5px solid var(--border); border-radius:8px; margin-bottom:12px;"></select>
-        <input type="number" id="expense-amount" placeholder="المبلغ" style="width:100%; height:44px; border:1.5px solid var(--border); border-radius:8px; margin-bottom:12px;">
-        <button id="submit-expense" style="width:100%; height:44px; background:var(--primary); color:white; border:none; border-radius:8px; font-weight:700;">حفظ</button>
-      </div>
-    </div>
+  <div class="toast" id="toast" hidden>
+    <span id="toast-message"></span>
   </div>
 
-  <div class="modal-overlay" id="pin-modal" hidden>
-    <div class="modal" style="max-width:320px;"><div class="modal-header"><h2>دخول المدير</h2><button class="modal-close" id="close-pin">✕</button></div>
-      <div style="padding:24px; text-align:center;">
-        <div id="pin-display" style="display:flex; gap:12px; justify-content:center; margin-bottom:24px;"><span style="width:14px;height:14px;border-radius:50%;border:2px solid var(--primary);"></span><span style="width:14px;height:14px;border-radius:50%;border:2px solid var(--primary);"></span><span style="width:14px;height:14px;border-radius:50%;border:2px solid var(--primary);"></span><span style="width:14px;height:14px;border-radius:50%;border:2px solid var(--primary);"></span></div>
-        <div id="pin-pad" style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px;">
-          <button class="pin-btn" style="height:60px; font-size:20px; background:var(--surface-2); border:none; border-radius:12px;">1</button>
-          <button class="pin-btn" style="height:60px; font-size:20px; background:var(--surface-2); border:none; border-radius:12px;">2</button>
-          <button class="pin-btn" style="height:60px; font-size:20px; background:var(--surface-2); border:none; border-radius:12px;">3</button>
-          <button class="pin-btn" style="height:60px; font-size:20px; background:var(--surface-2); border:none; border-radius:12px;">4</button>
-          <button class="pin-btn" style="height:60px; font-size:20px; background:var(--surface-2); border:none; border-radius:12px;">5</button>
-          <button class="pin-btn" style="height:60px; font-size:20px; background:var(--surface-2); border:none; border-radius:12px;">6</button>
-          <button class="pin-btn" style="height:60px; font-size:20px; background:var(--surface-2); border:none; border-radius:12px;">7</button>
-          <button class="pin-btn" style="height:60px; font-size:20px; background:var(--surface-2); border:none; border-radius:12px;">8</button>
-          <button class="pin-btn" style="height:60px; font-size:20px; background:var(--surface-2); border:none; border-radius:12px;">9</button>
-          <button class="pin-btn" style="height:60px; font-size:20px; background:var(--surface-2); border:none; border-radius:12px; color:var(--danger);">C</button>
-          <button class="pin-btn" style="height:60px; font-size:20px; background:var(--surface-2); border:none; border-radius:12px; grid-column: span 2;">0</button>
-        </div>
-      </div>
-    </div>
+  <div id="invoice-print" style="display:none;">
+    <div class="inv-table-badge"><span class="inv-table-num" id="print-table-num">—</span></div>
+    <div class="inv-meta-row"><span id="print-date-time">—</span></div>
+    <div class="inv-divider"></div>
+    <table class="inv-table">
+      <thead><tr><th>Qty</th><th>Item</th><th>Price</th></tr></thead>
+      <tbody id="print-invoice-items"></tbody>
+    </table>
+    <div class="inv-divider"></div>
+    <div class="inv-grand-total"><span>Total</span><span id="invoice-total">0.00</span></div>
   </div>
 
-  <div class="toast" id="toast" hidden><span id="toast-message"></span></div>
-
-  <!-- Dashboard -->
-  <div id="owner-dashboard" class="dash-root">
-    <aside class="dash-sidebar">
-      <div style="padding:20px; color:white; font-size:18px; font-weight:800;">MENUX</div>
-      <nav class="dash-nav">
-        <button class="dash-nav-item active" data-tab="reports" style="color:white; background:rgba(255,255,255,0.1);">التقارير</button>
-        <button class="dash-nav-item" data-tab="menu" style="color:rgba(255,255,255,0.6);">المنيو</button>
-        <button class="dash-nav-item" data-tab="tables" style="color:rgba(255,255,255,0.6);">الطاولات</button>
-        <button class="dash-nav-item" data-tab="expenses" style="color:rgba(255,255,255,0.6);">المصروفات</button>
-      </nav>
-      <button id="btn-exit-dashboard" style="padding:16px; color:white; background:none; border:none; cursor:pointer;">خروج</button>
-    </aside>
-    <main class="dash-main">
-      <div class="dash-tab-pane active" id="tab-reports">
-        <h1 style="font-size:22px; font-weight:800; margin-bottom:20px;">التقارير</h1>
-        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:15px;">
-          <div class="kpi-card"><div style="font-size:12px; color:var(--text-secondary);">إجمالي الإيراد</div><div style="font-size:24px; font-weight:800; color:var(--primary);" id="rep-revenue">0.00</div></div>
-          <div class="kpi-card"><div style="font-size:12px; color:var(--text-secondary);">إيراد نقدي</div><div style="font-size:24px; font-weight:800; color:var(--success);" id="rep-cash">0.00</div></div>
-          <div class="kpi-card"><div style="font-size:12px; color:var(--text-secondary);">صافي الدخل</div><div style="font-size:24px; font-weight:800;" id="rep-net">0.00</div></div>
-        </div>
-      </div>
-      <div class="dash-tab-pane" id="tab-menu"><h1>المنيو</h1><div id="mgmt-categories-list"></div></div>
-      <div class="dash-tab-pane" id="tab-tables"><h1>الطاولات</h1><div id="mgmt-tables-grid"></div></div>
-      <div class="dash-tab-pane" id="tab-expenses"><h1>المصروفات</h1><div id="mgmt-exp-cats-list"></div></div>
-    </main>
-  </div>
-
-  <script>
-    const SUPABASE_URL = 'https://wbyovaggjnnafbcrlimr.supabase.co'; 
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndieW92YWdnam5uYWZiY3JsaW1yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY5Njk1NDIsImV4cCI6MjEwMjU0NTU0Mn0.7aOgvhdB4YMoQJAZ90ow8tMEJZN4-jqh8p6-T2MfBCg'; 
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    const state = { lang: 'ar', currentTable: null, selectedCategory: null, orders: {}, categories: [], menuItems: [], tables: [], settings: {} };
-
-    async function dbOp(storeName, method, data = null) {
-      try {
-        if (method === 'getAll') { const { data: result, error } = await supabaseClient.from(storeName).select('*'); if (error) throw error; return result || []; } 
-        else if (method === 'get') { const { data: result, error } = await supabaseClient.from(storeName).select('*').eq('id', data).single(); if (error && error.code !== 'PGRST116') throw error; return result; } 
-        else if (method === 'add') { if (data && data.items) delete data.items; const { data: result, error } = await supabaseClient.from(storeName).insert(data).select().single(); if (error) throw error; return result ? result.id : null; } 
-        else if (method === 'put') { if (data && data.items) delete data.items; const { data: result, error } = await supabaseClient.from(storeName).upsert(data).select().single(); if (error) throw error; return result; } 
-        else if (method === 'delete') { const { error } = await supabaseClient.from(storeName).delete().eq('id', data); if (error) throw error; }
-      } catch (error) { console.error(`DB Error:`, error.message); return method === 'getAll' ? [] : null; }
-    }
-
-    function showToast(msg, isError = false) {
-      const el = document.getElementById('toast');
-      document.getElementById('toast-message').textContent = msg;
-      el.style.backgroundColor = isError ? 'var(--danger)' : 'var(--text-primary)';
-      el.hidden = false; el.offsetHeight; el.classList.add('show');
-      setTimeout(() => { el.classList.remove('show'); setTimeout(() => { el.hidden = true; }, 200); }, 2200);
-    }
-    const isoDate = () => new Date().toISOString();
-    function fmt(n) { return Number(n || 0).toFixed(2); }
-    function getCurrentOrder() { return state.currentTable ? state.orders[state.currentTable] : null; }
-
-    const categoryIcons = { 'default': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h16M4 12h16M4 18h12"/></svg>' };
-    function getCategoryIcon(name) { return categoryIcons[name] || categoryIcons['default']; }
-
-    async function loadInitialData() {
-      state.categories = await dbOp('categories', 'getAll') || [];
-      state.menuItems = await dbOp('menu_items', 'getAll') || [];
-      state.tables = await dbOp('tables', 'getAll') || [];
-      const allOrders = await dbOp('orders', 'getAll') || [];
-      const allOrderItems = await dbOp('order_items', 'getAll') || [];
-      state.orders = {};
-      for (const o of allOrders) { if (o.status === 'open' || o.status === 'printed') { o.items = allOrderItems.filter(i => i.order_id === o.id); state.orders[o.table_id] = o; } }
-    }
-
-    function renderCategories() {
-      const container = document.getElementById('category-tabs');
-      let html = `<button class="cat-tab ${!state.selectedCategory ? 'active' : ''}" data-cat=""><span class="cat-tab-icon">${categoryIcons['default']}</span><span>الكل</span></button>`;
-      state.categories.forEach(c => {
-        html += `<button class="cat-tab ${state.selectedCategory == c.id ? 'active' : ''}" data-cat="${c.id}"><span class="cat-tab-icon">${getCategoryIcon(c.name_ar)}</span><span>${c.name_ar}</span></button>`;
-      });
-      container.innerHTML = html;
-    }
-    function renderMenu() {
-      const container = document.getElementById('menu-grid');
-      let items = state.menuItems.filter(i => i.is_available);
-      if (state.selectedCategory) items = items.filter(i => i.category_id == state.selectedCategory);
-      container.innerHTML = items.map(item => `<button class="menu-card" data-item-id="${item.id}"><div class="menu-card-body"><span class="menu-card-name-ar">${item.name_ar}</span><span class="menu-card-name-en">${item.name_en}</span></div><div class="menu-card-footer"><span class="menu-card-price">${fmt(item.price)} <small>ر.س</small></span><span class="menu-card-add-icon">+</span></div></button>`).join('');
-    }
-    function renderOrder() {
-      const container = document.getElementById('order-items'); const titleEl = document.getElementById('table-title'); const order = getCurrentOrder();
-      if (state.currentTable) { const tbl = state.tables.find(t => t.id == state.currentTable); titleEl.innerHTML = tbl ? tbl.name : `طاولة #${state.currentTable}`; } else { titleEl.innerHTML = `<span class="table-title-placeholder">لم يتم اختيار طاولة</span>`; }
-      if (!order || !order.items || order.items.length === 0) { container.innerHTML = `<div class="empty-state"><p>لا توجد عناصر بعد</p></div>`; updateTotals(null); return; }
-      container.innerHTML = order.items.map(oi => `<div class="order-item"><div class="order-item-info"><div class="order-item-name-ar">${oi.name_ar}</div></div><div class="order-item-controls"><div class="qty-control"><button class="qty-btn" data-action="dec" data-item="${oi.id}">−</button><span class="qty-value">${oi.quantity}</span><button class="qty-btn" data-action="inc" data-item="${oi.id}">+</button></div><span class="order-item-total">${fmt(oi.line_total)} ر.س</span><button class="order-item-remove" data-action="remove" data-item="${oi.id}">حذف</button></div></div>`).join('');
-      updateTotals(order);
-    }
-    function updateTotals(order) {
-      let subtotal = 0; if (order && order.items) { subtotal = order.items.reduce((sum, oi) => sum + oi.line_total, 0); order.subtotal = subtotal; order.total = Math.max(0, subtotal - (order.discount || 0)); }
-      document.getElementById('subtotal').innerHTML = `${fmt(order ? order.subtotal : 0)} <small>ر.س</small>`;
-      document.getElementById('total-value').innerHTML = `${fmt(order ? order.total : 0)} <small>ر.س</small>`;
-    }
-    function renderTables() { document.getElementById('tables-grid').innerHTML = state.tables.map(tbl => `<button class="table-cell" data-table-id="${tbl.id}"><span style="font-size:20px; font-family:'Sora';">${tbl.id}</span></button>`).join(''); }
-
-    async function addToOrder(itemId) {
-      if (!state.currentTable) return showToast('يرجى اختيار طاولة أولاً', true);
-      let order = getCurrentOrder();
-      if (!order) { const orderId = await dbOp('orders', 'add', { table_id: state.currentTable, status: 'open', discount: 0, subtotal: 0, total: 0, created_at: isoDate() }); order = await dbOp('orders', 'get', orderId); order.items = []; state.orders[state.currentTable] = order; }
-      const menuItem = state.menuItems.find(i => i.id == itemId);
-      let existing = order.items.find(i => i.item_id == itemId);
-      if (existing) { existing.quantity++; existing.line_total = existing.quantity * menuItem.price; await dbOp('order_items', 'put', existing); } 
-      else { const oi = { order_id: order.id, item_id: itemId, name_ar: menuItem.name_ar, price: menuItem.price, quantity: 1, line_total: menuItem.price }; const oiId = await dbOp('order_items', 'add', oi); oi.id = oiId; order.items.push(oi); }
-      updateTotals(order); await dbOp('orders', 'put', { ...order, items: undefined }); renderOrder();
-    }
-    async function changeQty(id, delta) { const order = getCurrentOrder(); const item = order.items.find(i => i.id == id); item.quantity += delta; if (item.quantity <= 0) return removeItem(id); item.line_total = item.quantity * item.price; await dbOp('order_items', 'put', item); updateTotals(order); await dbOp('orders', 'put', { ...order, items: undefined }); renderOrder(); }
-    async function removeItem(id) { const order = getCurrentOrder(); await dbOp('order_items', 'delete', id); order.items = order.items.filter(i => i.id !== id); updateTotals(order); await dbOp('orders', 'put', { ...order, items: undefined }); renderOrder(); }
-    async function selectTable(id) { state.currentTable = Number(id); renderOrder(); document.getElementById('tables-modal').hidden = true; }
-    async function completeOrder(method) {
-      const order = getCurrentOrder(); order.status = 'paid'; order.payment_method = method; order.paid_at = isoDate();
-      await dbOp('orders', 'put', { ...order, items: undefined });
-      const tbl = state.tables.find(t => t.id == state.currentTable); if (tbl) { tbl.status = 'empty'; await dbOp('tables', 'put', tbl); }
-      delete state.orders[state.currentTable]; state.currentTable = null; renderOrder(); showToast('تم إتمام الطلب');
-    }
-
-    // Dashboard Logic
-    let enteredPin = '';
-    function handlePinInput(val) {
-      if (val === 'C') { enteredPin = ''; } else if (enteredPin.length < 4) { enteredPin += val; if (enteredPin.length === 4) { if (enteredPin === '2525') { document.getElementById('pin-modal').hidden = true; document.getElementById('app').style.display = 'none'; document.getElementById('owner-dashboard').style.display = 'flex'; loadDashboardTab('reports'); enteredPin = ''; } else { enteredPin = ''; } } }
-      document.querySelectorAll('#pin-display span').forEach((d, i) => d.style.backgroundColor = i < enteredPin.length ? 'var(--primary)' : 'transparent');
-    }
-    function closeDashboard() { document.getElementById('owner-dashboard').style.display = 'none'; document.getElementById('app').style.display = 'flex'; loadInitialData().then(() => { renderCategories(); renderMenu(); renderTables(); renderOrder(); }); }
-    async function loadDashboardTab(tab) {
-      document.querySelectorAll('.dash-tab-pane').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.dash-nav-item').forEach(el => { el.classList.remove('active'); el.style.color = 'rgba(255,255,255,0.6)'; el.style.background = 'none'; });
-      const activeTab = document.getElementById(`tab-${tab}`); activeTab.classList.add('active');
-      const activeNav = document.querySelector(`.dash-nav-item[data-tab="${tab}"]`); activeNav.classList.add('active'); activeNav.style.color = 'white'; activeNav.style.background = 'rgba(255,255,255,0.1)';
-      
-      if (tab === 'reports') {
-        const orders = await dbOp('orders', 'getAll') || [];
-        let cashRev = 0; orders.forEach(o => { if (o.status === 'paid' && o.payment_method === 'cash') cashRev += o.total; });
-        document.getElementById('rep-cash').textContent = fmt(cashRev);
-        document.getElementById('rep-revenue').textContent = fmt(cashRev);
-        document.getElementById('rep-net').textContent = fmt(cashRev);
-      }
-      if (tab === 'menu') { document.getElementById('mgmt-categories-list').innerHTML = (await dbOp('categories', 'getAll') || []).map(c => `<div class="mgmt-row">${c.name_ar}</div>`).join(''); }
-      if (tab === 'tables') { document.getElementById('mgmt-tables-grid').innerHTML = (await dbOp('tables', 'getAll') || []).map(t => `<div class="mgmt-row">${t.name}</div>`).join(''); }
-      if (tab === 'expenses') { document.getElementById('mgmt-exp-cats-list').innerHTML = (await dbOp('expense_categories', 'getAll') || []).map(c => `<div class="mgmt-row">${c.name}</div>`).join(''); }
-    }
-
-    function bindEvents() {
-      document.getElementById('btn-tables').addEventListener('click', () => { renderTables(); document.getElementById('tables-modal').hidden = false; });
-      document.getElementById('close-tables').addEventListener('click', () => document.getElementById('tables-modal').hidden = true);
-      document.getElementById('tables-grid').addEventListener('click', (e) => { const cell = e.target.closest('.table-cell'); if (cell) selectTable(cell.dataset.tableId); });
-      document.getElementById('btn-more').addEventListener('click', () => { document.getElementById('pin-modal').hidden = false; enteredPin = ''; handlePinInput(''); });
-      document.getElementById('close-pin').addEventListener('click', () => document.getElementById('pin-modal').hidden = true);
-      document.getElementById('pin-pad').addEventListener('click', (e) => { if (e.target.tagName === 'BUTTON') handlePinInput(e.target.textContent === 'C' ? 'C' : e.target.textContent); });
-      document.getElementById('btn-exit-dashboard').addEventListener('click', closeDashboard);
-      document.querySelectorAll('.dash-nav-item').forEach(item => item.addEventListener('click', () => loadDashboardTab(item.dataset.tab)));
-
-      document.getElementById('category-tabs').addEventListener('click', (e) => { const tab = e.target.closest('.cat-tab'); if (!tab) return; state.selectedCategory = tab.dataset.cat ? Number(tab.dataset.cat) : null; renderCategories(); renderMenu(); });
-      document.getElementById('menu-grid').addEventListener('click', (e) => { const card = e.target.closest('.menu-card'); if (card) addToOrder(Number(card.dataset.itemId)); });
-      document.getElementById('order-items').addEventListener('click', (e) => { const btn = e.target.closest('[data-action]'); if (!btn) return; const id = Number(btn.dataset.item); if (btn.dataset.action === 'inc') changeQty(id, 1); if (btn.dataset.action === 'dec') changeQty(id, -1); if (btn.dataset.action === 'remove') removeItem(id); });
-      document.getElementById('btn-clear-order').addEventListener('click', async () => { const order = getCurrentOrder(); if (!order || !order.items || order.items.length === 0) return; for (const oi of order.items) { await dbOp('order_items', 'delete', oi.id); } await dbOp('orders', 'delete', order.id); delete state.orders[state.currentTable]; state.currentTable = null; renderOrder(); });
-
-      document.getElementById('btn-expenses').addEventListener('click', async () => {
-        const cats = await dbOp('expense_categories', 'getAll') || [];
-        document.getElementById('expense-category').innerHTML = cats.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
-        document.getElementById('expenses-modal').hidden = false;
-      });
-      document.getElementById('close-expenses').addEventListener('click', () => document.getElementById('expenses-modal').hidden = true);
-      document.getElementById('submit-expense').addEventListener('click', async () => {
-        const cid = document.getElementById('expense-category').value; const amt = Number(document.getElementById('expense-amount').value);
-        if (!cid || !amt) return showToast('أدخل البيانات', true);
-        await dbOp('expenses', 'add', { category_id: Number(cid), amount: amt, created_at: isoDate() });
-        document.getElementById('expenses-modal').hidden = true; showToast('تم حفظ المصروف');
-      });
-
-      document.getElementById('btn-checkout').addEventListener('click', () => {
-        if (!state.currentTable) return showToast('يرجى اختيار طاولة أولاً', true);
-        const order = getCurrentOrder();
-        if (!order || !order.items || order.items.length === 0) return showToast('الطلب فارغ', true);
-        document.getElementById('payment-total-amount').innerHTML = `${fmt(order.total)} <small>ر.س</small>`;
-        document.getElementById('payment-modal').hidden = false;
-      });
-      document.querySelectorAll('.payment-option-card').forEach(btn => {
-        btn.addEventListener('click', () => { const method = btn.dataset.method; document.getElementById('payment-modal').hidden = true; completeOrder(method); });
-      });
-      document.getElementById('close-payment-modal').addEventListener('click', () => document.getElementById('payment-modal').hidden = true);
-    }
-
-    async function init() {
-      try { await loadInitialData(); renderCategories(); renderMenu(); renderTables(); renderOrder(); bindEvents(); } 
-      catch (e) { console.error("Init Error", e); }
-    }
-    document.addEventListener('DOMContentLoaded', init);
-  </script>
+  <script src="./app.js"></script>
 </body>
 </html>
