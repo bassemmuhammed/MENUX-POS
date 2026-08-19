@@ -1,9 +1,10 @@
 /* ═══════════════════════════════════════════════════
-   CAFÉ POS — Application Logic (UPDATED & OPTIMED)
+   CAFÉ POS — Application Logic (LTR OPTIMIZED)
    ═══════════════════════════════════════════════════ */
 
 function injectDynamicUI() {
   const container = document.getElementById('dynamic-ui-container') || document.createElement('div');
+  container.id = 'dynamic-ui-container';
   container.innerHTML = `
   <div class="modal-overlay" id="table-form-modal" hidden>
       <div class="modal">
@@ -90,7 +91,6 @@ function injectDynamicUI() {
     <!-- CATEGORY FORM MODAL -->
     <div class="modal-overlay" id="category-form-modal" hidden>
       <div class="modal modal-cat">
-        <div class="modal-drag"></div>
         <div class="modal-header">
           <h2>إضافة قسم / Add Category</h2>
         </div>
@@ -109,7 +109,6 @@ function injectDynamicUI() {
     <!-- ITEM FORM MODAL -->
     <div class="modal-overlay" id="item-form-modal" hidden>
       <div class="modal modal-item">
-        <div class="modal-drag"></div>
         <div class="modal-header"><h2 id="item-form-title">إضافة منتج / Add Item</h2></div>
         <div class="modal-body expenses-body">
           <input type="hidden" id="item-form-id">
@@ -118,10 +117,6 @@ function injectDynamicUI() {
           <div style="display:flex; gap:16px;">
             <div style="flex:1;"><label class="form-label">السعر / Price</label><input type="number" id="item-form-price" class="form-input" min="0" step="0.5"></div>
             <div style="flex:1;"><label class="form-label">القسم / Category</label><select id="item-form-category" class="form-input"></select></div>
-          </div>
-          <div style="display:flex; align-items:center; justify-content:space-between; background:var(--surface-2); border:1px solid var(--border); padding:12px 16px; border-radius:8px;">
-            <span style="font-weight:600;">متاح / Available</span>
-            <div class="toggle-switch on" id="item-form-toggle"><div class="toggle-thumb"></div></div>
           </div>
           <div class="btn-row">
             <button id="btn-cancel-item" class="btn-cancel">إلغاء</button>
@@ -134,7 +129,7 @@ function injectDynamicUI() {
     <!-- CONFIRM DIALOG -->
     <div class="modal-overlay" id="confirm-modal" hidden>
       <div class="modal modal-confirm">
-        <div class="modal-body confirm-body">
+        <div class="modal-body expenses-body" style="text-align:center;">
           <h3 id="confirm-title">هل أنت متأكد؟</h3>
           <p id="confirm-msg" style="color:var(--text-secondary); font-size:14px; margin:8px 0 24px;">سيتم حذف هذا العنصر نهائياً.</p>
           <div class="btn-row">
@@ -230,10 +225,6 @@ function showToast(msg, isError = false) {
 }
 const isoDate = () => new Date().toISOString();
 
-// ──────────────── CUSTOM MODAL HELPERS ────────────────
-function openModal(id) { const el = document.getElementById(id); if (el) { el.hidden = false; } }
-function closeModal(id) { const el = document.getElementById(id); if (el) { el.hidden = true; } }
-
 // ──────────────── DB DATA FETCHING ────────────────
 async function loadInitialData() {
   state.categories = await dbOp('categories', 'getAll') || [];
@@ -286,7 +277,7 @@ async function completeOrder(method, customerId = null) {
   delete state.orders[state.currentTable]; state.currentTable = null; renderOrder(); showToast(t('order-completed'));
 }
 
-// ──────────────── DASHBOARD LOGIC (FIXED REPORTS) ────────────────
+// ──────────────── DASHBOARD LOGIC ────────────────
 let enteredPin = '';
 function updatePinDisplay() { document.querySelectorAll('.pin-dot').forEach((d, i) => d.classList.toggle('filled', i < enteredPin.length)); }
 function handlePinInput(val) {
@@ -353,7 +344,6 @@ function bindEvents() {
   document.getElementById('order-items').addEventListener('click', (e) => { const btn = e.target.closest('[data-action]'); if (!btn) return; const id = Number(btn.dataset.item); if (btn.dataset.action === 'inc') changeQty(id, 1); if (btn.dataset.action === 'dec') changeQty(id, -1); if (btn.dataset.action === 'remove') removeItem(id); });
   document.getElementById('discount-input').addEventListener('change', async (e) => { const order = getCurrentOrder(); if (!order) return; order.discount = Number(e.target.value) || 0; updateTotals(order); await dbOp('orders', 'put', { ...order, items: undefined }); });
   
-  // FIXED: Bulk delete for order clearing
   document.getElementById('btn-clear-order').addEventListener('click', async () => {
     const order = getCurrentOrder();
     if (!order || !order.items || order.items.length === 0) return;
@@ -391,7 +381,6 @@ function bindEvents() {
   });
   document.getElementById('close-payment-modal').addEventListener('click', () => document.getElementById('payment-modal').hidden = true);
 
-  // ADDED: Keyboard support for PIN
   document.addEventListener('keydown', (e) => {
     const pinModal = document.getElementById('pin-modal');
     if (pinModal.hidden) return;
