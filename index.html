@@ -29,6 +29,10 @@
             <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>
             <span class="nav-label" data-i18n="tables">الطاولات</span>
           </button>
+          <button class="nav-icon-btn" id="btn-delivery">
+            <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="6" width="14" height="10" rx="1.5"/><path d="M15 9h4l3 3v4h-7z"/><circle cx="6" cy="18" r="2"/><circle cx="17.5" cy="18" r="2"/></svg></span>
+            <span class="nav-label">دليفري</span>
+          </button>
           <button class="nav-icon-btn" id="btn-print">
             <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></span>
             <span class="nav-label" data-i18n="print">طباعة</span>
@@ -157,6 +161,33 @@
         <span class="legend-item"><span class="legend-dot legend-printed"></span><span data-i18n="status-printed">مطبوعة</span></span>
       </div>
       <div class="tables-grid" id="tables-grid"></div>
+    </div>
+  </div>
+
+  <!-- DELIVERY MODAL -->
+  <div class="modal-overlay" id="delivery-modal" hidden>
+    <div class="modal" style="max-width: 520px;">
+      <div class="modal-header">
+        <h2>دليفري</h2>
+        <button class="modal-close" id="close-delivery">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="delivery-modal-body">
+        <div class="delivery-search-wrap">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="delivery-search" placeholder="ابحث بالاسم أو رقم الهاتف">
+        </div>
+        <div class="delivery-customers-list" id="delivery-customers-list"></div>
+        <div class="delivery-divider"><span>أو أضف عميل جديد</span></div>
+        <div class="delivery-new-customer">
+          <div class="delivery-form-row">
+            <input type="text" id="delivery-new-name" placeholder="اسم العميل">
+            <input type="tel" id="delivery-new-phone" placeholder="رقم الهاتف">
+          </div>
+          <button id="btn-save-delivery-customer" class="delivery-save-btn">+ إضافة واختيار العميل</button>
+        </div>
+      </div>
     </div>
   </div>
 

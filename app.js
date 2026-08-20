@@ -227,7 +227,7 @@ const I18N = {
 };
 
 // ──────────────── STATE ────────────────
-const state = { lang: 'ar', currentTable: null, selectedCategory: null, searchQuery: '', orders: {}, categories: [], menuItems: [], tables: [], settings: {} };
+const state = { lang: 'ar', mode: 'table', currentTable: null, currentCustomer: null, selectedCategory: null, searchQuery: '', orders: {}, deliveryOrders: {}, categories: [], menuItems: [], tables: [], customers: [], settings: {} };
 
 // ──────────────── SUPABASE INIT ────────────────
 const SUPABASE_URL = 'https://wbyovaggjnnafbcrlimr.supabase.co'; 
@@ -251,7 +251,7 @@ async function dbOp(storeName, method, data = null) {
 // ──────────────── HELPERS ────────────────
 function t(key) { return I18N[state.lang][key] || key; }
 function fmt(n) { return Number(n || 0).toFixed(2); }
-function getCurrentOrder() { return state.currentTable ? state.orders[state.currentTable] : null; }
+function getCurrentOrder() { if (state.mode === 'delivery') return state.currentCustomer ? state.deliveryOrders[state.currentCustomer] : null; return state.currentTable ? state.orders[state.currentTable] : null; }
 function applyLang() { const html = document.documentElement; html.lang = state.lang; html.dir = state.lang === 'ar' ? 'rtl' : 'ltr'; document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); }); }
 let toastTimer = null;
 function showToast(msg, isError = false) { const el = document.getElementById('toast'); document.getElementById('toast-message').textContent = msg; el.style.backgroundColor = isError ? 'var(--danger)' : 'var(--text-primary)'; el.hidden = false; el.offsetHeight; el.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => { el.classList.remove('show'); setTimeout(() => { el.hidden = true; }, 200); }, 2200); }
@@ -278,10 +278,17 @@ async function loadInitialData() {
   state.categories = await dbOp('categories', 'getAll') || [];
   state.menuItems = await dbOp('menu_items', 'getAll') || [];
   state.tables = await dbOp('tables', 'getAll') || [];
+  state.customers = await dbOp('customers', 'getAll') || [];
   const allOrders = await dbOp('orders', 'getAll') || [];
   const allOrderItems = await dbOp('order_items', 'getAll') || [];
-  state.orders = {};
-  for (const o of allOrders) { if (o.status === 'open' || o.status === 'printed') { o.items = allOrderItems.filter(i => i.order_id === o.id); state.orders[o.table_id] = o; } }
+  state.orders = {}; state.deliveryOrders = {};
+  for (const o of allOrders) {
+    if (o.status === 'open' || o.status === 'printed') {
+      o.items = allOrderItems.filter(i => i.order_id === o.id);
+      if (o.table_id) { state.orders[o.table_id] = o; }
+      else if (o.customer_id) { state.deliveryOrders[o.customer_id] = o; }
+    }
+  }
 }
 
 // ──────────────── RENDERING ────────────────
@@ -301,10 +308,30 @@ function renderMenu() {
 }
 function renderOrder() {
   const container = document.getElementById('order-items'); const titleEl = document.getElementById('table-title'); const order = getCurrentOrder();
-  if (state.currentTable) { const tbl = state.tables.find(t => t.id == state.currentTable); titleEl.innerHTML = tbl ? tbl.name : `${t('table')} #${state.currentTable}`; titleEl.classList.remove('table-title-placeholder'); } else { titleEl.innerHTML = `<span class="table-title-placeholder">${t('no-table')}</span>`; }
+  if (state.mode === 'delivery') {
+    if (state.currentCustomer) {
+      const cust = state.customers.find(c => c.id == state.currentCustomer);
+      titleEl.innerHTML = `<span class="order-mode-badge">دليفري</span> ${cust ? cust.name : ''}`;
+      titleEl.classList.remove('table-title-placeholder');
+    } else {
+      titleEl.innerHTML = `<span class="table-title-placeholder">اختر عميل للدليفري</span>`;
+    }
+  } else {
+    if (state.currentTable) { const tbl = state.tables.find(t => t.id == state.currentTable); titleEl.innerHTML = tbl ? tbl.name : `${t('table')} #${state.currentTable}`; titleEl.classList.remove('table-title-placeholder'); } else { titleEl.innerHTML = `<span class="table-title-placeholder">${t('no-table')}</span>`; }
+  }
   if (!order || !order.items || order.items.length === 0) { container.innerHTML = `<div class="empty-state"><p>${t('no-items')}</p></div>`; updateTotals(null); return; }
   container.innerHTML = order.items.map(oi => `<div class="order-item"><div class="order-item-info"><div class="order-item-name-ar">${oi.name_ar}</div></div><div class="order-item-controls"><div class="qty-control"><button class="qty-btn" data-action="dec" data-item="${oi.id}">−</button><span class="qty-value">${oi.quantity}</span><button class="qty-btn" data-action="inc" data-item="${oi.id}">+</button></div><span class="order-item-total">${fmt(oi.line_total)} ${t('currency')}</span><button class="order-item-remove" data-action="remove" data-item="${oi.id}">${t('remove')}</button></div></div>`).join('');
   updateTotals(order);
+}
+function renderDeliveryCustomers(list) {
+  const wrap = document.getElementById('delivery-customers-list');
+  if (!list || list.length === 0) { wrap.innerHTML = `<div class="delivery-empty">لا يوجد عملاء مطابقين</div>`; return; }
+  wrap.innerHTML = list.map(c => `<button class="delivery-customer-row" data-customer-id="${c.id}"><div class="delivery-customer-info"><span class="delivery-customer-name">${c.name}</span><span class="delivery-customer-phone">${c.phone || 'بدون رقم'}</span></div><span class="delivery-customer-arrow">‹</span></button>`).join('');
+}
+function selectDeliveryCustomer(id) {
+  state.mode = 'delivery'; state.currentCustomer = Number(id);
+  document.getElementById('delivery-modal').hidden = true;
+  renderOrder(); showToast('تم اختيار العميل');
 }
 function updateTotals(order) {
   let subtotal = 0; if (order && order.items) { subtotal = order.items.reduce((sum, oi) => sum + oi.line_total, 0); order.subtotal = subtotal; order.total = Math.max(0, subtotal - (order.discount || 0)); }
@@ -316,13 +343,21 @@ function renderTables() { document.getElementById('tables-grid').innerHTML = sta
 
 // ──────────────── CASHIER ACTIONS ────────────────
 async function addToOrder(itemId) {
-  if (!state.currentTable) return showToast(t('select-table-first'), true);
+  if (state.mode === 'delivery') { if (!state.currentCustomer) return showToast('يرجى اختيار عميل أولاً', true); }
+  else { if (!state.currentTable) return showToast(t('select-table-first'), true); }
   let order = getCurrentOrder();
   if (!order) {
-    const orderId = await dbOp('orders', 'add', { table_id: state.currentTable, status: 'open', discount: 0, subtotal: 0, total: 0, created_at: isoDate() });
-    order = await dbOp('orders', 'get', orderId); order.items = []; state.orders[state.currentTable] = order;
-    const tbl = state.tables.find(t => t.id == state.currentTable);
-    if (tbl && tbl.status !== 'open' && tbl.status !== 'printed') { tbl.status = 'open'; await dbOp('tables', 'put', tbl); }
+    const payload = state.mode === 'delivery'
+      ? { table_id: null, customer_id: state.currentCustomer, status: 'open', discount: 0, subtotal: 0, total: 0, created_at: isoDate() }
+      : { table_id: state.currentTable, status: 'open', discount: 0, subtotal: 0, total: 0, created_at: isoDate() };
+    const orderId = await dbOp('orders', 'add', payload);
+    order = await dbOp('orders', 'get', orderId); order.items = [];
+    if (state.mode === 'delivery') { state.deliveryOrders[state.currentCustomer] = order; }
+    else {
+      state.orders[state.currentTable] = order;
+      const tbl = state.tables.find(t => t.id == state.currentTable);
+      if (tbl && tbl.status !== 'open' && tbl.status !== 'printed') { tbl.status = 'open'; await dbOp('tables', 'put', tbl); }
+    }
   }
   const menuItem = state.menuItems.find(i => i.id == itemId);
   let existing = order.items.find(i => i.item_id == itemId);
@@ -332,23 +367,24 @@ async function addToOrder(itemId) {
 }
 async function changeQty(id, delta) { const order = getCurrentOrder(); const item = order.items.find(i => i.id == id); item.quantity += delta; if (item.quantity <= 0) return removeItem(id); item.line_total = item.quantity * item.price; await dbOp('order_items', 'put', item); updateTotals(order); await dbOp('orders', 'put', { ...order, items: undefined }); renderOrder(); }
 async function removeItem(id) { const order = getCurrentOrder(); await dbOp('order_items', 'delete', id); order.items = order.items.filter(i => i.id !== id); updateTotals(order); await dbOp('orders', 'put', { ...order, items: undefined }); renderOrder(); }
-async function selectTable(id) { state.currentTable = Number(id); renderOrder(); document.getElementById('tables-modal').hidden = true; showToast(t('table-selected')); }
+async function selectTable(id) { state.mode = 'table'; state.currentTable = Number(id); renderOrder(); document.getElementById('tables-modal').hidden = true; showToast(t('table-selected')); }
 async function completeOrder(method, customerId = null) {
-  const order = getCurrentOrder(); order.status = 'paid'; order.payment_method = method; order.paid_at = isoDate(); order.customer_id = customerId;
+  const order = getCurrentOrder(); order.status = 'paid'; order.payment_method = method; order.paid_at = isoDate(); if (customerId) order.customer_id = customerId;
   await dbOp('orders', 'put', { ...order, items: undefined });
   if (method === 'credit' && customerId) { const summary = order.items.map(i => `${i.name_ar} (x${i.quantity})`).join(', '); await dbOp('credit_orders', 'add', { customer_id: customerId, order_id: order.id, amount: order.total, items_summary: summary, is_paid: 0, created_at: order.paid_at, paid_at: null }); const cust = await dbOp('customers', 'get', customerId); if (cust) { cust.total_credit = (cust.total_credit || 0) + order.total; await dbOp('customers', 'put', cust); } }
-  const tbl = state.tables.find(t => t.id == state.currentTable); if (tbl) { tbl.status = 'empty'; await dbOp('tables', 'put', tbl); }
-  delete state.orders[state.currentTable]; state.currentTable = null; renderOrder(); showToast(t('order-completed'));
+  if (state.mode === 'delivery') { delete state.deliveryOrders[state.currentCustomer]; state.currentCustomer = null; }
+  else { const tbl = state.tables.find(t => t.id == state.currentTable); if (tbl) { tbl.status = 'empty'; await dbOp('tables', 'put', tbl); } delete state.orders[state.currentTable]; state.currentTable = null; }
+  renderOrder(); showToast(t('order-completed'));
 }
 async function printBill() {
   const order = getCurrentOrder(); if (!order) return;
-  document.getElementById('print-table-num').textContent = state.tables.find(tb => tb.id == state.currentTable)?.name || '—';
+  const label = state.mode === 'delivery' ? (state.customers.find(c => c.id == state.currentCustomer)?.name || 'دليفري') : (state.tables.find(tb => tb.id == state.currentTable)?.name || '—');
+  document.getElementById('print-table-num').textContent = label;
   document.getElementById('print-date-time').textContent = new Date().toLocaleString();
   const tbody = document.getElementById('print-invoice-items'); tbody.innerHTML = '';
   let subtotal = 0; order.items.forEach(item => { subtotal += item.price * item.quantity; tbody.innerHTML += `<tr><td>${item.quantity}</td><td>${item.name_ar}</td><td>${(item.price * item.quantity).toFixed(2)}</td></tr>`; });
   document.getElementById('invoice-total').textContent = subtotal.toFixed(2);
-  const tbl = state.tables.find(t => t.id == state.currentTable);
-  if (tbl && tbl.status !== 'printed') { tbl.status = 'printed'; await dbOp('tables', 'put', tbl); }
+  if (state.mode !== 'delivery') { const tbl = state.tables.find(t => t.id == state.currentTable); if (tbl && tbl.status !== 'printed') { tbl.status = 'printed'; await dbOp('tables', 'put', tbl); } }
   window.print();
 }
 
@@ -394,7 +430,14 @@ function bindEvents() {
   document.getElementById('order-items').addEventListener('click', (e) => { const btn = e.target.closest('[data-action]'); if (!btn) return; const id = Number(btn.dataset.item); if (btn.dataset.action === 'inc') changeQty(id, 1); if (btn.dataset.action === 'dec') changeQty(id, -1); if (btn.dataset.action === 'remove') removeItem(id); });
   document.getElementById('discount-input').addEventListener('change', async (e) => { const order = getCurrentOrder(); if (!order) return; order.discount = Number(e.target.value) || 0; updateTotals(order); await dbOp('orders', 'put', { ...order, items: undefined }); });
   
-  document.getElementById('btn-clear-order').addEventListener('click', async () => { const order = getCurrentOrder(); if (!order || !order.items || order.items.length === 0) return; for (const oi of order.items) { await dbOp('order_items', 'delete', oi.id); } await dbOp('orders', 'delete', order.id); delete state.orders[state.currentTable]; state.currentTable = null; renderOrder(); });
+  document.getElementById('btn-clear-order').addEventListener('click', async () => {
+    const order = getCurrentOrder(); if (!order || !order.items || order.items.length === 0) return;
+    for (const oi of order.items) { await dbOp('order_items', 'delete', oi.id); }
+    await dbOp('orders', 'delete', order.id);
+    if (state.mode === 'delivery') { delete state.deliveryOrders[state.currentCustomer]; state.currentCustomer = null; }
+    else { delete state.orders[state.currentTable]; state.currentTable = null; }
+    renderOrder();
+  });
   document.getElementById('pin-pad').addEventListener('click', (e) => { if (e.target.tagName === 'BUTTON') handlePinInput(e.target.textContent === 'C' ? 'C' : e.target.textContent); });
   document.getElementById('dashboard-nav').addEventListener('click', (e) => { const item = e.target.closest('.dash-nav-item'); if (item && item.dataset.tab) loadDashboardTab(item.dataset.tab); });
   document.getElementById('btn-exit-dashboard').addEventListener('click', closeDashboard);
@@ -414,7 +457,8 @@ function bindEvents() {
 
   // === نظام الدفع الجديد ===
   document.getElementById('btn-checkout').addEventListener('click', () => {
-    if (!state.currentTable) return showToast(t('select-table-first'), true);
+    const hasContext = state.mode === 'delivery' ? !!state.currentCustomer : !!state.currentTable;
+    if (!hasContext) return showToast(state.mode === 'delivery' ? 'يرجى اختيار عميل أولاً' : t('select-table-first'), true);
     const order = getCurrentOrder();
     if (!order || !order.items || order.items.length === 0) return showToast(t('empty-order'), true);
     document.getElementById('payment-total-amount').innerHTML = `${fmt(order.total)} <small>${t('currency')}</small>`;
@@ -428,6 +472,34 @@ function bindEvents() {
   });
   document.getElementById('close-payment-modal').addEventListener('click', () => document.getElementById('payment-modal').hidden = true);
   document.getElementById('close-payment-modal-x')?.addEventListener('click', () => document.getElementById('payment-modal').hidden = true);
+
+  // === الدليفري ===
+  document.getElementById('btn-delivery').addEventListener('click', async () => {
+    state.customers = await dbOp('customers', 'getAll') || [];
+    document.getElementById('delivery-search').value = '';
+    document.getElementById('delivery-new-name').value = '';
+    document.getElementById('delivery-new-phone').value = '';
+    renderDeliveryCustomers(state.customers);
+    document.getElementById('delivery-modal').hidden = false;
+  });
+  document.getElementById('close-delivery').addEventListener('click', () => document.getElementById('delivery-modal').hidden = true);
+  document.getElementById('delivery-search').addEventListener('input', (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    const filtered = !q ? state.customers : state.customers.filter(c => (c.name || '').toLowerCase().includes(q) || (c.phone || '').includes(q));
+    renderDeliveryCustomers(filtered);
+  });
+  document.getElementById('delivery-customers-list').addEventListener('click', (e) => {
+    const row = e.target.closest('.delivery-customer-row'); if (row) selectDeliveryCustomer(row.dataset.customerId);
+  });
+  document.getElementById('btn-save-delivery-customer').addEventListener('click', async () => {
+    const name = document.getElementById('delivery-new-name').value.trim();
+    const phone = document.getElementById('delivery-new-phone').value.trim();
+    if (!name) return showToast('اكتب اسم العميل', true);
+    const newId = await dbOp('customers', 'add', { name, phone, total_credit: 0 });
+    if (!newId) return showToast('حصل خطأ أثناء إضافة العميل — راجع إعدادات قاعدة البيانات', true);
+    state.customers.push({ id: newId, name, phone, total_credit: 0 });
+    selectDeliveryCustomer(newId);
+  });
 
   // إغلاق أي نافذة منبثقة بالدوس على الخلفية الغامقة برّه الفورم
   document.querySelectorAll('.modal-overlay').forEach(overlay => {
