@@ -419,6 +419,12 @@ function bindEvents() {
     });
   });
   document.getElementById('close-payment-modal').addEventListener('click', () => document.getElementById('payment-modal').hidden = true);
+  document.getElementById('close-payment-modal-x')?.addEventListener('click', () => document.getElementById('payment-modal').hidden = true);
+
+  // إغلاق أي نافذة منبثقة بالدوس على الخلفية الغامقة برّه الفورم
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.hidden = true; });
+  });
 }
 
 async function openCreditModal() {

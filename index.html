@@ -111,8 +111,12 @@
   <!-- PAYMENT MODAL (نافذة الدفع) -->
   <div class="modal-overlay" id="payment-modal" hidden>
     <div class="modal payment-modal-box">
-      <div class="modal-header" style="justify-content: center; border-bottom: none; padding-bottom: 0;">
+      <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
+        <span style="width:32px;"></span>
         <h2>اختر طريقة الدفع</h2>
+        <button class="modal-close" id="close-payment-modal-x">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
       </div>
       <div class="payment-total" id="payment-total-amount">0.00 <small>ر.س</small></div>
       <div class="payment-options-grid">
