@@ -318,7 +318,12 @@ function renderTables() { document.getElementById('tables-grid').innerHTML = sta
 async function addToOrder(itemId) {
   if (!state.currentTable) return showToast(t('select-table-first'), true);
   let order = getCurrentOrder();
-  if (!order) { const orderId = await dbOp('orders', 'add', { table_id: state.currentTable, status: 'open', discount: 0, subtotal: 0, total: 0, created_at: isoDate() }); order = await dbOp('orders', 'get', orderId); order.items = []; state.orders[state.currentTable] = order; }
+  if (!order) {
+    const orderId = await dbOp('orders', 'add', { table_id: state.currentTable, status: 'open', discount: 0, subtotal: 0, total: 0, created_at: isoDate() });
+    order = await dbOp('orders', 'get', orderId); order.items = []; state.orders[state.currentTable] = order;
+    const tbl = state.tables.find(t => t.id == state.currentTable);
+    if (tbl && tbl.status !== 'open' && tbl.status !== 'printed') { tbl.status = 'open'; await dbOp('tables', 'put', tbl); }
+  }
   const menuItem = state.menuItems.find(i => i.id == itemId);
   let existing = order.items.find(i => i.item_id == itemId);
   if (existing) { existing.quantity++; existing.line_total = existing.quantity * menuItem.price; await dbOp('order_items', 'put', existing); } 
@@ -341,7 +346,10 @@ async function printBill() {
   document.getElementById('print-date-time').textContent = new Date().toLocaleString();
   const tbody = document.getElementById('print-invoice-items'); tbody.innerHTML = '';
   let subtotal = 0; order.items.forEach(item => { subtotal += item.price * item.quantity; tbody.innerHTML += `<tr><td>${item.quantity}</td><td>${item.name_ar}</td><td>${(item.price * item.quantity).toFixed(2)}</td></tr>`; });
-  document.getElementById('invoice-total').textContent = subtotal.toFixed(2); window.print();
+  document.getElementById('invoice-total').textContent = subtotal.toFixed(2);
+  const tbl = state.tables.find(t => t.id == state.currentTable);
+  if (tbl && tbl.status !== 'printed') { tbl.status = 'printed'; await dbOp('tables', 'put', tbl); }
+  window.print();
 }
 
 // ──────────────── DASHBOARD LOGIC ────────────────
