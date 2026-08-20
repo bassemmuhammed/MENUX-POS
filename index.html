@@ -58,16 +58,7 @@
       </nav>
 
     <main class="main-content">
-      <!-- MENU PANEL -->
-      <section class="menu-panel" id="menu-panel">
-        <div class="menu-panel-header">
-          <h1 class="menu-panel-title">القائمة</h1>
-        </div>
-        <div class="category-tabs" id="category-tabs"></div>
-        <div class="menu-grid" id="menu-grid"></div>
-      </section>
-
-      <!-- ORDER PANEL -->
+      <!-- ORDER PANEL — بعد الـside-nav مباشرة -->
       <aside class="order-panel" id="order-panel">
         <div class="order-header">
           <h2 class="table-title" id="table-title">
@@ -85,7 +76,7 @@
           <div class="order-divider"></div>
           <div class="summary-row">
             <span class="summary-label" data-i18n="subtotal">المجموع الفرعي</span>
-            <span class="summary-value" id="subtotal">0.00 <small data-i18n="currency">ر.س</small></span>
+            <span class="summary-value" id="subtotal">0.00 <small data-i18n="currency">ج.م</small></span>
           </div>
           <div class="summary-row discount-row">
             <span class="summary-label" data-i18n="discount">الخصم</span>
@@ -94,9 +85,9 @@
           <div class="order-divider"></div>
           <div class="summary-row total-row">
             <span class="total-label" data-i18n="total">الإجمالي</span>
-            <span class="total-value" id="total-value">0.00 <small data-i18n="currency">ر.س</small></span>
+            <span class="total-value" id="total-value">0.00 <small data-i18n="currency">ج.م</small></span>
           </div>
-          
+
           <!-- زرار الدفع الجديد الكبير -->
           <button class="checkout-btn" id="btn-checkout">
             <span>دفع</span>
@@ -104,6 +95,15 @@
           </button>
         </div>
       </aside>
+
+      <!-- MENU PANEL — تبدأ من الشمال، بعد السلة مباشرة -->
+      <section class="menu-panel" id="menu-panel">
+        <div class="menu-panel-header">
+          <h1 class="menu-panel-title">القائمة</h1>
+        </div>
+        <div class="category-tabs" id="category-tabs"></div>
+        <div class="menu-grid" id="menu-grid"></div>
+      </section>
     </main>
     </div>
   </div>
@@ -118,7 +118,7 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
-      <div class="payment-total" id="payment-total-amount">0.00 <small>ر.س</small></div>
+      <div class="payment-total" id="payment-total-amount">0.00 <small>ج.م</small></div>
       <div class="payment-options-grid">
         <button class="payment-option-card" data-method="cash">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/></svg>
