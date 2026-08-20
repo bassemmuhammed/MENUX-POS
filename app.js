@@ -222,8 +222,8 @@ function injectDynamicUI() {
 
 // ──────────────── TRANSLATIONS ────────────────
 const I18N = {
-  ar: { 'lang-toggle': 'EN', 'tables': 'الطاولات', 'print': 'طباعة', 'expenses': 'المصروفات', 'credit': 'الآجل', 'more': 'المزيد', 'no-table': 'لم يتم اختيار طاولة', 'no-items': 'لا توجد عناصر بعد', 'subtotal': 'المجموع الفرعي', 'discount': 'الخصم', 'total': 'الإجمالي', 'cash': 'نقدي', 'wallet': 'محفظة', 'credit-pay': 'آجل', 'select-table': 'اختر طاولة', 'table': 'طاولة', 'remove': 'حذف', 'currency': 'ج.م', 'order-completed': 'تم إتمام الطلب بنجاح ✓', 'select-table-first': 'يرجى اختيار طاولة أولاً', 'empty-order': 'الطلب فارغ', 'status-empty': 'فارغة', 'status-open': 'مفتوحة', 'status-printed': 'مطبوعة', 'bill-printed': 'تم طباعة الفاتورة', 'table-selected': 'تم اختيار الطاولة' },
-  en: { 'lang-toggle': 'عربي', 'tables': 'Tables', 'print': 'Print', 'expenses': 'Expenses', 'credit': 'Credit', 'more': 'More', 'no-table': 'No Table Selected', 'no-items': 'No items yet', 'subtotal': 'Subtotal', 'discount': 'Discount', 'total': 'Total', 'cash': 'Cash', 'wallet': 'Wallet', 'credit-pay': 'Credit', 'select-table': 'Select a Table', 'table': 'Table', 'remove': 'Remove', 'currency': 'EGP', 'order-completed': 'Order completed successfully ✓', 'select-table-first': 'Please select a table first', 'empty-order': 'Order is empty', 'status-empty': 'Empty', 'status-open': 'Open', 'status-printed': 'Printed', 'bill-printed': 'Bill printed', 'table-selected': 'Table selected' }
+  ar: { 'lang-toggle': 'EN', 'tables': 'الطاولات', 'print': 'طباعة', 'expenses': 'المصروفات', 'credit': 'الآجل', 'more': 'المزيد', 'no-table': 'لم يتم اختيار طاولة', 'no-items': 'لا توجد عناصر بعد', 'subtotal': 'المجموع الفرعي', 'discount': 'الخصم', 'total': 'الإجمالي', 'cash': 'نقدي', 'wallet': 'محفظة', 'credit-pay': 'آجل', 'select-table': 'اختر طاولة', 'table': 'طاولة', 'remove': 'حذف', 'currency': 'ر.س', 'order-completed': 'تم إتمام الطلب بنجاح ✓', 'select-table-first': 'يرجى اختيار طاولة أولاً', 'empty-order': 'الطلب فارغ', 'status-empty': 'فارغة', 'status-open': 'مفتوحة', 'status-printed': 'مطبوعة', 'bill-printed': 'تم طباعة الفاتورة', 'table-selected': 'تم اختيار الطاولة' },
+  en: { 'lang-toggle': 'عربي', 'tables': 'Tables', 'print': 'Print', 'expenses': 'Expenses', 'credit': 'Credit', 'more': 'More', 'no-table': 'No Table Selected', 'no-items': 'No items yet', 'subtotal': 'Subtotal', 'discount': 'Discount', 'total': 'Total', 'cash': 'Cash', 'wallet': 'Wallet', 'credit-pay': 'Credit', 'select-table': 'Select a Table', 'table': 'Table', 'remove': 'Remove', 'currency': 'SAR', 'order-completed': 'Order completed successfully ✓', 'select-table-first': 'Please select a table first', 'empty-order': 'Order is empty', 'status-empty': 'Empty', 'status-open': 'Open', 'status-printed': 'Printed', 'bill-printed': 'Bill printed', 'table-selected': 'Table selected' }
 };
 
 // ──────────────── STATE ────────────────
@@ -339,26 +339,16 @@ async function printBill() {
   const order = getCurrentOrder(); if (!order) return;
   document.getElementById('print-table-num').textContent = state.tables.find(tb => tb.id == state.currentTable)?.name || '—';
   document.getElementById('print-date-time').textContent = new Date().toLocaleString();
-  document.getElementById('print-invoice-id').textContent = order.id || '0000';
   const tbody = document.getElementById('print-invoice-items'); tbody.innerHTML = '';
-  let subtotal = 0, itemsCount = 0;
-  order.items.forEach(item => { subtotal += item.price * item.quantity; itemsCount += item.quantity; tbody.innerHTML += `<tr><td>${item.quantity}</td><td>${item.name_ar}</td><td>${(item.price * item.quantity).toFixed(2)}</td></tr>`; });
-  const discount = order.discount || 0; const total = Math.max(0, subtotal - discount);
-  document.getElementById('invoice-subtotal').textContent = subtotal.toFixed(2);
-  document.getElementById('invoice-discount').textContent = discount.toFixed(2);
-  document.getElementById('inv-discount-wrap').style.display = discount > 0 ? 'flex' : 'none';
-  document.getElementById('invoice-total').textContent = total.toFixed(2);
-  document.getElementById('invoice-items-count').textContent = `Products Count ${itemsCount}`;
-  await dbOp('orders', 'put', { ...order, status: order.status === 'open' ? 'printed' : order.status, items: undefined });
-  const tbl = state.tables.find(t => t.id == state.currentTable); if (tbl) { tbl.status = 'printed'; await dbOp('tables', 'put', tbl); }
-  window.print(); showToast(t('bill-printed'));
+  let subtotal = 0; order.items.forEach(item => { subtotal += item.price * item.quantity; tbody.innerHTML += `<tr><td>${item.quantity}</td><td>${item.name_ar}</td><td>${(item.price * item.quantity).toFixed(2)}</td></tr>`; });
+  document.getElementById('invoice-total').textContent = subtotal.toFixed(2); window.print();
 }
 
 // ──────────────── DASHBOARD LOGIC ────────────────
 let enteredPin = '';
 function updatePinDisplay() { document.querySelectorAll('.pin-dot').forEach((d, i) => d.classList.toggle('filled', i < enteredPin.length)); }
 function handlePinInput(val) { if (val === 'C') { enteredPin = ''; } else if (enteredPin.length < 4) { enteredPin += val; if (enteredPin.length === 4) { if (enteredPin === (state.settings.owner_pin || '2525')) { document.getElementById('pin-modal').hidden = true; document.getElementById('app').style.display = 'none'; openDashboard(); enteredPin = ''; } else { enteredPin = ''; } } } updatePinDisplay(); }
-function openDashboard() { document.getElementById('owner-dashboard').style.display = 'flex'; loadDashboardTab('reports'); }
+function openDashboard() { document.getElementById('owner-dashboard').style.display = 'flex'; document.getElementById('owner-dashboard').style.flexDirection = 'row-reverse'; loadDashboardTab('reports'); }
 function closeDashboard() { document.getElementById('owner-dashboard').style.display = 'none'; document.getElementById('app').style.display = 'flex'; loadInitialData().then(() => { renderCategories(); renderMenu(); renderTables(); renderOrder(); }); }
 async function loadDashboardTab(tab) {
   document.querySelectorAll('.dash-tab-pane').forEach(el => { el.classList.remove('active'); el.style.display = 'none'; });
@@ -429,15 +419,6 @@ function bindEvents() {
     });
   });
   document.getElementById('close-payment-modal').addEventListener('click', () => document.getElementById('payment-modal').hidden = true);
-
-  // === إغلاق وتأكيد نافذة الآجل (كانت غير مربوطة) ===
-  document.getElementById('close-credit').addEventListener('click', () => document.getElementById('credit-modal').hidden = true);
-  document.getElementById('submit-credit').addEventListener('click', async () => {
-    const customerId = document.getElementById('credit-customer').value;
-    if (!customerId) return showToast('اختر عميل أولاً', true);
-    document.getElementById('credit-modal').hidden = true;
-    await completeOrder('credit', Number(customerId));
-  });
 }
 
 async function openCreditModal() {

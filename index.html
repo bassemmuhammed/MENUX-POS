@@ -1,111 +1,187 @@
 <!DOCTYPE html>
-<html lang="ar" dir="ltr">
+<html lang="ar" dir="rtl" translate="no">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MENUX POS</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google" content="notranslate">
+  <title>MENUX</title>
+  <meta name="description" content="Professional café point of sale system — نظام نقطة بيع احترافي للمقاهي">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+  <meta name="theme-color" content="#1a0533">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-
-    <div id="app" class="main-content">
-        <!-- MENU PANEL (يسار الشاشة الآن) -->
-        <div class="menu-panel">
-            <div class="action-bar">
-                <button class="top-btn" id="btn-tables">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-                    <span data-i18n="tables">الطاولات</span>
-                </button>
-                <button class="top-btn" id="btn-more">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
-                    <span data-i18n="more">المزيد</span>
-                </button>
-            </div>
-            <div class="category-tabs" id="category-tabs"></div>
-            <div class="menu-grid" id="menu-grid"></div>
+  <div id="app">
+    <div class="app-shell">
+      <!-- ICON RAIL — يسار (شمال) الشاشة، ثابت مثل أنظمة الـPOS الاحترافية -->
+      <nav class="side-nav" id="side-nav">
+        <div class="side-nav-brand">
+          <div class="side-nav-logo">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z"/><path d="m3 9 2.45-4.9A2 2 0 0 1 7.24 3h9.52a2 2 0 0 1 1.8 1.1L21 9"/><path d="M12 3v6"/></svg>
+          </div>
         </div>
 
-        <!-- ORDER PANEL (يمين الشاشة الآن) -->
-        <div class="order-panel">
-            <div class="order-header">
-                <div class="table-title" id="table-title"></div>
-            </div>
-            <div class="order-items" id="order-items"></div>
-            <div class="order-summary">
-                <div class="summary-row">
-                    <span class="summary-label" data-i18n="subtotal">المجموع الفرعي</span>
-                    <span class="summary-value" id="subtotal">0.00 <small data-i18n="currency">ر.س</small></span>
-                </div>
-                <div class="summary-row">
-                    <span class="summary-label" data-i18n="discount">الخصم</span>
-                    <input type="number" class="discount-input" id="discount-input" placeholder="0" min="0">
-                </div>
-                <div class="total-row">
-                    <span class="total-label" data-i18n="total">الإجمالي</span>
-                    <span class="total-value" id="total-value">0.00 <small data-i18n="currency">ر.س</small></span>
-                </div>
-                <button class="checkout-btn" id="btn-checkout">دفع الآن</button>
-                <button class="top-btn top-btn-danger" id="btn-clear-order" style="margin-top: 8px; justify-content: center;">مسح الطلب</button>
-                <button class="top-btn" id="btn-print" style="margin-top: 4px; justify-content: center;">طباعة الفاتورة</button>
-            </div>
+        <div class="side-nav-group">
+          <button class="nav-icon-btn" id="btn-tables">
+            <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>
+            <span class="nav-label" data-i18n="tables">الطاولات</span>
+          </button>
+          <button class="nav-icon-btn" id="btn-print">
+            <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></span>
+            <span class="nav-label" data-i18n="print">طباعة</span>
+          </button>
+          <button class="nav-icon-btn" id="btn-expenses">
+            <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 10h20"/></svg></span>
+            <span class="nav-label" data-i18n="expenses">المصروفات</span>
+          </button>
+          <button class="nav-icon-btn" id="btn-drawer-balance">
+            <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></span>
+            <span class="nav-label">رصيد الدرج</span>
+          </button>
         </div>
-    </div>
 
-    <!-- TABLES MODAL -->
-    <div class="modal-overlay" id="tables-modal" hidden>
-        <div class="modal" style="max-width: 800px;">
-            <div class="modal-header">
-                <h2 data-i18n="select-table">اختر طاولة</h2>
-                <button class="modal-close" id="close-tables">✕</button>
-            </div>
-            <div class="table-legend">
-                <div class="legend-item"><span class="legend-dot legend-empty"></span> <span data-i18n="status-empty">فارغة</span></div>
-                <div class="legend-item"><span class="legend-dot legend-open"></span> <span data-i18n="status-open">مفتوحة</span></div>
-                <div class="legend-item"><span class="legend-dot legend-printed"></span> <span data-i18n="status-printed">مطبوعة</span></div>
-            </div>
-            <div class="tables-grid" id="tables-grid"></div>
+        <div class="side-nav-spacer"></div>
+
+        <div class="side-nav-group side-nav-bottom">
+          <button class="nav-icon-btn nav-icon-danger" id="btn-clear-order">
+            <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></span>
+            <span class="nav-label">مسح</span>
+          </button>
+          <button class="nav-icon-btn" id="btn-more">
+            <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="5" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="12" cy="19" r="1.5" fill="currentColor"/></svg></span>
+            <span class="nav-label" data-i18n="more">المزيد</span>
+          </button>
         </div>
-    </div>
+      </nav>
 
-    <!-- PAYMENT MODAL -->
-    <div class="modal-overlay" id="payment-modal" hidden>
-        <div class="modal payment-modal-box">
-            <h2>ادفع المبلغ</h2>
-            <div class="payment-total" id="payment-total-amount">0.00</div>
-            <div class="payment-options-grid">
-                <button class="payment-option-card" data-method="cash">💵 <span data-i18n="cash">نقدي</span></button>
-                <button class="payment-option-card" data-method="wallet">📱 <span data-i18n="wallet">محفظة</span></button>
-                <button class="payment-option-card" data-method="credit">💳 <span data-i18n="credit-pay">آجل</span></button>
-            </div>
-            <button class="modal-cancel-btn" id="close-payment-modal">إلغاء</button>
+    <main class="main-content">
+      <!-- MENU PANEL -->
+      <section class="menu-panel" id="menu-panel">
+        <div class="menu-panel-header">
+          <h1 class="menu-panel-title">القائمة</h1>
         </div>
+        <div class="category-tabs" id="category-tabs"></div>
+        <div class="menu-grid" id="menu-grid"></div>
+      </section>
+
+      <!-- ORDER PANEL -->
+      <aside class="order-panel" id="order-panel">
+        <div class="order-header">
+          <h2 class="table-title" id="table-title">
+            <span class="table-title-placeholder" data-i18n="no-table">لم يتم اختيار طاولة</span>
+          </h2>
+        </div>
+        <div class="order-divider"></div>
+        <div class="order-items" id="order-items">
+          <div class="empty-state" id="empty-state">
+            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#EDEDF0" stroke-width="1.5"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/></svg>
+            <p data-i18n="no-items">لا توجد عناصر بعد</p>
+          </div>
+        </div>
+        <div class="order-summary" id="order-summary">
+          <div class="order-divider"></div>
+          <div class="summary-row">
+            <span class="summary-label" data-i18n="subtotal">المجموع الفرعي</span>
+            <span class="summary-value" id="subtotal">0.00 <small data-i18n="currency">ر.س</small></span>
+          </div>
+          <div class="summary-row discount-row">
+            <span class="summary-label" data-i18n="discount">الخصم</span>
+            <input type="number" class="discount-input" id="discount-input" placeholder="0" min="0" step="0.5" inputmode="decimal">
+          </div>
+          <div class="order-divider"></div>
+          <div class="summary-row total-row">
+            <span class="total-label" data-i18n="total">الإجمالي</span>
+            <span class="total-value" id="total-value">0.00 <small data-i18n="currency">ر.س</small></span>
+          </div>
+          
+          <!-- زرار الدفع الجديد الكبير -->
+          <button class="checkout-btn" id="btn-checkout">
+            <span>دفع</span>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </aside>
+    </main>
     </div>
-    
-    <!-- DYNAMIC UI INJECTION CONTAINER -->
-    <div id="dynamic-ui-container"></div>
+  </div>
 
-    <!-- TOAST -->
-    <div class="toast" id="toast" hidden><span id="toast-message"></span></div>
-
-    <!-- PRINT INVOICE -->
-    <div id="invoice-print" style="display: none; padding: 20px;">
-        <h2 style="text-align: center; margin-bottom: 10px;">فاتورة ضريبية</h2>
-        <p>الطاولة: <span id="print-table-num"></span></p>
-        <p>التاريخ: <span id="print-date-time"></span></p>
-        <table style="width: 100%; margin-top: 20px; border-collapse: collapse;">
-            <thead>
-                <tr style="border-bottom: 1px solid #000;">
-                    <th style="text-align: start;">الصنف</th>
-                    <th>الكمية</th>
-                    <th>السعر</th>
-                </tr>
-            </thead>
-            <tbody id="print-invoice-items"></tbody>
-        </table>
-        <h3 style="text-align: end; margin-top: 20px;">الإجمالي: <span id="invoice-total"></span> ر.س</h3>
+  <!-- PAYMENT MODAL (نافذة الدفع) -->
+  <div class="modal-overlay" id="payment-modal" hidden>
+    <div class="modal payment-modal-box">
+      <div class="modal-header" style="justify-content: center; border-bottom: none; padding-bottom: 0;">
+        <h2>اختر طريقة الدفع</h2>
+      </div>
+      <div class="payment-total" id="payment-total-amount">0.00 <small>ر.س</small></div>
+      <div class="payment-options-grid">
+        <button class="payment-option-card" data-method="cash">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/></svg>
+          نقدي (Cash)
+        </button>
+        <button class="payment-option-card" data-method="wallet">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 10H18a2 2 0 0 0 0 4h4"/></svg>
+          محفظة (Wallet)
+        </button>
+        <button class="payment-option-card" data-method="credit">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z"/></svg>
+          آجل (Credit)
+        </button>
+      </div>
+      <button class="modal-cancel-btn" id="close-payment-modal">إلغاء</button>
     </div>
+  </div>
 
-    <script src="app.js"></script>
+  <!-- TABLES MODAL -->
+  <div class="modal-overlay" id="tables-modal" hidden>
+    <div class="modal">
+      <div class="modal-header">
+        <h2 data-i18n="select-table">اختر طاولة</h2>
+        <button class="modal-close" id="close-tables">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="table-legend">
+        <span class="legend-item"><span class="legend-dot legend-empty"></span><span data-i18n="status-empty">فارغة</span></span>
+        <span class="legend-item"><span class="legend-dot legend-open"></span><span data-i18n="status-open">مفتوحة</span></span>
+        <span class="legend-item"><span class="legend-dot legend-printed"></span><span data-i18n="status-printed">مطبوعة</span></span>
+      </div>
+      <div class="tables-grid" id="tables-grid"></div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast" hidden>
+    <svg class="toast-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <span id="toast-message"></span>
+  </div>
+
+  <!-- فاتورة الطباعة -->
+  <div id="invoice-print" style="display:none;">
+    <div class="inv-logo-wrap"><img src="logo.png" alt="MENUX" class="inv-logo" /></div>
+    <div class="inv-table-badge"><span class="inv-table-label">Table#</span><span class="inv-table-num" id="print-table-num">—</span></div>
+    <div class="inv-meta-row"><span id="print-date-time">—</span></div>
+    <div class="inv-meta-row inv-check"><span>Check# <strong id="print-invoice-id">0000</strong></span></div>
+    <div class="inv-divider"></div>
+    <table class="inv-table">
+      <thead><tr><th class="inv-th-qty">Qty</th><th class="inv-th-item">Item</th><th class="inv-th-price">Price</th></tr></thead>
+      <tbody id="print-invoice-items"></tbody>
+    </table>
+    <div class="inv-divider"></div>
+    <div class="inv-totals">
+      <div class="inv-total-row"><span>Subtotal</span><span id="invoice-subtotal">0.00</span></div>
+      <div class="inv-total-row inv-discount-row" id="inv-discount-wrap"><span>Discount</span><span id="invoice-discount">0.00</span></div>
+    </div>
+    <div class="inv-divider inv-divider-bold"></div>
+    <div class="inv-grand-total"><span>Total</span><span id="invoice-total">0.00</span></div>
+    <div class="inv-divider"></div>
+    <div class="inv-footer">
+      <p id="invoice-items-count">Products Count 0</p>
+      <p class="inv-powered">Powered by MENUX</p>
+    </div>
+  </div>
+
+  <script src="./app.js"></script>
 </body>
 </html>
